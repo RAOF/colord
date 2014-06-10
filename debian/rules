@@ -35,11 +35,11 @@ else
 	confflags += --disable-sane --disable-gusb --disable-systemd-login --disable-udev
 endif
 
-ifeq ($(DEB_HOST_ARCH_OS),hurd)
+#ifeq ($(DEB_HOST_ARCH_OS),hurd)
 	indep_flags = --disable-print-profiles
-else
-	indep_flags = --enable-print-profiles
-endif
+#else
+#	indep_flags = --enable-print-profiles
+#endif
 
 override_dh_auto_configure-arch:
 	dh_auto_configure -- $(confflags)

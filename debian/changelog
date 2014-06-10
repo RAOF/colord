@@ -1,3 +1,10 @@
+colord (1.2.1-1ubuntu1) utopic; urgency=low
+
+  * Drop argyll build dependency, and associated extra print profiles.
+    Argyll is not in main and is unlikely to move there in the near future.
+
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Tue, 10 Jun 2014 09:54:40 +1000
+
 colord (1.2.1-1) unstable; urgency=medium
 
   * New upstream stable release. Fixes unsafe pointer cast, so
