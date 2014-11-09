@@ -1,6 +1,424 @@
+commit 438b6e8e5ae205fda71206f86de3c62bcc4a1231
+Author: Richard Hughes <richard@hughsie.com>
+Date:   2014-10-12
+
+    Release colord 1.2.4
+
+M	NEWS
+M	doc/website/download.html
+
+commit ba68c7a550f8e8fde479a8181dc3b2fd2a1506b1
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-09
+
+    Don't enable PIE support when --without-pic is specified
+
+M	configure.ac
+
+commit feb65971a24f00b1ca46aae666dd7b3adaf1cdee
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-09
+
+    libcolord: Build with PIE enabled
+
+M	lib/colord/Makefile.am
+
+commit d4e9ddb86b318a4abaed8f77abd89802f39781e0
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-09
+
+    colorhug: Retry the command submission if the hardware response
+    is incomplete
+
+M	lib/colorhug/ch-device.c
+
+commit ef24a3accf82f1e89904ac469f89cceb04cfb4dc
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-08
+
+    libcolord: Add cd_mat33_init() helper function
+
+M	lib/colord/cd-math.c
+M	lib/colord/cd-math.h
+
+commit 1f3f4e0ac8421034ac73250f334af9a930ec2945
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-08
+
+    trivial: Fix gtk-doc markup comment spelling
+
+M	lib/colord/cd-it8-utils.c
+
+commit 82c74caf242a4a3c0c470955186a438775ce4227
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-09-12
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
+commit 9bdec6fc37717ad0a2634d7928150e176ed8aac5
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-09-12
+
+    Release colord 1.2.3
+
+M	NEWS
+M	configure.ac
+M	doc/website/download.html
+M	po/de.po
+
+commit f27c9ecf2f2f98e49537e3386cc11478fa80ab55
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-09-11
+
+    colorhug: Add ch_device_check_firmware()
+
+    This returns an error if the firmware binary data is invalid.
+
+M	lib/colorhug/ch-device.c
+M	lib/colorhug/ch-device.h
+
+commit f24373dc3326124560062eb08a3a627fb6b35298
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-09-11
+
+    colorhug: Add ch_device_mode_from_firmware()
+
+    This allows us to look for known tokens in the binary firmware file.
+
+M	lib/colorhug/ch-common.c
+M	lib/colorhug/ch-common.h
+M	lib/colorhug/ch-self-test.c
+
+commit 0ec82c8b69f5401b6abe97bc803c1db6697c432c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-09-11
+
+    colorhug: Use the calibration capability to be able to do a unity
+    measurement
+
+M	src/sensors/cd-sensor-colorhug.c
+
+commit 3116b2d801a164afea20420165dccc67a33ed1bf
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-09-11
+
+    colorhug: Use a different PID for the ColorHug2 bootloader
+
+    The devices have different configs as the clocks are different.
+
+M	lib/colorhug/ch-common.c
+M	lib/colorhug/ch-common.h
+M	lib/colorhug/ch-device.c
+M	rules/69-cd-sensors.rules.in
+
+commit b27b108605fb564b8bd6627364f190c2bb94e7a2
+Author: Iain Lane <iain.lane@canonical.com>
+Date:	2014-08-20
+
+    tests: Fix the device path to allow uid or username to be omitted
+
+    This isn't always part of the device path.
+
+    Signed-off-by: Richard Hughes <richard@hughsie.com>
+
+M	lib/colord/cd-test-daemon.c
+
+commit 91f4f6a660e6962f3855d9d80b0a4b7d2be7741e
+Author: Iain Lane <iain.lane@canonical.com>
+Date:	2014-08-20
+
+    There is no seat if running in a chroot
+
+    Signed-off-by: Richard Hughes <richard@hughsie.com>
+
+M	lib/colord/cd-test-daemon.c
+
+commit 9ea0e674ffa41c1def7fccb15582fe9ad4afece5
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-08-22
+
+    trivial: Sync example spec file with downstream
+
+M	contrib/colord.spec.in
+
+commit 15ea90f12e8f1681386d0a3458a9c7897641905a
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-08-18
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
+commit acf0c7e3e9fef218d1cd057d53a55ae1d412c81d
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-08-18
+
+    Release colord 1.2.2
+
+M	NEWS
+M	data/tests/Makefile.am
+M	doc/website/download.html
+M	po/da_DK.po
+M	po/en_GB.po
+
+commit 7cc97189ea76bf78fb086cc4d86f834d0248180c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-08-14
+
+    trivial: Add another self test with a broken EDID
+
+A	data/tests/DELL-U2713H.bin
+M	data/tests/Makefile.am
+M	lib/colord/cd-test-private.c
+
+commit 5a9987bda3a83e2bd93a1834d466eb4664b661e0
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-08-05
+
+    Actually parse the EDID for better duplicate detection
+
+    If the EDID differs by available modes or chromacity, but has the same
+    vendor+model+serial combination then it will pass the duplicate EDID
+    check in
+    colord, but fail to show two devices in gnome-control-center.
+
+    Resolves: https://bugzilla.gnome.org/show_bug.cgi?id=734169
+
+M	src/cd-main.c
+
+commit 3065ea43c78791f9ab75feba38493cef16f35c64
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-07-28
+
+    libcolord: Do not try to return a CdIcc instance for virtual profiles
+
+M	lib/colord/cd-profile.c
+
+commit 046fdb48fb0c307db56b9b46099535349f450bd8
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-07-10
+
+    colorhug: Add two more error enums used by ColorHug2
+
+M	lib/colorhug/ch-common.c
+M	lib/colorhug/ch-common.h
+
+commit 080f623b952e8d3e4892ec08cec45632a6fd9744
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-06-10
+
+    Use the ColorHug sensor driver for the ColorHug2 hardware
+
+M	lib/colord/cd-enum.c
+M	lib/colord/cd-enum.h
+M	rules/69-cd-sensors.rules.in
+M	src/cd-sensor.c
+M	src/sensors/cd-sensor-argyll.c
+M	src/sensors/cd-sensor-colorhug.c
+
+commit aa3b23a3c9be3a586fe1a67ede73cff9804f92d2
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-06-10
+
+    trivial: Fix up the ColorHug+ enum names
+
+M	lib/colord/cd-enum.c
+M	lib/colord/cd-enum.h
+M	src/sensors/cd-sensor-argyll.c
+
+commit 2f967ad8c76c6766b400d888346ed98f2eba47b4
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-06-08
+
+    Add a helper to calculate the ΔE of two colors using the 1976 formula
+
+M	lib/colord/cd-color.c
+M	lib/colord/cd-color.h
+
+commit c9621ec7b2c15d15b4f418fea30586f3e215762f
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-06-06
+
+    colorhug: Document which commands are used on each device type
+
+M	lib/colorhug/ch-common.h
+
+commit 7553651b1d13672d6b166c6b4255e02206adc2bc
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-06-06
+
+    colorhug: Add references to the ColorHug2 device
+
+M	lib/colorhug/ch-common.c
+M	lib/colorhug/ch-common.h
+M	lib/colorhug/ch-device.c
+
+commit ef892039c8bea1b8d1827f1adbc3e09beb003b22
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-06-04
+
+    Bump the lcms2 dep to 2.6
+
+    Although agressive, there are a few people trying to use colord with
+    an lcms2
+    version that does not support cmsCreateContext() and so they are
+    getting weird
+    unfixable crashes due to the global state.
+
+    Bumping the version also means we can remove a ton of compatability
+    code.
+
+M	configure.ac
+M	lib/colord/cd-context-lcms.c
+M	lib/colord/cd-context-lcms.h
+M	lib/colord/cd-icc.c
+M	lib/colord/cd-it8.c
+M	lib/colord/cd-transform.c
+
+commit 937372355890d946d143402b870e487f0d4fedfb
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-06-04
+
+    trivial: Use systemd-style cleanup functions
+
+    There's no point creating yet another format...
+
+M	contrib/colord-sane/Makefile.am
+M	contrib/colord-sane/cd-main.c
+M	contrib/session-helper/cd-main.c
+M	contrib/session-helper/cd-state.c
+M	lib/colord/cd-cleanup.h
+M	lib/colord/cd-client.c
+M	lib/colord/cd-device.c
+M	lib/colord/cd-dom.c
+M	lib/colord/cd-edid.c
+M	lib/colord/cd-icc-store.c
+M	lib/colord/cd-icc-utils.c
+M	lib/colord/cd-icc.c
+M	lib/colord/cd-interp-akima.c
+M	lib/colord/cd-it8-utils.c
+M	lib/colord/cd-it8.c
+M	lib/colord/cd-profile.c
+M	lib/colord/cd-sensor.c
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-test-shared.c
+M	lib/colord/cd-transform.c
+M	lib/colorhug/ch-device-queue.c
+M	lib/colorhug/ch-inhx32.c
+M	lib/compat/cd-compat-edid.c
+M	src/cd-common.c
+M	src/cd-device-db.c
+M	src/cd-device.c
+M	src/cd-inhibit.c
+M	src/cd-main.c
+M	src/cd-mapping-db.c
+M	src/cd-profile-db.c
+M	src/cd-profile.c
+M	src/cd-sensor.c
+M	src/plugins/cd-plugin-camera.c
+M	src/plugins/cd-plugin-sane.c
+M	src/plugins/cd-plugin-scanner.c
+M	src/sensors/cd-sensor-argyll.c
+M	src/sensors/cd-sensor-colorhug.c
+M	src/sensors/cd-sensor-dtp94.c
+M	src/sensors/cd-sensor-dummy.c
+M	src/sensors/cd-sensor-huey.c
+M	src/sensors/cd-spawn.c
+
+commit b6f7c4d117a06f059a6e852e2dce8c13a3bb1f2c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-06-02
+
+    Use __attribute__(cleanup) to simplify memory cleanup
+
+M	contrib/colord-sane/cd-main.c
+M	contrib/session-helper/Makefile.am
+M	contrib/session-helper/cd-main.c
+M	contrib/session-helper/cd-state.c
+M	lib/colord/Makefile.am
+A	lib/colord/cd-cleanup.h
+M	lib/colord/cd-client.c
+M	lib/colord/cd-device.c
+M	lib/colord/cd-dom.c
+M	lib/colord/cd-edid.c
+M	lib/colord/cd-icc-store.c
+M	lib/colord/cd-icc-utils.c
+M	lib/colord/cd-icc.c
+M	lib/colord/cd-interp-akima.c
+M	lib/colord/cd-interp.c
+M	lib/colord/cd-it8-utils.c
+M	lib/colord/cd-it8.c
+M	lib/colord/cd-profile.c
+M	lib/colord/cd-quirk.c
+M	lib/colord/cd-sensor.c
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-test-private.c
+M	lib/colord/cd-test-shared.c
+M	lib/colord/cd-transform.c
+M	lib/colorhug/ch-device-queue.c
+M	lib/colorhug/ch-device.c
+M	lib/colorhug/ch-hash.c
+M	lib/colorhug/ch-inhx32.c
+M	lib/compat/cd-compat-edid.c
+M	lib/dtp94/dtp94-device.c
+M	lib/dtp94/dtp94-enum.c
+M	lib/huey/huey-ctx.c
+M	lib/huey/huey-device.c
+M	src/cd-common.c
+M	src/cd-device-array.c
+M	src/cd-device-db.c
+M	src/cd-device.c
+M	src/cd-inhibit.c
+M	src/cd-main.c
+M	src/cd-mapping-db.c
+M	src/cd-profile-array.c
+M	src/cd-profile-db.c
+M	src/cd-profile.c
+M	src/cd-sensor.c
+M	src/plugins/cd-plugin-camera.c
+M	src/plugins/cd-plugin-sane.c
+M	src/plugins/cd-plugin-scanner.c
+M	src/sensors/cd-sensor-argyll.c
+M	src/sensors/cd-sensor-colorhug.c
+M	src/sensors/cd-sensor-dtp94.c
+M	src/sensors/cd-sensor-dummy.c
+M	src/sensors/cd-sensor-huey.c
+M	src/sensors/cd-spawn.c
+
+commit 8d35ee8780f9b2f34ce3a05abb76ed79c3260eec
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-06-03
+
+    trivial: Fix three tiny memory leaks when emitting PropertiesChanged
+
+M	src/cd-device.c
+M	src/cd-profile.c
+M	src/cd-sensor.c
+
+commit 1ef46cc306c7529f2a9adfc2d09902124e965d3f
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-06-03
+
+    Actually write a file when using cd_icc_save_default()
+
+M	lib/colord/cd-icc.c
+
+commit 20abf1643b3d3c354a30e970cac43942c4289f45
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-05-23
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
 commit c64a2fff93ab154a142419a37d3b2f01fe3ec91e
 Author: Richard Hughes <richard@hughsie.com>
-Date:   2014-05-23
+Date:	2014-05-23
 
     Release colord 1.2.1
 

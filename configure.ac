@@ -3,7 +3,7 @@ AC_PREREQ(2.63)
 
 m4_define([cd_major_version], [1])
 m4_define([cd_minor_version], [2])
-m4_define([cd_micro_version], [1])
+m4_define([cd_micro_version], [4])
 m4_define([cd_version],
           [cd_major_version.cd_minor_version.cd_micro_version])
 
@@ -38,7 +38,7 @@ AC_SUBST(CD_MICRO_VERSION)
 # REVISION	If the API and ABI remains the same, but bugs are fixed.
 # AGE		Don't use.
 LT_CURRENT=2
-LT_REVISION=1
+LT_REVISION=2
 LT_AGE=0
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
@@ -125,11 +125,13 @@ AC_SUBST(LIBM)
 GLIB_GSETTINGS
 
 # check for PIE (position independent executable) support
-AX_CHECK_COMPILE_FLAG([-fPIE],
-		      [AX_CHECK_LINK_FLAG([-fPIE -pie],
-					  [PIE_CFLAGS="-fPIE" PIE_LDFLAGS="-pie"])])
-AC_SUBST(PIE_CFLAGS)
-AC_SUBST(PIE_LDFLAGS)
+if test x$with_pic != xno; then
+	AX_CHECK_COMPILE_FLAG([-fPIE],
+			      [AX_CHECK_LINK_FLAG([-fPIE -pie],
+						  [PIE_CFLAGS="-fPIE" PIE_LDFLAGS="-pie"])])
+	AC_SUBST(PIE_CFLAGS)
+	AC_SUBST(PIE_LDFLAGS)
+fi
 
 # check for full RELRO (relocation read-only) support
 AX_CHECK_LINK_FLAG([-Wl,-z,relro,-z,now],
@@ -149,19 +151,7 @@ if test x$enable_gusb != xno; then
 fi
 AM_CONDITIONAL(HAVE_GUSB, test x$enable_gusb = xyes)
 
-PKG_CHECK_MODULES(LCMS, lcms2 >= 2.4)
-AC_CHECK_LIB(lcms2, cmsGetHeaderCreator, have_lcms_creator=yes)
-if test x$have_lcms_creator != x; then
-	AC_DEFINE(HAVE_LCMS_GET_HEADER_CREATOR,1,[cmsGetHeaderCreator is available])
-fi
-AC_CHECK_LIB(lcms2, cmsMLUtranslationsCount, have_lcms_mlu_translations_count=yes)
-if test x$have_lcms_mlu_translations_count != x; then
-	AC_DEFINE(HAVE_LCMS_MLU_TRANSLATIONS_COUNT,1,[cmsMLUtranslationsCount is available])
-fi
-AC_CHECK_LIB(lcms2, cmsCreateContext, have_lcms_create_context=yes)
-if test x$have_lcms_create_context != x; then
-	AC_DEFINE(HAVE_LCMS_CREATE_CONTEXT,1,[cmsCreateContext is available])
-fi
+PKG_CHECK_MODULES(LCMS, lcms2 >= 2.6)
 
 PKG_CHECK_MODULES(SQLITE, sqlite3)
 

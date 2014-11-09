@@ -183,16 +183,20 @@ typedef enum {
 	CD_SENSOR_KIND_COLORHUG,		/* Since: 0.1.15 */
 	CD_SENSOR_KIND_SPYDER2,			/* Since: 0.1.16 */
 	CD_SENSOR_KIND_SPYDER3,			/* Since: 0.1.16 */
-	CD_SENSOR_KIND_COLORHUG_SPECTRO,	/* Since: 0.1.24 */
+	CD_SENSOR_KIND_COLORHUG_PLUS,		/* Since: 0.1.24 */
 	CD_SENSOR_KIND_I1_DISPLAY1,		/* Since: 0.1.25 */
 	CD_SENSOR_KIND_I1_DISPLAY2,		/* Since: 0.1.25 */
 	CD_SENSOR_KIND_DTP92,			/* Since: 0.1.25 */
 	CD_SENSOR_KIND_I1_MONITOR,		/* Since: 0.1.25 */
 	CD_SENSOR_KIND_SPYDER4,			/* Since: 0.1.26 */
 	CD_SENSOR_KIND_COLOR_MUNKI_SMILE,	/* Since: 0.1.27 */
+	CD_SENSOR_KIND_COLORHUG2,		/* Since: 1.2.2 */
 	/*< private >*/
 	CD_SENSOR_KIND_LAST
 } CdSensorKind;
+
+/* renamed due to trademark issue */
+#define CD_SENSOR_KIND_COLORHUG_SPECTRO		CD_SENSOR_KIND_COLORHUG_PLUS
 
 /**
  * CdSensorCap:

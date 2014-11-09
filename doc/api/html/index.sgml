@@ -142,6 +142,7 @@
 <ANCHOR id="cd-color-yxy-copy" href="colord/colord-cd-color.html#cd-color-yxy-copy">
 <ANCHOR id="cd-color-uvw-copy" href="colord/colord-cd-color.html#cd-color-uvw-copy">
 <ANCHOR id="cd-color-lab-copy" href="colord/colord-cd-color.html#cd-color-lab-copy">
+<ANCHOR id="cd-color-lab-delta-e76" href="colord/colord-cd-color.html#cd-color-lab-delta-e76">
 <ANCHOR id="cd-color-xyz-clear" href="colord/colord-cd-color.html#cd-color-xyz-clear">
 <ANCHOR id="cd-color-rgb-copy" href="colord/colord-cd-color.html#cd-color-rgb-copy">
 <ANCHOR id="cd-color-rgb8-to-rgb" href="colord/colord-cd-color.html#cd-color-rgb8-to-rgb">
@@ -164,7 +165,6 @@
 <ANCHOR id="colord-cd-dom" href="colord/colord-cd-dom.html">
 <ANCHOR id="colord-cd-dom.functions" href="colord/colord-cd-dom.html#colord-cd-dom.functions">
 <ANCHOR id="colord-cd-dom.other" href="colord/colord-cd-dom.html#colord-cd-dom.other">
-<ANCHOR id="colord-cd-dom.object-hierarchy" href="colord/colord-cd-dom.html#colord-cd-dom.object-hierarchy">
 <ANCHOR id="colord-cd-dom.description" href="colord/colord-cd-dom.html#colord-cd-dom.description">
 <ANCHOR id="colord-cd-dom.functions_details" href="colord/colord-cd-dom.html#colord-cd-dom.functions_details">
 <ANCHOR id="cd-dom-reserved1" href="colord/colord-cd-dom.html#cd-dom-reserved1">
@@ -220,7 +220,6 @@
 <ANCHOR id="colord-cd-icc" href="colord/colord-cd-icc.html">
 <ANCHOR id="colord-cd-icc.functions" href="colord/colord-cd-icc.html#colord-cd-icc.functions">
 <ANCHOR id="colord-cd-icc.other" href="colord/colord-cd-icc.html#colord-cd-icc.other">
-<ANCHOR id="colord-cd-icc.object-hierarchy" href="colord/colord-cd-icc.html#colord-cd-icc.object-hierarchy">
 <ANCHOR id="colord-cd-icc.description" href="colord/colord-cd-icc.html#colord-cd-icc.description">
 <ANCHOR id="colord-cd-icc.functions_details" href="colord/colord-cd-icc.html#colord-cd-icc.functions_details">
 <ANCHOR id="cd-icc-reserved1" href="colord/colord-cd-icc.html#cd-icc-reserved1">
@@ -319,7 +318,6 @@
 <ANCHOR id="CdIccStore-removed" href="colord/CdIccStore.html#CdIccStore-removed">
 <ANCHOR id="colord-cd-icc-utils" href="colord/colord-cd-icc-utils.html">
 <ANCHOR id="colord-cd-icc-utils.functions" href="colord/colord-cd-icc-utils.html#colord-cd-icc-utils.functions">
-<ANCHOR id="colord-cd-icc-utils.object-hierarchy" href="colord/colord-cd-icc-utils.html#colord-cd-icc-utils.object-hierarchy">
 <ANCHOR id="colord-cd-icc-utils.description" href="colord/colord-cd-icc-utils.html#colord-cd-icc-utils.description">
 <ANCHOR id="colord-cd-icc-utils.functions_details" href="colord/colord-cd-icc-utils.html#colord-cd-icc-utils.functions_details">
 <ANCHOR id="cd-icc-utils-get-coverage" href="colord/colord-cd-icc-utils.html#cd-icc-utils-get-coverage">
@@ -327,7 +325,6 @@
 <ANCHOR id="colord-cd-transform" href="colord/colord-cd-transform.html">
 <ANCHOR id="colord-cd-transform.functions" href="colord/colord-cd-transform.html#colord-cd-transform.functions">
 <ANCHOR id="colord-cd-transform.other" href="colord/colord-cd-transform.html#colord-cd-transform.other">
-<ANCHOR id="colord-cd-transform.object-hierarchy" href="colord/colord-cd-transform.html#colord-cd-transform.object-hierarchy">
 <ANCHOR id="colord-cd-transform.description" href="colord/colord-cd-transform.html#colord-cd-transform.description">
 <ANCHOR id="colord-cd-transform.functions_details" href="colord/colord-cd-transform.html#colord-cd-transform.functions_details">
 <ANCHOR id="cd-transform-reserved1" href="colord/colord-cd-transform.html#cd-transform-reserved1">
@@ -363,14 +360,12 @@
 <ANCHOR id="CdTransformError" href="colord/colord-cd-transform.html#CdTransformError">
 <ANCHOR id="colord-cd-interp-akima" href="colord/colord-cd-interp-akima.html">
 <ANCHOR id="colord-cd-interp-akima.functions" href="colord/colord-cd-interp-akima.html#colord-cd-interp-akima.functions">
-<ANCHOR id="colord-cd-interp-akima.object-hierarchy" href="colord/colord-cd-interp-akima.html#colord-cd-interp-akima.object-hierarchy">
 <ANCHOR id="colord-cd-interp-akima.description" href="colord/colord-cd-interp-akima.html#colord-cd-interp-akima.description">
 <ANCHOR id="colord-cd-interp-akima.functions_details" href="colord/colord-cd-interp-akima.html#colord-cd-interp-akima.functions_details">
 <ANCHOR id="cd-interp-akima-new" href="colord/colord-cd-interp-akima.html#cd-interp-akima-new">
 <ANCHOR id="colord-cd-interp-akima.other_details" href="colord/colord-cd-interp-akima.html#colord-cd-interp-akima.other_details">
 <ANCHOR id="colord-cd-interp-linear" href="colord/colord-cd-interp-linear.html">
 <ANCHOR id="colord-cd-interp-linear.functions" href="colord/colord-cd-interp-linear.html#colord-cd-interp-linear.functions">
-<ANCHOR id="colord-cd-interp-linear.object-hierarchy" href="colord/colord-cd-interp-linear.html#colord-cd-interp-linear.object-hierarchy">
 <ANCHOR id="colord-cd-interp-linear.description" href="colord/colord-cd-interp-linear.html#colord-cd-interp-linear.description">
 <ANCHOR id="colord-cd-interp-linear.functions_details" href="colord/colord-cd-interp-linear.html#colord-cd-interp-linear.functions_details">
 <ANCHOR id="cd-interp-linear-new" href="colord/colord-cd-interp-linear.html#cd-interp-linear-new">
@@ -378,7 +373,6 @@
 <ANCHOR id="colord-cd-interp" href="colord/colord-cd-interp.html">
 <ANCHOR id="colord-cd-interp.functions" href="colord/colord-cd-interp.html#colord-cd-interp.functions">
 <ANCHOR id="colord-cd-interp.other" href="colord/colord-cd-interp.html#colord-cd-interp.other">
-<ANCHOR id="colord-cd-interp.object-hierarchy" href="colord/colord-cd-interp.html#colord-cd-interp.object-hierarchy">
 <ANCHOR id="colord-cd-interp.description" href="colord/colord-cd-interp.html#colord-cd-interp.description">
 <ANCHOR id="colord-cd-interp.functions_details" href="colord/colord-cd-interp.html#colord-cd-interp.functions_details">
 <ANCHOR id="prepare" href="colord/colord-cd-interp.html#prepare">
@@ -407,7 +401,6 @@
 <ANCHOR id="CdInterpKind" href="colord/colord-cd-interp.html#CdInterpKind">
 <ANCHOR id="colord-cd-it8-utils" href="colord/colord-cd-it8-utils.html">
 <ANCHOR id="colord-cd-it8-utils.functions" href="colord/colord-cd-it8-utils.html#colord-cd-it8-utils.functions">
-<ANCHOR id="colord-cd-it8-utils.object-hierarchy" href="colord/colord-cd-it8-utils.html#colord-cd-it8-utils.object-hierarchy">
 <ANCHOR id="colord-cd-it8-utils.description" href="colord/colord-cd-it8-utils.html#colord-cd-it8-utils.description">
 <ANCHOR id="colord-cd-it8-utils.functions_details" href="colord/colord-cd-it8-utils.html#colord-cd-it8-utils.functions_details">
 <ANCHOR id="cd-it8-utils-calculate-ccmx" href="colord/colord-cd-it8-utils.html#cd-it8-utils-calculate-ccmx">
@@ -417,7 +410,6 @@
 <ANCHOR id="colord-cd-it8" href="colord/colord-cd-it8.html">
 <ANCHOR id="colord-cd-it8.functions" href="colord/colord-cd-it8.html#colord-cd-it8.functions">
 <ANCHOR id="colord-cd-it8.other" href="colord/colord-cd-it8.html#colord-cd-it8.other">
-<ANCHOR id="colord-cd-it8.object-hierarchy" href="colord/colord-cd-it8.html#colord-cd-it8.object-hierarchy">
 <ANCHOR id="colord-cd-it8.description" href="colord/colord-cd-it8.html#colord-cd-it8.description">
 <ANCHOR id="colord-cd-it8.functions_details" href="colord/colord-cd-it8.html#colord-cd-it8.functions_details">
 <ANCHOR id="cd-it8-reserved1" href="colord/colord-cd-it8.html#cd-it8-reserved1">
@@ -470,7 +462,6 @@
 <ANCHOR id="colord-cd-math" href="colord/colord-cd-math.html">
 <ANCHOR id="colord-cd-math.functions" href="colord/colord-cd-math.html#colord-cd-math.functions">
 <ANCHOR id="colord-cd-math.other" href="colord/colord-cd-math.html#colord-cd-math.other">
-<ANCHOR id="colord-cd-math.object-hierarchy" href="colord/colord-cd-math.html#colord-cd-math.object-hierarchy">
 <ANCHOR id="colord-cd-math.description" href="colord/colord-cd-math.html#colord-cd-math.description">
 <ANCHOR id="colord-cd-math.functions_details" href="colord/colord-cd-math.html#colord-cd-math.functions_details">
 <ANCHOR id="cd-vec3-clear" href="colord/colord-cd-math.html#cd-vec3-clear">
@@ -482,6 +473,7 @@
 <ANCHOR id="cd-vec3-to-string" href="colord/colord-cd-math.html#cd-vec3-to-string">
 <ANCHOR id="cd-vec3-get-data" href="colord/colord-cd-math.html#cd-vec3-get-data">
 <ANCHOR id="cd-vec3-init" href="colord/colord-cd-math.html#cd-vec3-init">
+<ANCHOR id="cd-mat33-init" href="colord/colord-cd-math.html#cd-mat33-init">
 <ANCHOR id="cd-mat33-clear" href="colord/colord-cd-math.html#cd-mat33-clear">
 <ANCHOR id="cd-mat33-to-string" href="colord/colord-cd-math.html#cd-mat33-to-string">
 <ANCHOR id="cd-mat33-get-data" href="colord/colord-cd-math.html#cd-mat33-get-data">
@@ -528,7 +520,6 @@
 <ANCHOR id="colord-cd-version" href="colord/colord-cd-version.html">
 <ANCHOR id="colord-cd-version.functions" href="colord/colord-cd-version.html#colord-cd-version.functions">
 <ANCHOR id="colord-cd-version.other" href="colord/colord-cd-version.html#colord-cd-version.other">
-<ANCHOR id="colord-cd-version.object-hierarchy" href="colord/colord-cd-version.html#colord-cd-version.object-hierarchy">
 <ANCHOR id="colord-cd-version.description" href="colord/colord-cd-version.html#colord-cd-version.description">
 <ANCHOR id="colord-cd-version.functions_details" href="colord/colord-cd-version.html#colord-cd-version.functions_details">
 <ANCHOR id="CD-CHECK-VERSION:CAPS" href="colord/colord-cd-version.html#CD-CHECK-VERSION:CAPS">
@@ -538,7 +529,6 @@
 <ANCHOR id="CD-MICRO-VERSION:CAPS" href="colord/colord-cd-version.html#CD-MICRO-VERSION:CAPS">
 <ANCHOR id="colord-cd-client-sync" href="colord/colord-cd-client-sync.html">
 <ANCHOR id="colord-cd-client-sync.functions" href="colord/colord-cd-client-sync.html#colord-cd-client-sync.functions">
-<ANCHOR id="colord-cd-client-sync.object-hierarchy" href="colord/colord-cd-client-sync.html#colord-cd-client-sync.object-hierarchy">
 <ANCHOR id="colord-cd-client-sync.description" href="colord/colord-cd-client-sync.html#colord-cd-client-sync.description">
 <ANCHOR id="colord-cd-client-sync.functions_details" href="colord/colord-cd-client-sync.html#colord-cd-client-sync.functions_details">
 <ANCHOR id="cd-client-connect-sync" href="colord/colord-cd-client-sync.html#cd-client-connect-sync">
@@ -563,7 +553,6 @@
 <ANCHOR id="colord-cd-client" href="colord/colord-cd-client.html">
 <ANCHOR id="colord-cd-client.functions" href="colord/colord-cd-client.html#colord-cd-client.functions">
 <ANCHOR id="colord-cd-client.other" href="colord/colord-cd-client.html#colord-cd-client.other">
-<ANCHOR id="colord-cd-client.object-hierarchy" href="colord/colord-cd-client.html#colord-cd-client.object-hierarchy">
 <ANCHOR id="colord-cd-client.description" href="colord/colord-cd-client.html#colord-cd-client.description">
 <ANCHOR id="colord-cd-client.functions_details" href="colord/colord-cd-client.html#colord-cd-client.functions_details">
 <ANCHOR id="device-added" href="colord/colord-cd-client.html#device-added">
@@ -632,7 +621,6 @@
 <ANCHOR id="CD-CLIENT-TYPE-ERROR:CAPS" href="colord/colord-cd-client.html#CD-CLIENT-TYPE-ERROR:CAPS">
 <ANCHOR id="colord-cd-device-sync" href="colord/colord-cd-device-sync.html">
 <ANCHOR id="colord-cd-device-sync.functions" href="colord/colord-cd-device-sync.html#colord-cd-device-sync.functions">
-<ANCHOR id="colord-cd-device-sync.object-hierarchy" href="colord/colord-cd-device-sync.html#colord-cd-device-sync.object-hierarchy">
 <ANCHOR id="colord-cd-device-sync.description" href="colord/colord-cd-device-sync.html#colord-cd-device-sync.description">
 <ANCHOR id="colord-cd-device-sync.functions_details" href="colord/colord-cd-device-sync.html#colord-cd-device-sync.functions_details">
 <ANCHOR id="cd-device-connect-sync" href="colord/colord-cd-device-sync.html#cd-device-connect-sync">
@@ -655,7 +643,6 @@
 <ANCHOR id="colord-cd-device" href="colord/colord-cd-device.html">
 <ANCHOR id="colord-cd-device.functions" href="colord/colord-cd-device.html#colord-cd-device.functions">
 <ANCHOR id="colord-cd-device.other" href="colord/colord-cd-device.html#colord-cd-device.other">
-<ANCHOR id="colord-cd-device.object-hierarchy" href="colord/colord-cd-device.html#colord-cd-device.object-hierarchy">
 <ANCHOR id="colord-cd-device.description" href="colord/colord-cd-device.html#colord-cd-device.description">
 <ANCHOR id="colord-cd-device.functions_details" href="colord/colord-cd-device.html#colord-cd-device.functions_details">
 <ANCHOR id="changed" href="colord/colord-cd-device.html#changed">
@@ -720,7 +707,6 @@
 <ANCHOR id="CD-DEVICE-TYPE-ERROR:CAPS" href="colord/colord-cd-device.html#CD-DEVICE-TYPE-ERROR:CAPS">
 <ANCHOR id="colord-cd-profile-sync" href="colord/colord-cd-profile-sync.html">
 <ANCHOR id="colord-cd-profile-sync.functions" href="colord/colord-cd-profile-sync.html#colord-cd-profile-sync.functions">
-<ANCHOR id="colord-cd-profile-sync.object-hierarchy" href="colord/colord-cd-profile-sync.html#colord-cd-profile-sync.object-hierarchy">
 <ANCHOR id="colord-cd-profile-sync.description" href="colord/colord-cd-profile-sync.html#colord-cd-profile-sync.description">
 <ANCHOR id="colord-cd-profile-sync.functions_details" href="colord/colord-cd-profile-sync.html#colord-cd-profile-sync.functions_details">
 <ANCHOR id="cd-profile-connect-sync" href="colord/colord-cd-profile-sync.html#cd-profile-connect-sync">
@@ -730,7 +716,6 @@
 <ANCHOR id="colord-cd-profile" href="colord/colord-cd-profile.html">
 <ANCHOR id="colord-cd-profile.functions" href="colord/colord-cd-profile.html#colord-cd-profile.functions">
 <ANCHOR id="colord-cd-profile.other" href="colord/colord-cd-profile.html#colord-cd-profile.other">
-<ANCHOR id="colord-cd-profile.object-hierarchy" href="colord/colord-cd-profile.html#colord-cd-profile.object-hierarchy">
 <ANCHOR id="colord-cd-profile.description" href="colord/colord-cd-profile.html#colord-cd-profile.description">
 <ANCHOR id="colord-cd-profile.functions_details" href="colord/colord-cd-profile.html#colord-cd-profile.functions_details">
 <ANCHOR id="changed" href="colord/colord-cd-profile.html#changed">
@@ -779,7 +764,6 @@
 <ANCHOR id="CD-PROFILE-TYPE-ERROR:CAPS" href="colord/colord-cd-profile.html#CD-PROFILE-TYPE-ERROR:CAPS">
 <ANCHOR id="colord-cd-sensor-sync" href="colord/colord-cd-sensor-sync.html">
 <ANCHOR id="colord-cd-sensor-sync.functions" href="colord/colord-cd-sensor-sync.html#colord-cd-sensor-sync.functions">
-<ANCHOR id="colord-cd-sensor-sync.object-hierarchy" href="colord/colord-cd-sensor-sync.html#colord-cd-sensor-sync.object-hierarchy">
 <ANCHOR id="colord-cd-sensor-sync.description" href="colord/colord-cd-sensor-sync.html#colord-cd-sensor-sync.description">
 <ANCHOR id="colord-cd-sensor-sync.functions_details" href="colord/colord-cd-sensor-sync.html#colord-cd-sensor-sync.functions_details">
 <ANCHOR id="cd-sensor-connect-sync" href="colord/colord-cd-sensor-sync.html#cd-sensor-connect-sync">
@@ -791,7 +775,6 @@
 <ANCHOR id="colord-cd-sensor" href="colord/colord-cd-sensor.html">
 <ANCHOR id="colord-cd-sensor.functions" href="colord/colord-cd-sensor.html#colord-cd-sensor.functions">
 <ANCHOR id="colord-cd-sensor.other" href="colord/colord-cd-sensor.html#colord-cd-sensor.other">
-<ANCHOR id="colord-cd-sensor.object-hierarchy" href="colord/colord-cd-sensor.html#colord-cd-sensor.object-hierarchy">
 <ANCHOR id="colord-cd-sensor.description" href="colord/colord-cd-sensor.html#colord-cd-sensor.description">
 <ANCHOR id="colord-cd-sensor.functions_details" href="colord/colord-cd-sensor.html#colord-cd-sensor.functions_details">
 <ANCHOR id="button-pressed" href="colord/colord-cd-sensor.html#button-pressed">

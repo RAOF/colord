@@ -41,15 +41,6 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
 
-/* cmsCreateContext is available */
-#define HAVE_LCMS_CREATE_CONTEXT 1
-
-/* cmsGetHeaderCreator is available */
-#define HAVE_LCMS_GET_HEADER_CREATOR 1
-
-/* cmsMLUtranslationsCount is available */
-#define HAVE_LCMS_MLU_TRANSLATIONS_COUNT 1
-
 /* Define to 1 if libsystemd-login is available */
 #define HAVE_LIBSYSTEMD_LOGIN 1
 
@@ -87,9 +78,6 @@
    */
 #define LT_OBJDIR ".libs/"
 
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-/* #undef NO_MINUS_C_MINUS_O */
-
 /* Name of package */
 #define PACKAGE "colord"
 
@@ -100,7 +88,7 @@
 #define PACKAGE_NAME "colord"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "colord 1.2.1"
+#define PACKAGE_STRING "colord 1.2.4"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "colord"
@@ -109,7 +97,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.2.1"
+#define PACKAGE_VERSION "1.2.4"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -121,4 +109,4 @@
 #define USE_POLKIT 1
 
 /* Version number of package */
-#define VERSION "1.2.1"
+#define VERSION "1.2.4"

@@ -74,6 +74,7 @@ namespace Cd {
 		[CCode (has_construct_function = false)]
 		public ColorLab ();
 		public void copy (Cd.ColorLab dest);
+		public double delta_e76 (Cd.ColorLab p2);
 		public Cd.ColorLab dup ();
 		public void free ();
 		public void @set (double L, double a, double b);
@@ -912,13 +913,14 @@ namespace Cd {
 		COLORHUG,
 		SPYDER2,
 		SPYDER3,
-		COLORHUG_SPECTRO,
+		COLORHUG_PLUS,
 		I1_DISPLAY1,
 		I1_DISPLAY2,
 		DTP92,
 		I1_MONITOR,
 		SPYDER4,
-		COLOR_MUNKI_SMILE
+		COLOR_MUNKI_SMILE,
+		COLORHUG2
 	}
 	[CCode (cheader_filename = "colord.h", cprefix = "CD_SENSOR_STATE_", has_type_id = false)]
 	public enum SensorState {
@@ -1187,6 +1189,8 @@ namespace Cd {
 	public static double mat33_determinant (Cd.Mat3x3 src);
 	[CCode (cheader_filename = "colord.h")]
 	public static double mat33_get_data (Cd.Mat3x3 src);
+	[CCode (cheader_filename = "colord.h")]
+	public static void mat33_init (Cd.Mat3x3 dest, double m00, double m01, double m02, double m10, double m11, double m12, double m20, double m21, double m22);
 	[CCode (cheader_filename = "colord.h")]
 	public static void mat33_matrix_multiply (Cd.Mat3x3 mat_src1, Cd.Mat3x3 mat_src2, Cd.Mat3x3 mat_dest);
 	[CCode (cheader_filename = "colord.h")]
