@@ -29,6 +29,7 @@
   #include <libudev.h>
 #endif
 
+#include "cd-cleanup.h"
 #include "cd-edid.h"
 #include "cd-quirk.h"
 
@@ -111,12 +112,12 @@ static gchar *
 cd_edid_convert_pnp_id_to_string (const gchar *pnp_id)
 {
 #ifdef HAVE_UDEV
-	gchar *modalias = NULL;
 	gchar *vendor = NULL;
 	struct udev_hwdb *hwdb = NULL;
 	struct udev_list_entry *e;
 	struct udev_list_entry *v;
 	struct udev *udev;
+	_cleanup_free_ gchar *modalias = NULL;
 
 	/* connect to the hwdb */
 	udev = udev_new ();
@@ -140,14 +141,12 @@ cd_edid_convert_pnp_id_to_string (const gchar *pnp_id)
 	/* quirk the name */
 	vendor = cd_quirk_vendor_name (udev_list_entry_get_value (v));
 out:
-	g_free (modalias);
 	if (hwdb != NULL)
 		udev_hwdb_unref (hwdb);
 	if (udev != NULL)
 		udev_unref (udev);
 #else
 	gboolean ret;
-	gchar *data = NULL;
 	gchar *idx2;
 	gchar *idx;
 	gchar *vendor = NULL;
@@ -156,6 +155,7 @@ out:
 				   "/usr/share/misc/pnp.ids",
 				   "/usr/share/libgnome-desktop/pnp.ids",
 				   NULL };
+	_cleanup_free_ gchar *data = NULL;
 
 	for (i = 0; pnp_ids[i] != NULL; i++) {
 		ret = g_file_get_contents (pnp_ids[i], &data, NULL, NULL);
@@ -179,7 +179,6 @@ out:
 			idx++;
 	}
 out:
-	g_free (data);
 #endif
 	return vendor;
 }
@@ -485,8 +484,7 @@ cd_edid_parse_string (const guint8 *data)
 	/* nothing left? */
 	if (text[0] == '\0') {
 		g_free (text);
-		text = NULL;
-		goto out;
+		return NULL;
 	}
 
 	/* ensure string is printable */
@@ -500,17 +498,14 @@ cd_edid_parse_string (const guint8 *data)
 	/* not valid UTF-8 */
 	if (!g_utf8_validate (text, -1, NULL)) {
 		g_free (text);
-		text = NULL;
-		goto out;
+		return NULL;
 	}
 
 	/* if the string is junk, ignore the string */
 	if (replaced > 4) {
 		g_free (text);
-		text = NULL;
-		goto out;
+		return NULL;
 	}
-out:
 	return text;
 }
 
@@ -531,7 +526,6 @@ cd_edid_parse (CdEdid *edid, GBytes *edid_data, GError **error)
 {
 	CdEdidPrivate *priv = edid->priv;
 	const guint8 *data;
-	gboolean ret = TRUE;
 	gchar *tmp;
 	gsize length;
 	guint32 serial;
@@ -544,16 +538,14 @@ cd_edid_parse (CdEdid *edid, GBytes *edid_data, GError **error)
 				     CD_EDID_ERROR,
 				     CD_EDID_ERROR_FAILED_TO_PARSE,
 				     "EDID length is too small");
-		ret = FALSE;
-		goto out;
+		return FALSE;
 	}
 	if (data[0] != 0x00 || data[1] != 0xff) {
 		g_set_error_literal (error,
 				     CD_EDID_ERROR,
 				     CD_EDID_ERROR_FAILED_TO_PARSE,
 				     "Failed to parse EDID header");
-		ret = FALSE;
-		goto out;
+		return FALSE;
 	}
 
 	/* free old data */
@@ -656,8 +648,7 @@ cd_edid_parse (CdEdid *edid, GBytes *edid_data, GError **error)
 
 	/* calculate checksum */
 	priv->checksum = g_compute_checksum_for_data (G_CHECKSUM_MD5, data, length);
-out:
-	return ret;
+	return TRUE;
 }
 
 /**

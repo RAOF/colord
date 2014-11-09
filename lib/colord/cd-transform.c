@@ -35,6 +35,7 @@
 #include <glib.h>
 #include <lcms2.h>
 
+#include "cd-cleanup.h"
 #include "cd-context-lcms.h"
 #include "cd-transform.h"
 
@@ -452,13 +453,13 @@ static gboolean
 cd_transform_setup (CdTransform *transform, GError **error)
 {
 	CdTransformPrivate *priv = transform->priv;
-	GError *error_local = NULL;
 	cmsHPROFILE profile_in;
 	cmsHPROFILE profile_out;
 	cmsUInt32Number lcms_flags = 0;
 	gboolean ret = TRUE;
 	gint lcms_intent = -1;
 	guint i;
+	_cleanup_error_free_ GError *error_local = NULL;
 
 	/* find native rendering intent */
 	for (i = 0; map_rendering_intent[i].colord != CD_RENDERING_INTENT_LAST; i++) {
@@ -541,7 +542,6 @@ cd_transform_setup (CdTransform *transform, GError **error)
 					     CD_TRANSFORM_ERROR,
 					     CD_TRANSFORM_ERROR_FAILED_TO_SETUP_TRANSFORM,
 					     error_local->message);
-			g_error_free (error_local);
 			goto out;
 		}
 		ret = FALSE;
@@ -591,32 +591,27 @@ cd_transform_process_func (gpointer data, gpointer user_data)
 static gboolean
 cd_transform_set_max_threads_default (CdTransform *transform, GError **error)
 {
-	gchar *data = NULL;
-	gboolean ret;
 	gchar *tmp;
+	_cleanup_free_ gchar *data = NULL;
 
 	/* use "cpu cores" to work out best number of threads */
-	ret = g_file_get_contents ("/proc/cpuinfo", &data, NULL, error);
-	if (!ret)
-		goto out;
+	if (!g_file_get_contents ("/proc/cpuinfo", &data, NULL, error))
+		return FALSE;
 	tmp = g_strstr_len (data, -1, "cpu cores\t: ");
 	if (tmp == NULL) {
 		/* some processors do not provide this info */
 		transform->priv->max_threads = 1;
-		goto out;
+		return TRUE;
 	}
 	transform->priv->max_threads = g_ascii_strtoull (tmp + 12, NULL, 10);
 	if (transform->priv->max_threads == 0) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_TRANSFORM_ERROR,
 				     CD_TRANSFORM_ERROR_LAST,
 				     "Failed to parse number of cores");
-		goto out;
+		return FALSE;
 	}
-out:
-	g_free (data);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -663,8 +658,6 @@ cd_transform_process (CdTransform *transform,
 	g_return_val_if_fail (width != 0, FALSE);
 	g_return_val_if_fail (height != 0, FALSE);
 	g_return_val_if_fail (rowstride != 0, FALSE);
-
-	_cd_context_lcms_pre26_start ();
 
 	/* check stuff that should have been set */
 	if (priv->rendering_intent == CD_RENDERING_INTENT_UNKNOWN) {
@@ -745,7 +738,6 @@ cd_transform_process (CdTransform *transform,
 		p_out += rowstride * rows_to_process * priv->bpp_output;
 	}
 out:
-	_cd_context_lcms_pre26_stop ();
 	if (pool != NULL)
 		g_thread_pool_free (pool, FALSE, TRUE);
 	return ret;

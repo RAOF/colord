@@ -31,6 +31,7 @@
 #include <glib.h>
 #include <math.h>
 
+#include "cd-cleanup.h"
 #include "cd-interp-akima.h"
 
 static void	cd_interp_akima_class_init	(CdInterpAkimaClass	*klass);
@@ -62,15 +63,15 @@ cd_interp_akima_prepare (CdInterp *interp, GError **error)
 	CdInterpAkima *interp_akima = CD_INTERP_AKIMA (interp);
 	CdInterpAkimaPrivate *priv = interp_akima->priv;
 	gdouble tmp = 0.0;
-	gdouble *dx;
-	gdouble *dy;
-	gdouble *slope_m;
 	gdouble *x;
 	gdouble *y;
 	gint i;
 	gint n;
 	GArray *array_x;
 	GArray *array_y;
+	_cleanup_free_ gdouble *dx = NULL;
+	_cleanup_free_ gdouble *dy = NULL;
+	_cleanup_free_ gdouble *slope_m = NULL;
 
 	/* only add the points if they are going to be used */
 	if (cd_interp_get_size (interp) <= 2)
@@ -151,10 +152,6 @@ cd_interp_akima_prepare (CdInterp *interp, GError **error)
 		priv->polynom_c[i] = (3 * slope_m[i] - 2 * priv->slope_t[i] - priv->slope_t[i+1]) / dx[i];
 		priv->polynom_d[i] = (priv->slope_t[i] + priv->slope_t[i+1] - 2 * slope_m[i]) / (dx[i] * dx[i]);
 	}
-
-	g_free (dx);
-	g_free (dy);
-	g_free (slope_m);
 	return TRUE;
 }
 

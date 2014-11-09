@@ -163,6 +163,7 @@
     <keyword type="function" name="cd_color_yxy_copy ()" link="colord-cd-color.html#cd-color-yxy-copy" since="0.1.27"/>
     <keyword type="function" name="cd_color_uvw_copy ()" link="colord-cd-color.html#cd-color-uvw-copy" since="1.1.6"/>
     <keyword type="function" name="cd_color_lab_copy ()" link="colord-cd-color.html#cd-color-lab-copy" since="0.1.32"/>
+    <keyword type="function" name="cd_color_lab_delta_e76 ()" link="colord-cd-color.html#cd-color-lab-delta-e76" since="0.1.32"/>
     <keyword type="function" name="cd_color_xyz_clear ()" link="colord-cd-color.html#cd-color-xyz-clear" since="0.1.27"/>
     <keyword type="function" name="cd_color_rgb_copy ()" link="colord-cd-color.html#cd-color-rgb-copy" since="0.1.27"/>
     <keyword type="function" name="cd_color_rgb8_to_rgb ()" link="colord-cd-color.html#cd-color-rgb8-to-rgb" since="0.1.27"/>
@@ -421,6 +422,7 @@
     <keyword type="function" name="cd_vec3_to_string ()" link="colord-cd-math.html#cd-vec3-to-string"/>
     <keyword type="function" name="cd_vec3_get_data ()" link="colord-cd-math.html#cd-vec3-get-data"/>
     <keyword type="function" name="cd_vec3_init ()" link="colord-cd-math.html#cd-vec3-init"/>
+    <keyword type="function" name="cd_mat33_init ()" link="colord-cd-math.html#cd-mat33-init"/>
     <keyword type="function" name="cd_mat33_clear ()" link="colord-cd-math.html#cd-mat33-clear"/>
     <keyword type="function" name="cd_mat33_to_string ()" link="colord-cd-math.html#cd-mat33-to-string"/>
     <keyword type="function" name="cd_mat33_get_data ()" link="colord-cd-math.html#cd-mat33-get-data"/>

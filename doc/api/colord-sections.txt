@@ -13,6 +13,13 @@ cd_buffer_write_uint32_le
 </SECTION>
 
 <SECTION>
+<FILE>cd-cleanup</FILE>
+GS_DEFINE_CLEANUP_FUNCTION
+GS_DEFINE_CLEANUP_FUNCTION0
+GS_DEFINE_CLEANUP_FUNCTIONt
+</SECTION>
+
+<SECTION>
 <FILE>cd-client</FILE>
 CD_CLIENT_ERROR
 CD_CLIENT_TYPE_ERROR
@@ -144,6 +151,7 @@ cd_color_xyz_copy
 cd_color_yxy_copy
 cd_color_uvw_copy
 cd_color_lab_copy
+cd_color_lab_delta_e76
 cd_color_xyz_clear
 cd_color_rgb_copy
 cd_color_rgb8_to_rgb
@@ -370,6 +378,7 @@ CdColorspace
 CdDeviceMode
 CdDeviceRelation
 CdSensorKind
+CD_SENSOR_KIND_COLORHUG_SPECTRO
 CdSensorCap
 CdSensorState
 CdStandardSpace
@@ -777,6 +786,7 @@ cd_vec3_squared_error
 cd_vec3_to_string
 cd_vec3_get_data
 cd_vec3_init
+cd_mat33_init
 cd_mat33_clear
 cd_mat33_to_string
 cd_mat33_get_data

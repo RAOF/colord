@@ -314,6 +314,16 @@ cd-color
 @dest: 
 
 
+<!-- ##### FUNCTION cd_color_lab_delta_e76 ##### -->
+<para>
+
+</para>
+
+@p1: 
+@p2: 
+@Returns: 
+
+
 <!-- ##### FUNCTION cd_color_xyz_clear ##### -->
 <para>
 

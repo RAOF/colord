@@ -40,15 +40,6 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* cmsCreateContext is available */
-#undef HAVE_LCMS_CREATE_CONTEXT
-
-/* cmsGetHeaderCreator is available */
-#undef HAVE_LCMS_GET_HEADER_CREATOR
-
-/* cmsMLUtranslationsCount is available */
-#undef HAVE_LCMS_MLU_TRANSLATIONS_COUNT
-
 /* Define to 1 if libsystemd-login is available */
 #undef HAVE_LIBSYSTEMD_LOGIN
 
@@ -85,9 +76,6 @@
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
 #undef LT_OBJDIR
-
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-#undef NO_MINUS_C_MINUS_O
 
 /* Name of package */
 #undef PACKAGE
