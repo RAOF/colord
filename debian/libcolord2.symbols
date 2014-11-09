@@ -217,6 +217,7 @@ libcolordprivate.so.2 libcolord2 #MINVER#
  cd_client_error_to_string@Base 0.1.29
  cd_color_get_blackbody_rgb@Base 0.1.29
  cd_color_lab_copy@Base 0.1.34
+ cd_color_lab_delta_e76@Base 1.2.4
  cd_color_lab_dup@Base 0.1.34
  cd_color_lab_free@Base 0.1.34
  cd_color_lab_get_type@Base 0.1.34
@@ -444,6 +445,7 @@ libcolordprivate.so.2 libcolord2 #MINVER#
  cd_mat33_copy@Base 0.1.29
  cd_mat33_determinant@Base 0.1.29
  cd_mat33_get_data@Base 0.1.29
+ cd_mat33_init@Base 1.2.4
  cd_mat33_matrix_multiply@Base 0.1.29
  cd_mat33_normalize@Base 0.1.29
  cd_mat33_reciprocal@Base 0.1.29
