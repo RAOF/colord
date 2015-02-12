@@ -77,6 +77,14 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+
+# this needs data/profiles/*.icc
+@HAVE_UNIX_TRUE@am__append_1 = \
+@HAVE_UNIX_TRUE@	man						\
+@HAVE_UNIX_TRUE@	policy						\
+@HAVE_UNIX_TRUE@	rules						\
+@HAVE_UNIX_TRUE@	src
+
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
@@ -86,6 +94,7 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/as-linguas.m4 \
 	$(top_srcdir)/m4/ax_check_compile_flag.m4 \
+	$(top_srcdir)/m4/ax_check_define.m4 \
 	$(top_srcdir)/m4/ax_check_link_flag.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gtk-doc.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
@@ -160,7 +169,8 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 CSCOPE = cscope
-DIST_SUBDIRS = $(SUBDIRS)
+DIST_SUBDIRS = lib po client contrib doc examples data man policy \
+	rules src
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -217,6 +227,8 @@ BASH_COMPLETION_CFLAGS = @BASH_COMPLETION_CFLAGS@
 BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
+CD_CREATE_PROFILE = @CD_CREATE_PROFILE@
+CD_IT8 = @CD_IT8@
 CD_MAJOR_VERSION = @CD_MAJOR_VERSION@
 CD_MICRO_VERSION = @CD_MICRO_VERSION@
 CD_MINOR_VERSION = @CD_MINOR_VERSION@
@@ -249,6 +261,8 @@ GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_COMPILE_SCHEMAS = @GLIB_COMPILE_SCHEMAS@
 GLIB_LIBS = @GLIB_LIBS@
+GLIB_UNIX_CFLAGS = @GLIB_UNIX_CFLAGS@
+GLIB_UNIX_LIBS = @GLIB_UNIX_LIBS@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GNOME_DESKTOP_CFLAGS = @GNOME_DESKTOP_CFLAGS@
@@ -345,6 +359,7 @@ SANE_LIBS = @SANE_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SPOTREAD = @SPOTREAD@
 SQLITE_CFLAGS = @SQLITE_CFLAGS@
 SQLITE_LIBS = @SQLITE_LIBS@
 STRIP = @STRIP@
@@ -354,6 +369,7 @@ USE_NLS = @USE_NLS@
 VAPIGEN = @VAPIGEN@
 VERSION = @VERSION@
 WARNINGFLAGS_C = @WARNINGFLAGS_C@
+WINE = @WINE@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -423,9 +439,7 @@ NULL =
 # this needs libcolord
 
 # this needs client/cd-create-profile
-
-# this needs data/profiles/*.icc
-SUBDIRS = policy man lib rules po client contrib doc examples data src
+SUBDIRS = lib po client contrib doc examples data $(am__append_1)
 DISTCHECK_CONFIGURE_FLAGS = \
 	--enable-introspection				\
 	--enable-fd-fallback				\

@@ -367,6 +367,7 @@
     <keyword type="function" name="cd_it8_utils_calculate_ccmx ()" link="colord-cd-it8-utils.html#cd-it8-utils-calculate-ccmx"/>
     <keyword type="function" name="cd_it8_utils_calculate_xyz_from_cmf ()" link="colord-cd-it8-utils.html#cd-it8-utils-calculate-xyz-from-cmf"/>
     <keyword type="function" name="cd_it8_utils_calculate_cri_from_cmf ()" link="colord-cd-it8-utils.html#cd-it8-utils-calculate-cri-from-cmf"/>
+    <keyword type="function" name="cd_it8_utils_calculate_gamma ()" link="colord-cd-it8-utils.html#cd-it8-utils-calculate-gamma" since="0.2.6"/>
     <keyword type="function" name="_cd_it8_reserved1 ()" link="colord-cd-it8.html#cd-it8-reserved1"/>
     <keyword type="function" name="_cd_it8_reserved2 ()" link="colord-cd-it8.html#cd-it8-reserved2"/>
     <keyword type="function" name="_cd_it8_reserved3 ()" link="colord-cd-it8.html#cd-it8-reserved3"/>
@@ -409,6 +410,7 @@
     <keyword type="function" name="cd_it8_get_spectrum_array ()" link="colord-cd-it8.html#cd-it8-get-spectrum-array" since="1.1.6"/>
     <keyword type="function" name="cd_it8_get_spectrum_by_id ()" link="colord-cd-it8.html#cd-it8-get-spectrum-by-id" since="1.1.6"/>
     <keyword type="function" name="cd_it8_has_option ()" link="colord-cd-it8.html#cd-it8-has-option" since="0.1.20"/>
+    <keyword type="function" name="cd_it8_get_xyz_for_rgb ()" link="colord-cd-it8.html#cd-it8-get-xyz-for-rgb" since="1.2.6"/>
     <keyword type="macro" name="CD_IT8_ERROR" link="colord-cd-it8.html#CD-IT8-ERROR:CAPS"/>
     <keyword type="macro" name="CD_IT8_TYPE_ERROR" link="colord-cd-it8.html#CD-IT8-TYPE-ERROR:CAPS"/>
     <keyword type="enum" name="enum CdIt8Error" link="colord-cd-it8.html#CdIt8Error"/>
@@ -442,13 +444,16 @@
     <keyword type="function" name="cd_spectrum_free ()" link="colord-cd-spectrum.html#cd-spectrum-free" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_dup ()" link="colord-cd-spectrum.html#cd-spectrum-dup" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_normalize ()" link="colord-cd-spectrum.html#cd-spectrum-normalize" since="1.1.6"/>
+    <keyword type="function" name="cd_spectrum_normalize_max ()" link="colord-cd-spectrum.html#cd-spectrum-normalize-max" since="1.2.6"/>
     <keyword type="function" name="cd_spectrum_get_id ()" link="colord-cd-spectrum.html#cd-spectrum-get-id" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_get_data ()" link="colord-cd-spectrum.html#cd-spectrum-get-data" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_get_start ()" link="colord-cd-spectrum.html#cd-spectrum-get-start" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_get_end ()" link="colord-cd-spectrum.html#cd-spectrum-get-end" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_get_norm ()" link="colord-cd-spectrum.html#cd-spectrum-get-norm" since="1.1.6"/>
+    <keyword type="function" name="cd_spectrum_get_resolution ()" link="colord-cd-spectrum.html#cd-spectrum-get-resolution" since="1.2.6"/>
     <keyword type="function" name="cd_spectrum_get_size ()" link="colord-cd-spectrum.html#cd-spectrum-get-size" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_get_value ()" link="colord-cd-spectrum.html#cd-spectrum-get-value" since="1.1.6"/>
+    <keyword type="function" name="cd_spectrum_get_value_raw ()" link="colord-cd-spectrum.html#cd-spectrum-get-value-raw" since="1.2.6"/>
     <keyword type="function" name="cd_spectrum_get_wavelength ()" link="colord-cd-spectrum.html#cd-spectrum-get-wavelength" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_get_value_for_nm ()" link="colord-cd-spectrum.html#cd-spectrum-get-value-for-nm" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_set_id ()" link="colord-cd-spectrum.html#cd-spectrum-set-id" since="1.1.6"/>
@@ -456,6 +461,7 @@
     <keyword type="function" name="cd_spectrum_set_start ()" link="colord-cd-spectrum.html#cd-spectrum-set-start" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_set_end ()" link="colord-cd-spectrum.html#cd-spectrum-set-end" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_set_norm ()" link="colord-cd-spectrum.html#cd-spectrum-set-norm" since="1.1.6"/>
+    <keyword type="function" name="cd_spectrum_set_value ()" link="colord-cd-spectrum.html#cd-spectrum-set-value" since="1.2.6"/>
     <keyword type="function" name="cd_spectrum_add_value ()" link="colord-cd-spectrum.html#cd-spectrum-add-value" since="1.1.6"/>
     <keyword type="function" name="cd_spectrum_multiply ()" link="colord-cd-spectrum.html#cd-spectrum-multiply" since="1.1.6"/>
     <keyword type="macro" name="CD_CHECK_VERSION()" link="colord-cd-version.html#CD-CHECK-VERSION:CAPS"/>

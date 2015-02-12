@@ -24,10 +24,11 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <locale.h>
-#include <pwd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <colord/colord.h>
+
+#include "cd-cleanup.h"
 
 #define CD_ERROR			1
 #define CD_ERROR_INVALID_ARGUMENTS	0
@@ -80,9 +81,9 @@ cd_util_add (GPtrArray *array,
 	     const gchar *description,
 	     CdUtilPrivateCb callback)
 {
-	gchar **names;
 	guint i;
 	CdUtilItem *item;
+	_cleanup_strv_free_ gchar **names = NULL;
 
 	g_return_if_fail (name != NULL);
 	g_return_if_fail (description != NULL);
@@ -104,7 +105,6 @@ cd_util_add (GPtrArray *array,
 		item->callback = callback;
 		g_ptr_array_add (array, item);
 	}
-	g_strfreev (names);
 }
 
 /**
@@ -159,18 +159,15 @@ cd_util_get_descriptions (GPtrArray *array)
 static gboolean
 cd_util_run (CdUtilPrivate *priv, const gchar *command, gchar **values, GError **error)
 {
-	gboolean ret = FALSE;
 	guint i;
 	CdUtilItem *item;
-	GString *string;
+	_cleanup_string_free_ GString *string = NULL;
 
 	/* find command */
 	for (i = 0; i < priv->cmd_array->len; i++) {
 		item = g_ptr_array_index (priv->cmd_array, i);
-		if (g_strcmp0 (item->name, command) == 0) {
-			ret = item->callback (priv, values, error);
-			goto out;
-		}
+		if (g_strcmp0 (item->name, command) == 0)
+			return item->callback (priv, values, error);
 	}
 
 	/* not found */
@@ -185,9 +182,7 @@ cd_util_run (CdUtilPrivate *priv, const gchar *command, gchar **values, GError *
 					item->arguments ? item->arguments : "");
 	}
 	g_set_error_literal (error, CD_ERROR, CD_ERROR_NO_SUCH_CMD, string->str);
-	g_string_free (string, TRUE);
-out:
-	return ret;
+	return FALSE;
 }
 
 typedef struct {
@@ -213,39 +208,37 @@ cd_util_create_cmf (CdUtilPrivate *priv,
 		    GError **error)
 {
 	gboolean ret = TRUE;
-	CdIt8 *cmf = NULL;
 	CdSpectrum *spectrum[3] = { NULL, NULL, NULL };
 	CdSpectrumData *tmp;
-	GFile *file = NULL;
-	GPtrArray *array = NULL;
-	gchar **lines = NULL;
-	gchar **split;
-	gchar *data = NULL;
 	gchar *dot;
-	gchar *title = NULL;
 	guint i;
 	gdouble norm;
+	_cleanup_free_ gchar *data = NULL;
+	_cleanup_free_ gchar *title = NULL;
+	_cleanup_object_unref_ CdIt8 *cmf = NULL;
+	_cleanup_object_unref_ GFile *file = NULL;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
+	_cleanup_strv_free_ gchar **lines = NULL;
 
 	if (g_strv_length (values) != 3) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, expected: "
 				     "file.cmf file.csv norm");
-		goto out;
+		return FALSE;
 	}
 
 	/* get data */
-	ret = g_file_get_contents (values[1], &data, NULL, error);
-	if (!ret)
-		goto out;
+	if (!g_file_get_contents (values[1], &data, NULL, error))
+		return FALSE;
 
 	/* parse lines */
 	norm = g_strtod (values[2], NULL);
 	array = g_ptr_array_new_with_free_func ((GDestroyNotify) cd_csv2cmf_data_free);
 	lines = g_strsplit (data, "\n", -1);
 	for (i = 0; lines[i] != NULL; i++) {
+		_cleanup_strv_free_ gchar **split = NULL;
 		if (lines[i][0] == '\0')
 			continue;
 		if (lines[i][0] == '#')
@@ -262,17 +255,15 @@ cd_util_create_cmf (CdUtilPrivate *priv,
 		} else {
 			g_printerr ("Ignoring data line: %s", lines[i]);
 		}
-		g_strfreev (split);
 	}
 
 	/* did we get enough data */
 	if (array->len < 3) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough data in the CSV file");
-		goto out;
+		return FALSE;
 	}
 
 	for (i = 0; i < 3; i++) {
@@ -325,16 +316,63 @@ out:
 		if (spectrum[i] != NULL)
 			cd_spectrum_free (spectrum[i]);
 	}
-	if (array != NULL)
-		g_ptr_array_unref (array);
-	if (cmf != NULL)
-		g_object_unref (cmf);
-	if (file != NULL)
-		g_object_unref (file);
-	g_free (data);
-	g_free (title);
-	g_strfreev (lines);
 	return ret;
+}
+
+/**
+ * cd_util_calculate_ccmx:
+ **/
+static gboolean
+cd_util_calculate_ccmx (CdUtilPrivate *priv,
+			gchar **values,
+			GError **error)
+{
+	gchar *tmp;
+	_cleanup_free_ gchar *basename = NULL;
+	_cleanup_object_unref_ CdIt8 *it8_ccmx = NULL;
+	_cleanup_object_unref_ CdIt8 *it8_meas = NULL;
+	_cleanup_object_unref_ CdIt8 *it8_ref = NULL;
+	_cleanup_object_unref_ GFile *file_ccmx = NULL;
+	_cleanup_object_unref_ GFile *file_meas = NULL;
+	_cleanup_object_unref_ GFile *file_ref = NULL;
+
+	/* check args */
+	if (g_strv_length (values) != 3) {
+		g_set_error_literal (error,
+				     CD_ERROR,
+				     CD_ERROR_INVALID_ARGUMENTS,
+				     "Not enough arguments, expected: file, file, file");
+		return FALSE;
+	}
+
+	/* load reference */
+	it8_ref = cd_it8_new ();
+	file_ref = g_file_new_for_path (values[0]);
+	if (!cd_it8_load_from_file (it8_ref, file_ref, error))
+		return FALSE;
+
+	/* load measurement */
+	it8_meas = cd_it8_new ();
+	file_meas = g_file_new_for_path (values[1]);
+	if (!cd_it8_load_from_file (it8_meas, file_meas, error))
+		return FALSE;
+
+	/* caclulate correction matrix */
+	it8_ccmx = cd_it8_new_with_kind (CD_IT8_KIND_CCMX);
+	if (!cd_it8_utils_calculate_ccmx (it8_ref, it8_meas, it8_ccmx, error))
+		return FALSE;
+
+	/* save CCMX file */
+	basename = g_path_get_basename (values[2]);
+	tmp = g_strrstr (basename, ".");
+	if (tmp != NULL)
+		*tmp = '\0';
+	cd_it8_add_option (it8_ccmx, "TYPE_FACTORY");
+	cd_it8_set_title (it8_ccmx, basename);
+	file_ccmx = g_file_new_for_path (values[2]);
+	if (!cd_it8_save_to_file (it8_ccmx, file_ccmx, error))
+		return FALSE;
+	return TRUE;
 }
 
 /**
@@ -345,39 +383,37 @@ cd_util_create_sp (CdUtilPrivate *priv,
 		   gchar **values,
 		   GError **error)
 {
-	CdIt8 *cmf = NULL;
 	CdSpectrum *spectrum = NULL;
 	CdSpectrumData *tmp;
-	GFile *file = NULL;
-	GPtrArray *array = NULL;
 	gboolean ret = TRUE;
-	gchar **lines = NULL;
-	gchar **split;
-	gchar *data = NULL;
 	gchar *dot;
-	gchar *title = NULL;
 	gdouble norm;
 	guint i;
+	_cleanup_free_ gchar *data = NULL;
+	_cleanup_free_ gchar *title = NULL;
+	_cleanup_object_unref_ CdIt8 *cmf = NULL;
+	_cleanup_object_unref_ GFile *file = NULL;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
+	_cleanup_strv_free_ gchar **lines = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, expected: file");
-		goto out;
+		return FALSE;
 	}
 
 	/* get data */
-	ret = g_file_get_contents (values[1], &data, NULL, error);
-	if (!ret)
-		goto out;
+	if (!g_file_get_contents (values[1], &data, NULL, error))
+		return FALSE;
 
 	/* parse lines */
 	array = g_ptr_array_new_with_free_func ((GDestroyNotify) cd_csv2cmf_data_free);
 	lines = g_strsplit (data, "\n", -1);
 	norm = g_strtod (values[2], NULL);
 	for (i = 0; lines[i] != NULL; i++) {
+		_cleanup_strv_free_ gchar **split = NULL;
 		if (lines[i][0] == '\0')
 			continue;
 		if (lines[i][0] == '#')
@@ -394,17 +430,15 @@ cd_util_create_sp (CdUtilPrivate *priv,
 		} else {
 			g_printerr ("Ignoring data line: %s", lines[i]);
 		}
-		g_strfreev (split);
 	}
 
 	/* did we get enough data */
 	if (array->len < 3) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough data in the CSV file");
-		goto out;
+		return FALSE;
 	}
 
 	spectrum = cd_spectrum_sized_new (array->len);
@@ -442,15 +476,6 @@ cd_util_create_sp (CdUtilPrivate *priv,
 out:
 	if (spectrum != NULL)
 		cd_spectrum_free (spectrum);
-	if (array != NULL)
-		g_ptr_array_unref (array);
-	if (cmf != NULL)
-		g_object_unref (cmf);
-	if (file != NULL)
-		g_object_unref (file);
-	g_free (data);
-	g_free (title);
-	g_strfreev (lines);
 	return ret;
 }
 
@@ -472,9 +497,9 @@ main (int argc, char *argv[])
 	CdUtilPrivate *priv;
 	gboolean ret;
 	gboolean verbose = FALSE;
-	gchar *cmd_descriptions = NULL;
-	GError *error = NULL;
 	guint retval = 1;
+	_cleanup_error_free_ GError *error = NULL;
+	_cleanup_free_ gchar *cmd_descriptions = NULL;
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 			/* TRANSLATORS: command line option */
@@ -505,6 +530,12 @@ main (int argc, char *argv[])
 		     /* TRANSLATORS: command description */
 		     _("Create a spectrum from CSV data"),
 		     cd_util_create_sp);
+	cd_util_add (priv->cmd_array,
+		     "calculate-ccmx",
+		     "[REFERENCE.ti3] [MEASURED.ti3] [OUTPUT.ccmx]",
+		     /* TRANSLATORS: command description */
+		     _("Create a CCMX from reference and measurement data"),
+		     cd_util_calculate_ccmx);
 
 	/* sort by command name */
 	g_ptr_array_sort (priv->cmd_array,
@@ -524,7 +555,6 @@ main (int argc, char *argv[])
 		g_print ("%s: %s\n",
 			 _("Failed to parse arguments"),
 			 error->message);
-		g_error_free (error);
 		goto out;
 	}
 
@@ -547,7 +577,6 @@ main (int argc, char *argv[])
 		} else {
 			g_print ("%s\n", error->message);
 		}
-		g_error_free (error);
 		goto out;
 	}
 
@@ -560,7 +589,6 @@ out:
 		g_option_context_free (priv->context);
 		g_free (priv);
 	}
-	g_free (cmd_descriptions);
 	return retval;
 }
 

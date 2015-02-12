@@ -23,10 +23,11 @@
 
 #include <stdlib.h>
 #include <gio/gio.h>
+#ifdef __unix__
 #include <gio/gunixfdlist.h>
+#endif
 #include <glib/gi18n.h>
 #include <locale.h>
-#include <syslog.h>
 
 #ifdef HAVE_LIBSYSTEMD_LOGIN
 #include <systemd/sd-login.h>
@@ -81,8 +82,8 @@ cd_main_profile_removed (CdMainPrivate *priv, CdProfile *profile)
 	CdDevice *device_tmp;
 	gboolean ret;
 	guint i;
-	_cleanup_free_ gchar *object_path_tmp;
-	_cleanup_ptrarray_unref_ GPtrArray *devices;
+	_cleanup_free_ gchar *object_path_tmp = NULL;
+	_cleanup_ptrarray_unref_ GPtrArray *devices = NULL;
 
 	/* remove from the array before emitting */
 	object_path_tmp = g_strdup (cd_profile_get_object_path (profile));
@@ -96,7 +97,7 @@ cd_main_profile_removed (CdMainPrivate *priv, CdProfile *profile)
 						object_path_tmp,
 						NULL);
 		if (ret) {
-			syslog (LOG_INFO, "Automatic remove of %s from %s",
+			g_info ("Automatic remove of %s from %s",
 				cd_profile_get_id (profile),
 				cd_device_get_id (device_tmp));
 			g_debug ("CdMain: automatically removing %s from %s as removed",
@@ -107,8 +108,7 @@ cd_main_profile_removed (CdMainPrivate *priv, CdProfile *profile)
 
 	/* emit signal */
 	g_debug ("CdMain: Emitting ProfileRemoved(%s)", object_path_tmp);
-	syslog (LOG_INFO, "Profile removed: %s",
-		cd_profile_get_id (profile));
+	g_info ("Profile removed: %s", cd_profile_get_id (profile));
 	g_dbus_connection_emit_signal (priv->connection,
 				       NULL,
 				       COLORD_DBUS_PATH,
@@ -141,7 +141,7 @@ cd_main_device_removed (CdMainPrivate *priv, CdDevice *device)
 {
 	GError *error = NULL;
 	gboolean ret;
-	_cleanup_free_ gchar *object_path_tmp;
+	_cleanup_free_ gchar *object_path_tmp = NULL;
 
 	/* remove from the array before emitting */
 	object_path_tmp = g_strdup (cd_device_get_object_path (device));
@@ -163,8 +163,7 @@ cd_main_device_removed (CdMainPrivate *priv, CdDevice *device)
 
 	/* emit signal */
 	g_debug ("CdMain: Emitting DeviceRemoved(%s)", object_path_tmp);
-	syslog (LOG_INFO, "device removed: %s",
-		cd_device_get_id (device));
+	g_info ("device removed: %s", cd_device_get_id (device));
 	g_dbus_connection_emit_signal (priv->connection,
 				       NULL,
 				       COLORD_DBUS_PATH,
@@ -219,7 +218,7 @@ cd_main_create_profile (CdMainPrivate *priv,
 			CdObjectScope scope,
 			GError **error)
 {
-	_cleanup_object_unref_ CdProfile *profile_tmp;
+	_cleanup_object_unref_ CdProfile *profile_tmp = NULL;
 
 	g_assert (priv->connection != NULL);
 
@@ -308,10 +307,8 @@ cd_main_auto_add_from_md (CdMainPrivate *priv,
 	}
 
 	/* auto-add soft relationship */
-	g_debug ("CdMain: Automatically MD add %s to %s",
-		 profile_id, device_id);
-	syslog (LOG_INFO, "Automatic metadata add %s to %s",
-		profile_id, device_id);
+	g_debug ("CdMain: Automatically MD add %s to %s", profile_id, device_id);
+	g_info ("Automatic metadata add %s to %s", profile_id, device_id);
 	ret = cd_device_add_profile (device,
 				     CD_DEVICE_RELATION_SOFT,
 				     cd_profile_get_object_path (profile),
@@ -340,7 +337,7 @@ cd_main_auto_add_from_db (CdMainPrivate *priv,
 	g_debug ("CdMain: Automatically DB add %s to %s",
 		 cd_profile_get_id (profile),
 		 cd_device_get_object_path (device));
-	syslog (LOG_INFO, "Automatic database add %s to %s",
+	g_info ("Automatic database add %s to %s",
 		cd_profile_get_id (profile),
 		cd_device_get_id (device));
 	timestamp = cd_mapping_db_get_timestamp (priv->mapping_db,
@@ -374,7 +371,7 @@ cd_main_device_auto_add_from_md (CdMainPrivate *priv,
 {
 	CdProfile *profile_tmp;
 	guint i;
-	_cleanup_ptrarray_unref_ GPtrArray *array;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	/* get all the profiles, and check to see if any of them contain
 	 * MAPPING_device_id that matches the device */
@@ -400,7 +397,7 @@ cd_main_device_auto_add_from_db (CdMainPrivate *priv, CdDevice *device)
 	guint64 timestamp;
 	guint i;
 	_cleanup_error_free_ GError *error = NULL;
-	_cleanup_ptrarray_unref_ GPtrArray *array;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	/* get data */
 	array = cd_mapping_db_get_profiles (priv->mapping_db,
@@ -467,8 +464,7 @@ cd_main_device_register_on_bus (CdMainPrivate *priv,
 	/* emit signal */
 	g_debug ("CdMain: Emitting DeviceAdded(%s)",
 		 cd_device_get_object_path (device));
-	syslog (LOG_INFO, "Device added: %s",
-		cd_device_get_id (device));
+	g_info ("Device added: %s", cd_device_get_id (device));
 	g_dbus_connection_emit_signal (priv->connection,
 				       NULL,
 				       COLORD_DBUS_PATH,
@@ -687,7 +683,7 @@ cd_main_profile_auto_add_from_db (CdMainPrivate *priv,
 {
 	guint i;
 	_cleanup_error_free_ GError *error = NULL;
-	_cleanup_ptrarray_unref_ GPtrArray *array;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	/* get data */
 	array = cd_mapping_db_get_devices (priv->mapping_db,
@@ -772,10 +768,8 @@ cd_main_profile_register_on_bus (CdMainPrivate *priv,
 	/* emit signal */
 	g_debug ("CdMain: Emitting ProfileAdded(%s)",
 		 cd_profile_get_object_path (profile));
-	if ((logging & CD_LOGGING_FLAG_SYSLOG) > 0) {
-		syslog (LOG_INFO, "Profile added: %s",
-			cd_profile_get_id (profile));
-	}
+	if ((logging & CD_LOGGING_FLAG_SYSLOG) > 0)
+		g_info ("Profile added: %s", cd_profile_get_id (profile));
 	g_dbus_connection_emit_signal (priv->connection,
 				       NULL,
 				       COLORD_DBUS_PATH,
@@ -813,7 +807,7 @@ cd_main_get_standard_space_metadata (CdMainPrivate *priv,
 	guint i;
 	guint score_best = 0;
 	guint score_tmp;
-	_cleanup_ptrarray_unref_ GPtrArray *array;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	/* get all the profiles with this metadata */
 	array = cd_profile_array_get_by_metadata (priv->profiles_array,
@@ -872,7 +866,7 @@ cd_main_get_cmdline_for_pid (guint pid)
 	gsize len = 0;
 	guint i;
 	_cleanup_error_free_ GError *error = NULL;
-	_cleanup_free_ gchar *proc_path;
+	_cleanup_free_ gchar *proc_path = NULL;
 
 	/* just read the link */
 	proc_path = g_strdup_printf ("/proc/%i/cmdline", pid);
@@ -918,7 +912,6 @@ cd_main_daemon_method_call (GDBusConnection *connection, const gchar *sender,
 	const gchar *scope_tmp = NULL;
 	gboolean register_on_bus = TRUE;
 	gboolean ret;
-	gint fd = -1;
 	guint i;
 	guint pid;
 	guint uid;
@@ -1463,8 +1456,10 @@ cd_main_daemon_method_call (GDBusConnection *connection, const gchar *sender,
 	if (g_strcmp0 (method_name, "CreateProfile") == 0 ||
 	    g_strcmp0 (method_name, "CreateProfileWithFd") == 0) {
 
+#ifdef __unix__
 		GDBusMessage *message;
 		GUnixFDList *fd_list;
+#endif
 		gint32 fd_handle = 0;
 
 		/* require auth */
@@ -1556,9 +1551,11 @@ cd_main_daemon_method_call (GDBusConnection *connection, const gchar *sender,
 		}
 
 		/* get any file descriptor in the message */
+#ifdef __unix__
 		message = g_dbus_method_invocation_get_message (invocation);
 		fd_list = g_dbus_message_get_unix_fd_list (message);
 		if (fd_list != NULL && g_unix_fd_list_get_length (fd_list) == 1) {
+			gint fd;
 			fd = g_unix_fd_list_get (fd_list, fd_handle, &error);
 			if (fd < 0) {
 				g_warning ("CdMain: failed to get fd from message: %s",
@@ -1590,7 +1587,25 @@ cd_main_daemon_method_call (GDBusConnection *connection, const gchar *sender,
 				return;
 			}
 		}
-
+#else
+		if (filename != NULL) {
+			ret = cd_profile_load_from_filename (profile,
+							     filename,
+							     &error);
+			if (!ret) {
+				g_warning ("CdMain: failed to profile from filename: %s",
+					   error->message);
+				g_dbus_method_invocation_return_gerror (invocation, error);
+				return;
+			}
+		} else {
+			g_dbus_method_invocation_return_error (invocation,
+							       CD_CLIENT_ERROR,
+							       CD_CLIENT_ERROR_NOT_SUPPORTED,
+							       "no FD support");
+			return;
+		}
+#endif
 		/* auto add profiles from the database and metadata */
 		cd_main_profile_auto_add_from_db (priv, profile);
 		cd_main_profile_auto_add_from_md (priv, profile);
@@ -1684,7 +1699,7 @@ cd_main_icc_store_added_cb (CdIccStore *icc_store,
 	gboolean ret;
 	_cleanup_error_free_ GError *error = NULL;
 	_cleanup_free_ gchar *profile_id = NULL;
-	_cleanup_object_unref_ CdProfile *profile;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 
 	/* create profile */
 	profile = cd_profile_new ();
@@ -1761,7 +1776,7 @@ cd_main_add_disk_device (CdMainPrivate *priv, const gchar *device_id)
 	gboolean ret;
 	guint i;
 	_cleanup_error_free_ GError *error = NULL;
-	_cleanup_object_unref_ CdDevice *device;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 	_cleanup_ptrarray_unref_ GPtrArray *array_properties = NULL;
 
 	device = cd_main_create_device (priv,
@@ -1791,7 +1806,7 @@ cd_main_add_disk_device (CdMainPrivate *priv, const gchar *device_id)
 		return;
 	}
 	for (i = 0; i < array_properties->len; i++) {
-		_cleanup_free_ gchar *value;
+		_cleanup_free_ gchar *value = NULL;
 		property = g_ptr_array_index (array_properties, i);
 		value = cd_device_db_get_property (priv->device_db,
 						   device_id,
@@ -1843,8 +1858,7 @@ cd_main_sensor_register_on_bus (CdMainPrivate *priv,
 	/* emit signal */
 	g_debug ("CdMain: Emitting SensorAdded(%s)",
 		 cd_sensor_get_object_path (sensor));
-	syslog (LOG_INFO, "Sensor added: %s",
-		cd_sensor_get_id (sensor));
+	g_info ("Sensor added: %s", cd_sensor_get_id (sensor));
 	g_dbus_connection_emit_signal (priv->connection,
 				       NULL,
 				       COLORD_DBUS_PATH,
@@ -2058,8 +2072,7 @@ cd_main_client_sensor_removed_cb (CdSensorClient *sensor_client_,
 	/* emit signal */
 	g_debug ("CdMain: Emitting SensorRemoved(%s)",
 		 cd_sensor_get_object_path (sensor));
-	syslog (LOG_INFO, "Sensor removed: %s",
-		cd_sensor_get_id (sensor));
+	g_info ("Sensor removed: %s", cd_sensor_get_id (sensor));
 	g_dbus_connection_emit_signal (priv->connection,
 				       NULL,
 				       COLORD_DBUS_PATH,
@@ -2089,8 +2102,8 @@ cd_main_timed_exit_cb (gpointer user_data)
 static GDBusNodeInfo *
 cd_main_load_introspection (const gchar *filename, GError **error)
 {
-	_cleanup_bytes_unref_ GBytes *data;
-	_cleanup_free_ gchar *path;
+	_cleanup_bytes_unref_ GBytes *data = NULL;
+	_cleanup_free_ gchar *path = NULL;
 
 	/* lookup data */
 	path = g_build_filename ("/org/freedesktop/colord", filename, NULL);
@@ -2232,9 +2245,9 @@ cd_main_load_plugins (CdMainPrivate *priv)
 {
 	const gchar *filename_tmp;
 	gboolean ret;
-	_cleanup_dir_close_ GDir *dir;
+	_cleanup_dir_close_ GDir *dir = NULL;
 	_cleanup_error_free_ GError *error = NULL;
-	_cleanup_free_ gchar *path;
+	_cleanup_free_ gchar *path = NULL;
 
 	/* search in the plugin directory for plugins */
 	path = g_build_filename (LIBDIR, "colord-plugins", NULL);
@@ -2259,9 +2272,7 @@ cd_main_load_plugins (CdMainPrivate *priv)
 						    NULL);
 		ret = cd_main_load_plugin (priv, filename_plugin, &error);
 		if (ret) {
-			syslog (LOG_INFO,
-				"loaded plugin %s",
-				filename_tmp);
+			g_info ("loaded plugin %s", filename_tmp);
 		} else {
 			if (g_error_matches (error,
 					     CD_CLIENT_ERROR,
@@ -2270,10 +2281,8 @@ cd_main_load_plugins (CdMainPrivate *priv)
 			} else {
 				g_warning ("CdMain: %s", error->message);
 			}
-			syslog (LOG_INFO,
-				"plugin %s not loaded: %s",
-				filename_plugin,
-				error->message);
+			g_info ("plugin %s not loaded: %s",
+				filename_plugin, error->message);
 			g_clear_error (&error);
 		}
 	} while (TRUE);
@@ -2361,7 +2370,7 @@ cd_main_check_duplicate_edids (void)
 {
 	const gchar *fn;
 	gboolean use_xrandr_mode = FALSE;
-	_cleanup_dir_close_ GDir *dir;
+	_cleanup_dir_close_ GDir *dir = NULL;
 	_cleanup_hashtable_unref_ GHashTable *hash = NULL;
 
 	dir = g_dir_open ("/sys/class/drm", 0, NULL);
@@ -2455,7 +2464,7 @@ cd_main_dmi_get_vendor (void)
 		"/sys/class/dmi/id/chassis_vendor",
 		"/sys/class/dmi/id/board_vendor",
 		NULL};
-	_cleanup_free_ gchar *tmp;
+	_cleanup_free_ gchar *tmp = NULL;
 
 	/* get vendor name */
 	tmp = cd_main_dmi_get_from_filenames (sysfs_vendor);
@@ -2474,7 +2483,7 @@ cd_main_dmi_get_model (void)
 		"/sys/class/dmi/id/board_name",
 		NULL};
 	gchar *model;
-	_cleanup_free_ gchar *tmp;
+	_cleanup_free_ gchar *tmp = NULL;
 
 	/* thinkpad puts the common name in the version field, urgh */
 	tmp = cd_main_dmi_get_from_filename ("/sys/class/dmi/id/product_version");
@@ -2527,7 +2536,6 @@ main (int argc, char *argv[])
 	_cleanup_error_free_ GError *error = NULL;
 
 	setlocale (LC_ALL, "");
-	openlog ("colord", LOG_CONS, LOG_DAEMON);
 
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -2668,16 +2676,16 @@ main (int argc, char *argv[])
 		 priv->system_vendor, priv->system_model);
 
 	/* wait */
-	syslog (LOG_INFO, "Daemon ready for requests");
+	g_info ("Daemon ready for requests");
 	g_main_loop_run (priv->loop);
 
 	/* run the plugins */
 	cd_main_plugin_phase (priv, CD_PLUGIN_PHASE_DESTROY);
-	closelog ();
 
 	/* success */
 	retval = 0;
 out:
+	cd_debug_destroy ();
 	g_option_context_free (context);
 	if (owner_id > 0)
 		g_bus_unown_name (owner_id);

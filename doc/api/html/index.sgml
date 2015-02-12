@@ -406,6 +406,7 @@
 <ANCHOR id="cd-it8-utils-calculate-ccmx" href="colord/colord-cd-it8-utils.html#cd-it8-utils-calculate-ccmx">
 <ANCHOR id="cd-it8-utils-calculate-xyz-from-cmf" href="colord/colord-cd-it8-utils.html#cd-it8-utils-calculate-xyz-from-cmf">
 <ANCHOR id="cd-it8-utils-calculate-cri-from-cmf" href="colord/colord-cd-it8-utils.html#cd-it8-utils-calculate-cri-from-cmf">
+<ANCHOR id="cd-it8-utils-calculate-gamma" href="colord/colord-cd-it8-utils.html#cd-it8-utils-calculate-gamma">
 <ANCHOR id="colord-cd-it8-utils.other_details" href="colord/colord-cd-it8-utils.html#colord-cd-it8-utils.other_details">
 <ANCHOR id="colord-cd-it8" href="colord/colord-cd-it8.html">
 <ANCHOR id="colord-cd-it8.functions" href="colord/colord-cd-it8.html#colord-cd-it8.functions">
@@ -454,6 +455,7 @@
 <ANCHOR id="cd-it8-get-spectrum-array" href="colord/colord-cd-it8.html#cd-it8-get-spectrum-array">
 <ANCHOR id="cd-it8-get-spectrum-by-id" href="colord/colord-cd-it8.html#cd-it8-get-spectrum-by-id">
 <ANCHOR id="cd-it8-has-option" href="colord/colord-cd-it8.html#cd-it8-has-option">
+<ANCHOR id="cd-it8-get-xyz-for-rgb" href="colord/colord-cd-it8.html#cd-it8-get-xyz-for-rgb">
 <ANCHOR id="colord-cd-it8.other_details" href="colord/colord-cd-it8.html#colord-cd-it8.other_details">
 <ANCHOR id="CD-IT8-ERROR:CAPS" href="colord/colord-cd-it8.html#CD-IT8-ERROR:CAPS">
 <ANCHOR id="CD-IT8-TYPE-ERROR:CAPS" href="colord/colord-cd-it8.html#CD-IT8-TYPE-ERROR:CAPS">
@@ -500,13 +502,16 @@
 <ANCHOR id="cd-spectrum-free" href="colord/colord-cd-spectrum.html#cd-spectrum-free">
 <ANCHOR id="cd-spectrum-dup" href="colord/colord-cd-spectrum.html#cd-spectrum-dup">
 <ANCHOR id="cd-spectrum-normalize" href="colord/colord-cd-spectrum.html#cd-spectrum-normalize">
+<ANCHOR id="cd-spectrum-normalize-max" href="colord/colord-cd-spectrum.html#cd-spectrum-normalize-max">
 <ANCHOR id="cd-spectrum-get-id" href="colord/colord-cd-spectrum.html#cd-spectrum-get-id">
 <ANCHOR id="cd-spectrum-get-data" href="colord/colord-cd-spectrum.html#cd-spectrum-get-data">
 <ANCHOR id="cd-spectrum-get-start" href="colord/colord-cd-spectrum.html#cd-spectrum-get-start">
 <ANCHOR id="cd-spectrum-get-end" href="colord/colord-cd-spectrum.html#cd-spectrum-get-end">
 <ANCHOR id="cd-spectrum-get-norm" href="colord/colord-cd-spectrum.html#cd-spectrum-get-norm">
+<ANCHOR id="cd-spectrum-get-resolution" href="colord/colord-cd-spectrum.html#cd-spectrum-get-resolution">
 <ANCHOR id="cd-spectrum-get-size" href="colord/colord-cd-spectrum.html#cd-spectrum-get-size">
 <ANCHOR id="cd-spectrum-get-value" href="colord/colord-cd-spectrum.html#cd-spectrum-get-value">
+<ANCHOR id="cd-spectrum-get-value-raw" href="colord/colord-cd-spectrum.html#cd-spectrum-get-value-raw">
 <ANCHOR id="cd-spectrum-get-wavelength" href="colord/colord-cd-spectrum.html#cd-spectrum-get-wavelength">
 <ANCHOR id="cd-spectrum-get-value-for-nm" href="colord/colord-cd-spectrum.html#cd-spectrum-get-value-for-nm">
 <ANCHOR id="cd-spectrum-set-id" href="colord/colord-cd-spectrum.html#cd-spectrum-set-id">
@@ -514,6 +519,7 @@
 <ANCHOR id="cd-spectrum-set-start" href="colord/colord-cd-spectrum.html#cd-spectrum-set-start">
 <ANCHOR id="cd-spectrum-set-end" href="colord/colord-cd-spectrum.html#cd-spectrum-set-end">
 <ANCHOR id="cd-spectrum-set-norm" href="colord/colord-cd-spectrum.html#cd-spectrum-set-norm">
+<ANCHOR id="cd-spectrum-set-value" href="colord/colord-cd-spectrum.html#cd-spectrum-set-value">
 <ANCHOR id="cd-spectrum-add-value" href="colord/colord-cd-spectrum.html#cd-spectrum-add-value">
 <ANCHOR id="cd-spectrum-multiply" href="colord/colord-cd-spectrum.html#cd-spectrum-multiply">
 <ANCHOR id="colord-cd-spectrum.other_details" href="colord/colord-cd-spectrum.html#colord-cd-spectrum.other_details">

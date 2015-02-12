@@ -1,6 +1,646 @@
+commit 3d1bbfe7b35326009d4e6c734ab57443fac303ff
+Author: Richard Hughes <richard@hughsie.com>
+Date:   2015-01-15
+
+    Release colord 1.2.8
+
+M	NEWS
+M	RELEASE
+M	contrib/colord.spec.in
+M	doc/website/download.html
+M	po/nb.po
+
+commit 42b8d182cd3ce2272ed04e1ac8a552fbd7fd320a
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-25
+
+    trivial: Do not use the deprecated GUsbDeviceList
+
+M	configure.ac
+M	lib/colorhug/ch-self-test.c
+M	src/cd-sensor.c
+
+commit de998742bc94b30bf61f74ade98aa433d4581b38
+Merge: 5ce26cb ee8410a
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-01-13
+
+    Merge pull request #9 from olesalscheider/master
+
+    Fix build without gobject-introspection
+
+commit ee8410a9fcafab6a06526885baa412b2d9e27934
+Author: Niels Ole Salscheider <niels_ole@salscheider-online.de>
+Date:	2015-01-13
+
+    Fix build without gobject-introspection
+
+    Only call GOBJECT_INTROSPECTION_CHECK if it is available.
+
+M	configure.ac
+
+commit 5ce26cb948a7f6b1f2c579dbd24d0777cedbc85d
+Merge: 296c68c 26b46cf
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-01-13
+
+    Merge pull request #8 from olesalscheider/master
+
+    Check for dbus when enabling sane
+
+commit 26b46cf8ba0170881b204da14c4b7c10b3245d9b
+Author: Niels Ole Salscheider <niels_ole@salscheider-online.de>
+Date:	2015-01-13
+
+    Check for dbus when enabling sane
+
+    Otherwise the build will fail when sane is enabled and the examples
+    are
+    disabled.
+
+M	configure.ac
+
+commit 296c68c4906a523097b9a81dc2ff66338ec4532f
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-01-06
+
+    trivial: Sync with Transifex
+
+M	po/hu.po
+R099	po/nb_NO.po	po/nb.po
+R099	po/nn_NO.po	po/nn.po
+M	po/tr.po
+
+commit 2ecb53d07d30efb13408013a7d343e743343bd0f
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-12-19
+
+    Do not use the helper version of the sender when using
+    g_dbus_watch_name()
+
+    This could be the fix for
+    https://bugzilla.redhat.com/show_bug.cgi?id=1175704
+
+M	src/cd-inhibit.c
+
+commit 21888d5b4799ba0ee9f504b162914230a8b77ff9
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-12-02
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
+commit 12944d5c2640fb1f80f79b472dec47f42623189a
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-12-02
+
+    Release colord 1.2.7
+
+M	NEWS
+M	doc/website/download.html
+M	po/ru.po
+
+commit 37f3fcca309ceb2bd1ca0c120903e9786feaf568
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-12-02
+
+    Use wine to run the client build tools when compiling under MinGW
+
+    This worked for some people without this if wine was installed and
+    the binfmt
+    service was enabled. It's much better just to make it explicit.
+
+    If wine is not available for whatever reason, allow falling back
+    to either
+    pre-generated or host-provided binaries.
+
+M	configure.ac
+M	data/cmf/Makefile.am
+M	data/illuminant/Makefile.am
+M	data/profiles/Makefile.am
+
+commit 7c7c073cf4e1b52d8b11548f864499399a1637b1
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-12-02
+
+    trivial: Increase the device replug delay to 10s
+
+    On some USB1 hubs this can take much longer than 5s.
+
+M	lib/colorhug/ch-common.h
+
+commit 7352830b06664fd0b48fac37f56c5164568fb05e
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-12-02
+
+    Don't build the daemon when compiling for MinGW
+
+M	Makefile.am
+M	client/Makefile.am
+M	configure.ac
+M	contrib/Makefile.am
+M	data/Makefile.am
+
+commit 5de8fcbbc6e4b7d27a544a2fea5a247d3b3c2e13
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-24
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
+commit 543a2ab28d193b1a26dfc391837fed43adceecd2
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-24
+
+    Release colord 1.2.6
+
+M	NEWS
+M	configure.ac
+M	doc/website/download.html
+M	po/cs.po
+M	po/de.po
+M	po/it.po
+M	po/pl.po
+M	po/ru.po
+M	po/sr.po
+M	po/uk.po
+M	po/zh_TW.po
+
+commit 0d220f458e856d599f8b43cfe543c1a3b024593a
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-24
+
+    trivial: Fix the configure checks to actually define the HAVE_ defines
+
+M	configure.ac
+
+commit ad4ec52e1d2ce505a9861df5ac5e87dff5d1a444
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-23
+
+    Add cd_it8_get_xyz_for_rgb()
+
+M	lib/colord/cd-it8.c
+M	lib/colord/cd-it8.h
+M	lib/colord/cd-test-private.c
+
+commit 292b6241f70c44b0d6d02b7ee039c9ca6c6c2abc
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-23
+
+    libcolord: Add cd_it8_utils_calculate_gamma()
+
+    This allows us to detect and use a gray gamma ramp in .ti3 files.
+
+M	lib/colord/cd-it8-utils.c
+M	lib/colord/cd-it8-utils.h
+M	lib/colord/cd-test-private.c
+
+commit 5da6ecc2765012f81f2d4d502dec5c6f5d3728be
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    Fix compile using mingw64
+
+    Although I don't think colord makes a lot of sense on non-Linux
+    platforms,
+    compiling for w64 seems to mean that we get a different set of
+    compiler warnings
+    which benefits the Linux platform too.
+
+    Plus, the libraries might make sense on Windows one day.
+
+M	README.md
+M	configure.ac
+M	lib/colord/Makefile.am
+M	lib/colord/cd-client.c
+A	m4/ax_check_define.m4
+M	src/Makefile.am
+M	src/cd-main.c
+
+commit 020b194de9e661b78a8368b7fcd9e9f0bc67a67c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    trivial: Fix compile with --disable-gudev --enable-gusb
+
+M	src/cd-sensor.c
+
+commit 340509668d690de868836255b2aa9a0a3e928418
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    libcolord: Fix using cd_it8_add_spectrum() where the spectra have
+    no ID values
+
+M	lib/colord/cd-it8.c
+
+commit 53110ed19c393c619c9ecad67274d09d13a2a221
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    Don't assume getuid() is available on all platforms
+
+M	configure.ac
+M	src/cd-common.c
+
+commit dd4697d75f68c9f6cea394b798bd4c17cfb32774
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    trivial: Use EXEEXT when compiling tools used for compiling
+
+M	data/cmf/Makefile.am
+M	data/illuminant/Makefile.am
+M	data/profiles/Makefile.am
+
+commit b3e0016c8450ad57969eb4447068472b11509527
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    Make the ArgyllCMS sensor driver optional
+
+    This doesn't make sense on platforms like RHEL which don't ship
+    spotread.
+
+M	configure.ac
+M	src/sensors/Makefile.am
+
+commit a9b6365817193d528893dfff990f3579c1b3ae40
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    trivial: Do not require old-style dbus when specifying
+    --disable-examples
+
+M	configure.ac
+
+commit 4f61184f1dfd1716e3bb463ddfae104798a5e84c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    libcolord: Return correct values when no LUMINANCE_XYZ_CDM2 is
+    specified
+
+M	lib/colord/cd-it8.c
+
+commit c2a1cf226cbeba18dca7dcd133cdb00de14cf2c8
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    Don't assume syslog.h is always available
+
+M	configure.ac
+M	src/cd-debug.c
+M	src/cd-debug.h
+M	src/cd-device-db.c
+M	src/cd-device.c
+M	src/cd-main.c
+M	src/cd-mapping-db.c
+M	src/cd-profile-db.c
+
+commit 4716fd4db29b3d66594545d445e54dda25dda137
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    Don't assume pwd.h is always available
+
+M	client/cd-it8.c
+M	client/cd-util.c
+M	configure.ac
+M	src/cd-device.c
+M	src/cd-profile.c
+
+commit 49170ad2544f4a0a17164f2b622d1e52a86f8ac7
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-19
+
+    trivial: Silence some invalid _cleanup_free_ warnings
+
+M	contrib/colord-sane/cd-main.c
+M	contrib/session-helper/cd-main.c
+M	lib/colord/cd-client.c
+M	lib/colord/cd-icc-store.c
+M	lib/colord/cd-icc.c
+M	lib/colord/cd-it8.c
+M	src/cd-common.c
+M	src/cd-main.c
+M	src/cd-profile.c
+M	src/cd-sensor.c
+M	src/plugins/cd-plugin-camera.c
+M	src/sensors/cd-sensor-colorhug.c
+
+commit e86d2976f4b708293e0635ff407da3bd2423bf98
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-18
+
+    libcolord: Never allow duplicate CCSS IDs for small wavelength ranges
+
+M	lib/colord/cd-it8.c
+
+commit 9caf9ed103d2f5d9412bee8a6e02d94a5de7b0df
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-18
+
+    trivial: Fix memory leak introduced in
+    0f0b5c89258b3781c0f73b2729e3665c31cdbd56
+
+M	lib/colord/cd-it8.c
+
+commit b8b48fc544d6ff0410eecbc7f32ab71fba770ee2
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-18
+
+    trivial: Tiny _cleanup_free() optimisation
+
+M	lib/colord/cd-it8.c
+
+commit 6bb42e40891f7a572e75d98237d8b5ac208cf104
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-17
+
+    libcolord: Add cd_spectrum_set_value()
+
+    Sometimes we just want to overwrite the spectral data without
+    duplicating.
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+
+commit 826e1d81a5daa21506583767b95c81546f24d725
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-17
+
+    libcolord: Deep copy the spectral data when using cd_spectrum_dup()
+
+M	lib/colord/cd-spectrum.c
+
+commit 0f0b5c89258b3781c0f73b2729e3665c31cdbd56
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-17
+
+    libcolord: Always replace CCSS spectral data of the same ID
+
+    When invoking cd_it8_load() multiple times on ccss files remove
+    existing data
+    with the same ID.
+
+M	lib/colord/cd-it8.c
+
+commit 703d1a0851e27d36f8a067130deec45617044ae5
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-17
+
+    libcolord: Use double precision for SPECTRAL_START_NM and
+    SPECTRAL_END_NM
+
+M	lib/colord/cd-it8.c
+
+commit 0b645babb21076928c8ceafdfe1385c0b07b5abb
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-17
+
+    libcolord: Only set SPECTRAL_NORM when the normalisation is enabled
+
+M	lib/colord/cd-it8.c
+
+commit 9d7ee74f41561a91580d6cec0583cbd7ee9f39ba
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-17
+
+    libcolord: Allow a SPECTRAL_START_NM value of zero
+
+M	lib/colord/cd-it8.c
+
+commit e67ff673c353c997193214dd5b20b0c47f513c77
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-17
+
+    libcolord: When using cd_it8_add_spectrum() replace any with the
+    same ID
+
+M	lib/colord/cd-it8.c
+
+commit 7ed786ac2245559386c2308a9aab06f85d4eb00b
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-17
+
+    libcolord: Add cd_spectrum_get_resolution()
+
+    This returns the resolution (the frequency or time interval) of
+    the spectrum.
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+
+commit 51de21f2bb358291f1d79fe8c10896c2d0dc3906
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-17
+
+    libcolord: Add cd_spectrum_normalize_max()
+
+    Usually you just want to normalize the spectrum to a maximum certain
+    value,
+    rather than at a specific wavelength.
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+
+commit 4bbce955a4bfa145ac91ced10df7ddd1b835c6a6
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-17
+
+    libcolord: Add cd_spectrum_get_value_raw()
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+
+commit 3386c63009500acb2da5cefbc5927f93ff33d165
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-10
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
+commit 6eaede31314f49adc9b261013a13036f696c7983
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-10
+
+    Release colord 1.2.5
+
+M	NEWS
+M	doc/website/download.html
+M	po/cs.po
+M	po/da_DK.po
+M	po/de.po
+M	po/el.po
+M	po/en_GB.po
+M	po/eo.po
+M	po/es.po
+M	po/eu.po
+M	po/fi.po
+M	po/fr.po
+M	po/gl.po
+M	po/he.po
+M	po/hu.po
+M	po/id.po
+M	po/it.po
+M	po/ja.po
+M	po/kk.po
+M	po/ko.po
+M	po/lv.po
+M	po/nb_NO.po
+M	po/nl.po
+M	po/nn_NO.po
+M	po/pl.po
+M	po/pt_BR.po
+M	po/pt_PT.po
+M	po/ro.po
+M	po/ru.po
+M	po/sk.po
+M	po/sl.po
+M	po/sr.po
+M	po/sv.po
+M	po/tr.po
+M	po/uk.po
+M	po/zh_CN.po
+M	po/zh_TW.po
+
+commit 6e34c53c71eb385f1a7fc536b190abc84d61fe7d
+Merge: 5d4e192 041ec80
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-07
+
+    Merge pull request #7 from torstehu/master
+
+    Drop nb.po, its superfluous with nb_NO.po around
+
+commit 041ec809b8b12edfbb85513f68501fe56c4af86e
+Author: Torstein Husebø <torstein@huseboe.net>
+Date:	2014-08-26
+
+    Drop nb.po, its superfluous with nb_NO.po around
+
+D	po/nb.po
+
+commit 5d4e192612148517a7664682dbb6a126ae91bc5d
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-07
+
+    Remove the private cd-find-broken tool
+
+    It's unused and no longer works.
+
+M	client/Makefile.am
+D	client/cd-find-broken.c
+
+commit 4656465846361b0c06c06eb5db891fcaef88918f
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-07
+
+    Install the now-useful cd-it8 helper
+
+M	client/Makefile.am
+M	man/Makefile.am
+A	man/cd-it8.sgml
+
+commit 942898d8df0403c3b4753821d47d583d55c77432
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-06
+
+    Use _cleanup_free() in the client tools
+
+M	client/cd-create-profile.c
+M	client/cd-find-broken.c
+M	client/cd-fix-profile.c
+M	client/cd-iccdump.c
+M	client/cd-it8.c
+M	client/cd-util.c
+
+commit cf8a0d8a0844c54e188c363409c2be04cb0b9c19
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-11-06
+
+    Add the calculate-ccmx subcommand to cd-it8
+
+    This is useful for finding the CCMX correction matrix.
+
+M	client/cd-it8.c
+
+commit 59fa8f7a8a25febc403fc6d3b0629c4184d75081
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-27
+
+    trivial: Fix up the ColorHug gtk-doc to reflect reality
+
+M	lib/colorhug/ch-common.h
+
+commit da60b2f4578a81e4a99bc47a4f146a61cd8aef81
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-27
+
+    session-helper: Fix a crash in the session helper while calibrating
+
+M	contrib/session-helper/cd-main.c
+M	contrib/session-helper/cd-state.c
+
+commit 484e92f0ed9445aec40eff0e067dc27bd9e3de92
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-27
+
+    trivial: Another trademark fixup
+
+M	rules/69-cd-sensors.rules.in
+
+commit 698dacb7e6e483a61b896a20456f406cd90912d4
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-27
+
+    trivial: Fix the 'unknown' udev enum name
+
+M	rules/69-cd-sensors.rules.in
+
+commit 91e383c33cd37403d071fd951c9024076960ae31
+Author: Pascal de Bruijn <pmjdebruijn@pcode.nl>
+Date:	2014-10-24
+
+    Add a branding-less ColorHug2 figure
+
+    Signed-off-by: Richard Hughes <richard@hughsie.com>
+
+M	data/figures/Makefile.am
+A	data/figures/colorhug2-attach.svg
+
+commit fc8161e6dcd75f9ea9f690b4a056242b3662439a
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-21
+
+    trivial: Make the ColorHug insanity check a little more crazy
+
+M	lib/colorhug/ch-device-queue.c
+
+commit a503417e2cce66eeb28fad9d36b9149761793500
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2014-10-12
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
 commit 438b6e8e5ae205fda71206f86de3c62bcc4a1231
 Author: Richard Hughes <richard@hughsie.com>
-Date:   2014-10-12
+Date:	2014-10-12
 
     Release colord 1.2.4
 

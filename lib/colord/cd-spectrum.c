@@ -56,13 +56,20 @@ CdSpectrum *
 cd_spectrum_dup (const CdSpectrum *spectrum)
 {
 	CdSpectrum *dest;
+	gdouble tmp;
+	guint i;
+
 	g_return_val_if_fail (spectrum != NULL, NULL);
+
 	dest = cd_spectrum_new ();
 	dest->id = g_strdup (spectrum->id);
 	dest->start = spectrum->start;
 	dest->end = spectrum->end;
 	dest->norm = spectrum->norm;
-	dest->data = g_array_ref (spectrum->data);
+	for (i = 0; i < spectrum->data->len; i++) {
+		tmp = cd_spectrum_get_value_raw (spectrum, i);
+		cd_spectrum_add_value (dest, tmp);
+	}
 	return dest;
 }
 
@@ -100,6 +107,44 @@ cd_spectrum_get_value (const CdSpectrum *spectrum, guint idx)
 	g_return_val_if_fail (spectrum != NULL, -1.0f);
 	g_return_val_if_fail (idx < spectrum->data->len, -1.0f);
 	return g_array_index (spectrum->data, gdouble, idx) * spectrum->norm;
+}
+
+/**
+ * cd_spectrum_set_value:
+ * @spectrum: a #CdSpectrum instance.
+ * @idx: an index into the data
+ * @data: a data value
+ *
+ * Overwrites the spectrum data at a specified index.
+ *
+ * Since: 1.2.6
+ **/
+void
+cd_spectrum_set_value (CdSpectrum *spectrum, guint idx, gdouble data)
+{
+	g_return_if_fail (spectrum != NULL);
+	g_return_if_fail (idx < spectrum->data->len);
+	g_array_index (spectrum->data, gdouble, idx) = data / spectrum->norm;
+}
+
+/**
+ * cd_spectrum_get_value_raw:
+ * @spectrum: a #CdSpectrum instance.
+ * @idx: an index into the data
+ *
+ * Gets the spectrum data at a specified index, without any normalization
+ * applied. Most people should use cd_spectrum_get_value() instead.
+ *
+ * Return value: spectral data value, or -1 for invalid
+ *
+ * Since: 1.2.6
+ **/
+gdouble
+cd_spectrum_get_value_raw (const CdSpectrum *spectrum, guint idx)
+{
+	g_return_val_if_fail (spectrum != NULL, -1.0f);
+	g_return_val_if_fail (idx < spectrum->data->len, -1.0f);
+	return g_array_index (spectrum->data, gdouble, idx);
 }
 
 /**
@@ -217,6 +262,23 @@ cd_spectrum_get_norm (const CdSpectrum *spectrum)
 {
 	g_return_val_if_fail (spectrum != NULL, 0.0f);
 	return spectrum->norm;
+}
+
+/**
+ * cd_spectrum_get_resolution:
+ * @spectrum: a #CdSpectrum instance.
+ *
+ * Gets the divisor of the spectra, for instance a .
+ *
+ * Return value: the value
+ *
+ * Since: 1.2.6
+ **/
+gdouble
+cd_spectrum_get_resolution (const CdSpectrum *spectrum)
+{
+	g_return_val_if_fail (spectrum != NULL, 0.0f);
+	return (spectrum->end - spectrum->start) / (gdouble) spectrum->data->len;
 }
 
 /**
@@ -497,6 +559,31 @@ cd_spectrum_normalize (CdSpectrum *spectrum, gdouble wavelength, gdouble value)
 	gdouble tmp;
 	tmp = cd_spectrum_get_value_for_nm (spectrum, wavelength);
 	spectrum->norm *= value / tmp;
+}
+
+/**
+ * cd_spectrum_normalize_max:
+ * @spectrum: a #CdSpectrum instance
+ * @value: the value to normalize to
+ *
+ * Normalizes a spectrum to a specific value at its maximum value.
+ *
+ * Since: 1.2.6
+ **/
+void
+cd_spectrum_normalize_max (CdSpectrum *spectrum, gdouble value)
+{
+	gdouble max = 0.f;
+	gdouble tmp;
+	guint i;
+
+	for (i = 0; i < spectrum->data->len; i++) {
+		tmp = cd_spectrum_get_value_raw (spectrum, i);
+		if (tmp > max)
+			max = tmp;
+	}
+	if (max > 0.f)
+		spectrum->norm = value / max;
 }
 
 /**

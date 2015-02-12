@@ -83,6 +83,7 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/as-linguas.m4 \
 	$(top_srcdir)/m4/ax_check_compile_flag.m4 \
+	$(top_srcdir)/m4/ax_check_define.m4 \
 	$(top_srcdir)/m4/ax_check_link_flag.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gtk-doc.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
@@ -163,6 +164,8 @@ BASH_COMPLETION_CFLAGS = @BASH_COMPLETION_CFLAGS@
 BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
+CD_CREATE_PROFILE = @CD_CREATE_PROFILE@
+CD_IT8 = @CD_IT8@
 CD_MAJOR_VERSION = @CD_MAJOR_VERSION@
 CD_MICRO_VERSION = @CD_MICRO_VERSION@
 CD_MINOR_VERSION = @CD_MINOR_VERSION@
@@ -195,6 +198,8 @@ GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_COMPILE_SCHEMAS = @GLIB_COMPILE_SCHEMAS@
 GLIB_LIBS = @GLIB_LIBS@
+GLIB_UNIX_CFLAGS = @GLIB_UNIX_CFLAGS@
+GLIB_UNIX_LIBS = @GLIB_UNIX_LIBS@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GNOME_DESKTOP_CFLAGS = @GNOME_DESKTOP_CFLAGS@
@@ -291,6 +296,7 @@ SANE_LIBS = @SANE_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SPOTREAD = @SPOTREAD@
 SQLITE_CFLAGS = @SQLITE_CFLAGS@
 SQLITE_LIBS = @SQLITE_LIBS@
 STRIP = @STRIP@
@@ -300,6 +306,7 @@ USE_NLS = @USE_NLS@
 VAPIGEN = @VAPIGEN@
 VERSION = @VERSION@
 WARNINGFLAGS_C = @WARNINGFLAGS_C@
+WINE = @WINE@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -635,84 +642,64 @@ uninstall-am: uninstall-illuminantDATA
 .NOTPARALLEL:
 
 CIE-A.sp: CIE-A.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-A.csv 100.0
 CIE-B.sp: CIE-B.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-B.csv 100.0
 CIE-C.sp: CIE-C.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-C.csv 100.0
 CIE-D50.sp: CIE-D50.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-D50.csv 100.0
 CIE-D55.sp: CIE-D55.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-D55.csv 100.0
 CIE-D65.sp: CIE-D65.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-D65.csv 100.0
 CIE-D93.sp: CIE-D93.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-D93.csv 100.0
 CIE-E.sp: CIE-E.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-E.csv 100.0
 CIE-F10.sp: CIE-F10.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F10.csv 100.0
 CIE-F11.sp: CIE-F11.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F11.csv 100.0
 CIE-F12.sp: CIE-F12.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F12.csv 100.0
 CIE-F1.sp: CIE-F1.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F1.csv 100.0
 CIE-F2.sp: CIE-F2.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F2.csv 100.0
 CIE-F3.sp: CIE-F3.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F3.csv 100.0
 CIE-F4.sp: CIE-F4.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F4.csv 100.0
 CIE-F5.sp: CIE-F5.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F5.csv 100.0
 CIE-F6.sp: CIE-F6.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F6.csv 100.0
 CIE-F7.sp: CIE-F7.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F7.csv 100.0
 CIE-F8.sp: CIE-F8.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F8.csv 100.0
 CIE-F9.sp: CIE-F9.csv
-	$(AM_V_GEN)					\
-	$(top_builddir)/client/cd-it8 create-sp $@	\
+	$(AM_V_GEN) $(CD_IT8) create-sp $@		\
 		$(srcdir)/CIE-F9.csv 100.0
 
 -include $(top_srcdir)/git.mk

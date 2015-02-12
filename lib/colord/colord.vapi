@@ -423,6 +423,7 @@ namespace Cd {
 		public GLib.GenericArray<weak Cd.Spectrum> get_spectrum_array ();
 		public unowned Cd.Spectrum get_spectrum_by_id (string id);
 		public unowned string get_title ();
+		public unowned Cd.ColorXYZ get_xyz_for_rgb (double R, double G, double B, double delta);
 		public bool has_option (string option);
 		public bool load_from_data (string data, size_t size) throws GLib.Error;
 		public bool load_from_file (GLib.File file) throws GLib.Error;
@@ -440,6 +441,7 @@ namespace Cd {
 		public void set_title (string title);
 		public bool utils_calculate_ccmx (Cd.It8 it8_measured, Cd.It8 it8_ccmx) throws GLib.Error;
 		public bool utils_calculate_cri_from_cmf (Cd.It8 tcs, Cd.Spectrum illuminant, double value, double resolution) throws GLib.Error;
+		public bool utils_calculate_gamma (double gamma_y) throws GLib.Error;
 		public bool utils_calculate_xyz_from_cmf (Cd.Spectrum illuminant, Cd.Spectrum spectrum, Cd.ColorXYZ value, double resolution) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public It8.with_kind (Cd.It8Kind kind);
@@ -586,13 +588,16 @@ namespace Cd {
 		public double get_end ();
 		public unowned string get_id ();
 		public double get_norm ();
+		public double get_resolution ();
 		public uint get_size ();
 		public double get_start ();
 		public double get_value (uint idx);
 		public double get_value_for_nm (double wavelength);
+		public double get_value_raw (uint idx);
 		public double get_wavelength (uint idx);
 		public Cd.Spectrum multiply (Cd.Spectrum s2, double resolution);
 		public void normalize (double wavelength, double value);
+		public void normalize_max (double value);
 		[CCode (cname = "cd_spectrum_planckian_new", has_construct_function = false)]
 		public Spectrum.planckian_new (double temperature);
 		public void set_data (GLib.Array<double> value);
@@ -600,6 +605,7 @@ namespace Cd {
 		public void set_id (string id);
 		public void set_norm (double norm);
 		public void set_start (double start);
+		public void set_value (uint idx, double data);
 		[CCode (cname = "cd_spectrum_sized_new", has_construct_function = false)]
 		public Spectrum.sized_new (uint reserved_size);
 	}

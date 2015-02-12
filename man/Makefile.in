@@ -82,6 +82,7 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/as-linguas.m4 \
 	$(top_srcdir)/m4/ax_check_compile_flag.m4 \
+	$(top_srcdir)/m4/ax_check_define.m4 \
 	$(top_srcdir)/m4/ax_check_link_flag.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gtk-doc.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
@@ -164,6 +165,8 @@ BASH_COMPLETION_CFLAGS = @BASH_COMPLETION_CFLAGS@
 BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
+CD_CREATE_PROFILE = @CD_CREATE_PROFILE@
+CD_IT8 = @CD_IT8@
 CD_MAJOR_VERSION = @CD_MAJOR_VERSION@
 CD_MICRO_VERSION = @CD_MICRO_VERSION@
 CD_MINOR_VERSION = @CD_MINOR_VERSION@
@@ -196,6 +199,8 @@ GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_COMPILE_SCHEMAS = @GLIB_COMPILE_SCHEMAS@
 GLIB_LIBS = @GLIB_LIBS@
+GLIB_UNIX_CFLAGS = @GLIB_UNIX_CFLAGS@
+GLIB_UNIX_LIBS = @GLIB_UNIX_LIBS@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GNOME_DESKTOP_CFLAGS = @GNOME_DESKTOP_CFLAGS@
@@ -292,6 +297,7 @@ SANE_LIBS = @SANE_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SPOTREAD = @SPOTREAD@
 SQLITE_CFLAGS = @SQLITE_CFLAGS@
 SQLITE_LIBS = @SQLITE_LIBS@
 STRIP = @STRIP@
@@ -301,6 +307,7 @@ USE_NLS = @USE_NLS@
 VAPIGEN = @VAPIGEN@
 VERSION = @VERSION@
 WARNINGFLAGS_C = @WARNINGFLAGS_C@
+WINE = @WINE@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -366,12 +373,14 @@ udevrulesdir = @udevrulesdir@
 man_MANS_DIST = \
 	colormgr.1					\
 	cd-create-profile.1				\
-	cd-fix-profile.1
+	cd-fix-profile.1				\
+	cd-it8.1
 
 EXTRA_DIST = \
 	colormgr.sgml					\
 	cd-create-profile.sgml				\
 	cd-fix-profile.sgml				\
+	cd-it8.sgml					\
 	$(man_MANS_DIST)
 
 @HAVE_DOCBOOK2MAN_TRUE@man_MANS = \
@@ -631,6 +640,9 @@ uninstall-man: uninstall-man1
 @HAVE_DOCBOOK2MAN_TRUE@	$(AM_V_GEN)					\
 @HAVE_DOCBOOK2MAN_TRUE@	docbook2man $? > /dev/null
 @HAVE_DOCBOOK2MAN_TRUE@cd-fix-profile.1: cd-fix-profile.sgml
+@HAVE_DOCBOOK2MAN_TRUE@	$(AM_V_GEN)					\
+@HAVE_DOCBOOK2MAN_TRUE@	docbook2man $? > /dev/null
+@HAVE_DOCBOOK2MAN_TRUE@cd-it8.1: cd-it8.sgml
 @HAVE_DOCBOOK2MAN_TRUE@	$(AM_V_GEN)					\
 @HAVE_DOCBOOK2MAN_TRUE@	docbook2man $? > /dev/null
 

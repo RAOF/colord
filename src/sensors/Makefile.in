@@ -86,12 +86,16 @@ host_triplet = @host@
 @HAVE_GUSB_TRUE@	libcolord_sensor_dtp94.la			\
 @HAVE_GUSB_TRUE@	libcolord_sensor_huey.la
 
+@HAVE_ARGYLLCMS_SENSOR_TRUE@am__append_2 = \
+@HAVE_ARGYLLCMS_SENSOR_TRUE@	libcolord_sensor_argyll.la
+
 subdir = src/sensors
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/as-linguas.m4 \
 	$(top_srcdir)/m4/ax_check_compile_flag.m4 \
+	$(top_srcdir)/m4/ax_check_define.m4 \
 	$(top_srcdir)/m4/ax_check_link_flag.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gtk-doc.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
@@ -138,11 +142,13 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(plugin_LTLIBRARIES)
 am__DEPENDENCIES_1 =
-libcolord_sensor_argyll_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
-am_libcolord_sensor_argyll_la_OBJECTS =  \
-	libcolord_sensor_argyll_la-cd-spawn.lo \
-	libcolord_sensor_argyll_la-cd-sensor-argyll.lo
+@HAVE_ARGYLLCMS_SENSOR_TRUE@libcolord_sensor_argyll_la_DEPENDENCIES =  \
+@HAVE_ARGYLLCMS_SENSOR_TRUE@	$(am__DEPENDENCIES_1) \
+@HAVE_ARGYLLCMS_SENSOR_TRUE@	$(am__DEPENDENCIES_1)
+am__libcolord_sensor_argyll_la_SOURCES_DIST = cd-spawn.c cd-spawn.h \
+	cd-sensor-argyll.c
+@HAVE_ARGYLLCMS_SENSOR_TRUE@am_libcolord_sensor_argyll_la_OBJECTS = libcolord_sensor_argyll_la-cd-spawn.lo \
+@HAVE_ARGYLLCMS_SENSOR_TRUE@	libcolord_sensor_argyll_la-cd-sensor-argyll.lo
 libcolord_sensor_argyll_la_OBJECTS =  \
 	$(am_libcolord_sensor_argyll_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -153,6 +159,8 @@ libcolord_sensor_argyll_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(libcolord_sensor_argyll_la_CFLAGS) $(CFLAGS) \
 	$(libcolord_sensor_argyll_la_LDFLAGS) $(LDFLAGS) -o $@
+@HAVE_ARGYLLCMS_SENSOR_TRUE@am_libcolord_sensor_argyll_la_rpath =  \
+@HAVE_ARGYLLCMS_SENSOR_TRUE@	-rpath $(plugindir)
 @HAVE_GUSB_TRUE@libcolord_sensor_colorhug_la_DEPENDENCIES =  \
 @HAVE_GUSB_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 @HAVE_GUSB_TRUE@	$(top_builddir)/lib/colorhug/libcolorhug.la
@@ -279,7 +287,7 @@ SOURCES = $(libcolord_sensor_argyll_la_SOURCES) \
 	$(libcolord_sensor_dummy_la_SOURCES) \
 	$(libcolord_sensor_huey_la_SOURCES) $(cd_parse_beagle_SOURCES) \
 	$(cd_sensor_dump_SOURCES)
-DIST_SOURCES = $(libcolord_sensor_argyll_la_SOURCES) \
+DIST_SOURCES = $(am__libcolord_sensor_argyll_la_SOURCES_DIST) \
 	$(am__libcolord_sensor_colorhug_la_SOURCES_DIST) \
 	$(am__libcolord_sensor_dtp94_la_SOURCES_DIST) \
 	$(libcolord_sensor_dummy_la_SOURCES) \
@@ -325,6 +333,8 @@ BASH_COMPLETION_CFLAGS = @BASH_COMPLETION_CFLAGS@
 BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
+CD_CREATE_PROFILE = @CD_CREATE_PROFILE@
+CD_IT8 = @CD_IT8@
 CD_MAJOR_VERSION = @CD_MAJOR_VERSION@
 CD_MICRO_VERSION = @CD_MICRO_VERSION@
 CD_MINOR_VERSION = @CD_MINOR_VERSION@
@@ -357,6 +367,8 @@ GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_COMPILE_SCHEMAS = @GLIB_COMPILE_SCHEMAS@
 GLIB_LIBS = @GLIB_LIBS@
+GLIB_UNIX_CFLAGS = @GLIB_UNIX_CFLAGS@
+GLIB_UNIX_LIBS = @GLIB_UNIX_LIBS@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GNOME_DESKTOP_CFLAGS = @GNOME_DESKTOP_CFLAGS@
@@ -453,6 +465,7 @@ SANE_LIBS = @SANE_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SPOTREAD = @SPOTREAD@
 SQLITE_CFLAGS = @SQLITE_CFLAGS@
 SQLITE_LIBS = @SQLITE_LIBS@
 STRIP = @STRIP@
@@ -462,6 +475,7 @@ USE_NLS = @USE_NLS@
 VAPIGEN = @VAPIGEN@
 VERSION = @VERSION@
 WARNINGFLAGS_C = @WARNINGFLAGS_C@
+WINE = @WINE@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -590,7 +604,7 @@ COLORD_PRIVATE_LIBS = \
 # sensor plugins
 plugindir = $(libdir)/colord-sensors
 plugin_LTLIBRARIES = libcolord_sensor_dummy.la $(am__append_1) \
-	libcolord_sensor_argyll.la
+	$(am__append_2)
 libcolord_sensor_dummy_la_SOURCES = cd-sensor-dummy.c
 libcolord_sensor_dummy_la_LIBADD = $(GLIB_LIBS)
 libcolord_sensor_dummy_la_LDFLAGS = -module -avoid-version
@@ -628,14 +642,14 @@ libcolord_sensor_dummy_la_CFLAGS = $(WARNINGFLAGS_C)
 
 @HAVE_GUSB_TRUE@libcolord_sensor_colorhug_la_LDFLAGS = -module -avoid-version
 @HAVE_GUSB_TRUE@libcolord_sensor_colorhug_la_CFLAGS = $(WARNINGFLAGS_C)
-libcolord_sensor_argyll_la_SOURCES = \
-	cd-spawn.c					\
-	cd-spawn.h					\
-	cd-sensor-argyll.c
+@HAVE_ARGYLLCMS_SENSOR_TRUE@libcolord_sensor_argyll_la_SOURCES = \
+@HAVE_ARGYLLCMS_SENSOR_TRUE@	cd-spawn.c					\
+@HAVE_ARGYLLCMS_SENSOR_TRUE@	cd-spawn.h					\
+@HAVE_ARGYLLCMS_SENSOR_TRUE@	cd-sensor-argyll.c
 
-libcolord_sensor_argyll_la_LIBADD = $(GLIB_LIBS) $(GUSB_LIBS)
-libcolord_sensor_argyll_la_LDFLAGS = -module -avoid-version
-libcolord_sensor_argyll_la_CFLAGS = $(WARNINGFLAGS_C)
+@HAVE_ARGYLLCMS_SENSOR_TRUE@libcolord_sensor_argyll_la_LIBADD = $(GLIB_LIBS) $(GUSB_LIBS)
+@HAVE_ARGYLLCMS_SENSOR_TRUE@libcolord_sensor_argyll_la_LDFLAGS = -module -avoid-version
+@HAVE_ARGYLLCMS_SENSOR_TRUE@libcolord_sensor_argyll_la_CFLAGS = $(WARNINGFLAGS_C)
 all: all-am
 
 .SUFFIXES:
@@ -707,7 +721,7 @@ clean-pluginLTLIBRARIES:
 	}
 
 libcolord_sensor_argyll.la: $(libcolord_sensor_argyll_la_OBJECTS) $(libcolord_sensor_argyll_la_DEPENDENCIES) $(EXTRA_libcolord_sensor_argyll_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(libcolord_sensor_argyll_la_LINK) -rpath $(plugindir) $(libcolord_sensor_argyll_la_OBJECTS) $(libcolord_sensor_argyll_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(libcolord_sensor_argyll_la_LINK) $(am_libcolord_sensor_argyll_la_rpath) $(libcolord_sensor_argyll_la_OBJECTS) $(libcolord_sensor_argyll_la_LIBADD) $(LIBS)
 
 libcolord_sensor_colorhug.la: $(libcolord_sensor_colorhug_la_OBJECTS) $(libcolord_sensor_colorhug_la_DEPENDENCIES) $(EXTRA_libcolord_sensor_colorhug_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libcolord_sensor_colorhug_la_LINK) $(am_libcolord_sensor_colorhug_la_rpath) $(libcolord_sensor_colorhug_la_OBJECTS) $(libcolord_sensor_colorhug_la_LIBADD) $(LIBS)
