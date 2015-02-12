@@ -24,10 +24,14 @@
 #include <glib/gi18n.h>
 #include <gio/gio.h>
 #include <locale.h>
+#ifdef HAVE_PWD_H
 #include <pwd.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <colord/colord.h>
+
+#include "cd-cleanup.h"
 
 #define CD_ERROR			1
 #define CD_ERROR_INVALID_ARGUMENTS	0
@@ -119,15 +123,14 @@ cd_util_print_field_time (const gchar *title,
 			  CdUtilPrivate *priv,
 			  gint64 usecs)
 {
-	gchar *str;
 	GDateTime *datetime;
+	_cleanup_free_ gchar *str = NULL;
 
 	datetime = g_date_time_new_from_unix_utc (usecs / G_USEC_PER_SEC);
 	/* TRANSLATORS: this is the profile creation date strftime format */
 	str = g_date_time_format (datetime, _("%B %e %Y, %I:%M:%S %p"));
 	cd_util_print_field (title, filter_id, priv, str);
 	g_date_time_unref (datetime);
-	g_free (str);
 }
 
 /**
@@ -136,10 +139,17 @@ cd_util_print_field_time (const gchar *title,
 static void
 cd_util_show_owner (CdUtilPrivate *priv, guint uid)
 {
+#ifdef HAVE_PWD_H
 	struct passwd *pw;
 	pw = getpwuid (uid);
 	/* TRANSLATORS: profile owner */
 	cd_util_print_field (_("Owner"), "owner", priv, pw->pw_name);
+#else
+	_cleanup_free_ gchar *str = NULL;
+	str = g_strdup_printf ("%u", uid);
+	/* TRANSLATORS: profile UID */
+	cd_util_print_field (_("Owner"), "owner", priv, str);
+#endif
 }
 
 /**
@@ -154,10 +164,11 @@ cd_util_show_profile (CdUtilPrivate *priv, CdProfile *profile)
 	const gchar *tmp;
 	gchar *str_tmp;
 	gchar **warnings;
-	GHashTable *metadata;
-	GList *list, *l;
+	GList *l;
 	guint i;
 	guint size;
+	_cleanup_hashtable_unref_ GHashTable *metadata = NULL;
+	_cleanup_list_free_ GList *list = NULL;
 
 	/* TRANSLATORS: the internal DBus path */
 	cd_util_print_field (_("Object Path"),
@@ -245,9 +256,6 @@ cd_util_show_profile (CdUtilPrivate *priv, CdProfile *profile)
 	size = g_strv_length (warnings);
 	for (i = 0; i < size; i++)
 		cd_util_print_field (_("Warning"), "warnings", priv, warnings[i]);
-
-	g_list_free (list);
-	g_hash_table_unref (metadata);
 }
 
 /**
@@ -262,10 +270,11 @@ cd_util_show_device (CdUtilPrivate *priv, CdDevice *device)
 	gboolean ret;
 	gchar *str_tmp;
 	GError *error = NULL;
-	GHashTable *metadata;
-	GList *list, *l;
+	GList *l;
 	GPtrArray *profiles;
 	guint i;
+	_cleanup_hashtable_unref_ GHashTable *metadata = NULL;
+	_cleanup_list_free_ GList *list = NULL;
 
 	/* TRANSLATORS: the internal DBus path */
 	cd_util_print_field (_("Object Path"),
@@ -395,8 +404,6 @@ cd_util_show_device (CdUtilPrivate *priv, CdDevice *device)
 		cd_util_print_field (_("Metadata"), "metadata", priv, str_tmp);
 		g_free (str_tmp);
 	}
-	g_list_free (list);
-	g_hash_table_unref (metadata);
 }
 
 /**
@@ -501,16 +508,16 @@ cd_util_show_sensor (CdUtilPrivate *priv, CdSensor *sensor)
 	const gchar *tmp;
 	gboolean ret;
 	gchar *str_tmp;
-	GError *error = NULL;
-	GString *caps_str = NULL;
-	GHashTable *options = NULL;
 	GList *l;
-	GList *list = NULL;
 	GMainLoop *loop = NULL;
 	guint caps;
 	guint i;
 	GVariant *value_tmp;
-	GHashTable *metadata = NULL;
+	_cleanup_error_free_ GError *error = NULL;
+	_cleanup_hashtable_unref_ GHashTable *metadata = NULL;
+	_cleanup_hashtable_unref_ GHashTable *options = NULL;
+	_cleanup_list_free_ GList *list = NULL;
+	_cleanup_string_free_ GString *caps_str = NULL;
 
 	/* TRANSLATORS: the internal DBus path */
 	cd_util_print_field (_("Object Path"),
@@ -524,7 +531,6 @@ cd_util_show_sensor (CdUtilPrivate *priv, CdSensor *sensor)
 	if (!ret) {
 		g_warning ("Failed to lock sensor: %s",
 			   error->message);
-		g_error_free (error);
 		goto out;
 	}
 
@@ -646,17 +652,9 @@ cd_util_show_sensor (CdUtilPrivate *priv, CdSensor *sensor)
 	if (!ret) {
 		g_warning ("Failed to unlock sensor: %s",
 			   error->message);
-		g_error_free (error);
 		goto out;
 	}
 out:
-	if (metadata != NULL)
-		g_hash_table_unref (metadata);
-	g_list_free (list);
-	if (caps_str != NULL)
-		g_string_free (caps_str, TRUE);
-	if (options != NULL)
-		g_hash_table_unref (options);
 	if (loop != NULL)
 		g_main_loop_unref (loop);
 }
@@ -692,9 +690,9 @@ cd_util_add (GPtrArray *array,
 	     const gchar *description,
 	     CdUtilPrivateCb callback)
 {
-	gchar **names;
 	guint i;
 	CdUtilItem *item;
+	_cleanup_strv_free_ gchar **names = NULL;
 
 	g_return_if_fail (name != NULL);
 	g_return_if_fail (description != NULL);
@@ -716,7 +714,6 @@ cd_util_add (GPtrArray *array,
 		item->callback = callback;
 		g_ptr_array_add (array, item);
 	}
-	g_strfreev (names);
 }
 
 /**
@@ -771,18 +768,15 @@ cd_util_get_descriptions (GPtrArray *array)
 static gboolean
 cd_util_run (CdUtilPrivate *priv, const gchar *command, gchar **values, GError **error)
 {
-	gboolean ret = FALSE;
 	guint i;
 	CdUtilItem *item;
-	GString *string;
+	_cleanup_string_free_ GString *string = NULL;
 
 	/* find command */
 	for (i = 0; i < priv->cmd_array->len; i++) {
 		item = g_ptr_array_index (priv->cmd_array, i);
-		if (g_strcmp0 (item->name, command) == 0) {
-			ret = item->callback (priv, values, error);
-			goto out;
-		}
+		if (g_strcmp0 (item->name, command) == 0)
+			return item->callback (priv, values, error);
 	}
 
 	/* not found */
@@ -797,9 +791,7 @@ cd_util_run (CdUtilPrivate *priv, const gchar *command, gchar **values, GError *
 					item->arguments ? item->arguments : "");
 	}
 	g_set_error_literal (error, CD_ERROR, CD_ERROR_NO_SUCH_CMD, string->str);
-	g_string_free (string, TRUE);
-out:
-	return ret;
+	return FALSE;
 }
 
 /**
@@ -812,14 +804,14 @@ cd_util_dump (CdUtilPrivate *priv, gchar **values, GError **error)
 	CdProfile *profile;
 	const gchar *argv[] = { "sqlite3", "/var/lib/colord/mapping.db", ".dump", NULL };
 	gboolean ret = TRUE;
-	gchar *mapping_db = NULL;
 	gchar *tmp;
 	GDateTime *dt;
 	GError *error_local = NULL;
-	GPtrArray *devices = NULL;
-	GPtrArray *profiles = NULL;
-	GString *str;
 	guint i;
+	_cleanup_free_ gchar *mapping_db = NULL;
+	_cleanup_ptrarray_unref_ GPtrArray *devices = NULL;
+	_cleanup_ptrarray_unref_ GPtrArray *profiles = NULL;
+	_cleanup_string_free_ GString *str = NULL;
 
 	/* header */
 	str = g_string_new ("");
@@ -910,12 +902,6 @@ cd_util_dump (CdUtilPrivate *priv, gchar **values, GError **error)
 	g_free (tmp);
 out:
 	g_date_time_unref (dt);
-	g_free (mapping_db);
-	g_string_free (str, FALSE);
-	if (devices != NULL)
-		g_ptr_array_unref (devices);
-	if (profiles != NULL)
-		g_ptr_array_unref (profiles);
 	return ret;
 }
 
@@ -926,29 +912,22 @@ static gboolean
 cd_util_get_devices (CdUtilPrivate *priv, gchar **values, GError **error)
 {
 	CdDevice *device;
-	gboolean ret = TRUE;
-	GPtrArray *array = NULL;
 	guint i;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	/* execute sync method */
 	array = cd_client_get_devices_sync (priv->client, NULL, error);
-	if (array == NULL) {
-		ret = FALSE;
-		goto out;
-	}
+	if (array == NULL)
+		return FALSE;
 	for (i = 0; i < array->len; i++) {
 		device = g_ptr_array_index (array, i);
-		ret = cd_device_connect_sync (device, NULL, error);
-		if (!ret)
-			goto out;
+		if (!cd_device_connect_sync (device, NULL, error))
+			return FALSE;
 		cd_util_show_device (priv, device);
 		if (i != array->len - 1 && !priv->value_only)
 			g_print ("\n");
 	}
-out:
-	if (array != NULL)
-		g_ptr_array_unref (array);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -958,19 +937,17 @@ static gboolean
 cd_util_get_devices_by_kind (CdUtilPrivate *priv, gchar **values, GError **error)
 {
 	CdDevice *device;
-	gboolean ret = TRUE;
-	GPtrArray *array = NULL;
 	guint i;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device kind "
 				     "e.g. 'printer'");
-		goto out;
+		return FALSE;
 	}
 
 	/* execute sync method */
@@ -978,23 +955,17 @@ cd_util_get_devices_by_kind (CdUtilPrivate *priv, gchar **values, GError **error
 						    cd_device_kind_from_string (values[0]),
 						    NULL,
 						    error);
-	if (array == NULL) {
-		ret = FALSE;
-		goto out;
-	}
+	if (array == NULL)
+		return FALSE;
 	for (i = 0; i < array->len; i++) {
 		device = g_ptr_array_index (array, i);
-		ret = cd_device_connect_sync (device, NULL, error);
-		if (!ret)
-			goto out;
+		if (!cd_device_connect_sync (device, NULL, error))
+			return FALSE;
 		cd_util_show_device (priv, device);
 		if (i != array->len - 1 && !priv->value_only)
 			g_print ("\n");
 	}
-out:
-	if (array != NULL)
-		g_ptr_array_unref (array);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1004,29 +975,22 @@ static gboolean
 cd_util_get_profiles (CdUtilPrivate *priv, gchar **values, GError **error)
 {
 	CdProfile *profile;
-	gboolean ret = TRUE;
-	GPtrArray *array = NULL;
 	guint i;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	/* execute sync method */
 	array = cd_client_get_profiles_sync (priv->client, NULL, error);
-	if (array == NULL) {
-		ret = FALSE;
-		goto out;
-	}
+	if (array == NULL)
+		return FALSE;
 	for (i = 0; i < array->len; i++) {
 		profile = g_ptr_array_index (array, i);
-		ret = cd_profile_connect_sync (profile, NULL, error);
-		if (!ret)
-			goto out;
+		if (!cd_profile_connect_sync (profile, NULL, error))
+			return FALSE;
 		cd_util_show_profile (priv, profile);
 		if (i != array->len - 1 && !priv->value_only)
 			g_print ("\n");
 	}
-out:
-	if (array != NULL)
-		g_ptr_array_unref (array);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1036,36 +1000,28 @@ static gboolean
 cd_util_get_sensors (CdUtilPrivate *priv, gchar **values, GError **error)
 {
 	CdSensor *sensor;
-	gboolean ret = TRUE;
-	GPtrArray *array = NULL;
 	guint i;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	/* execute sync method */
 	array = cd_client_get_sensors_sync (priv->client, NULL, error);
-	if (array == NULL) {
-		ret = FALSE;
-		goto out;
-	}
+	if (array == NULL)
+		return FALSE;
 	if (array->len == 0) {
-		ret = FALSE;
 		/* TRANSLATORS: the user does not have a colorimeter attached */
 		g_set_error_literal (error, CD_ERROR, CD_ERROR_INVALID_ARGUMENTS,
 				     _("There are no supported sensors attached"));
-		goto out;
+		return FALSE;
 	}
 	for (i = 0; i < array->len; i++) {
 		sensor = g_ptr_array_index (array, i);
-		ret = cd_sensor_connect_sync (sensor, NULL, error);
-		if (!ret)
-			goto out;
+		if (!cd_sensor_connect_sync (sensor, NULL, error))
+			return FALSE;
 		cd_util_show_sensor (priv, sensor);
 		if (i != array->len - 1 && !priv->value_only)
 			g_print ("\n");
 	}
-out:
-	if (array != NULL)
-		g_ptr_array_unref (array);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1075,48 +1031,35 @@ static gboolean
 cd_util_sensor_lock (CdUtilPrivate *priv, gchar **values, GError **error)
 {
 	CdSensor *sensor;
-	gboolean ret = TRUE;
 	GMainLoop *loop = NULL;
-	GPtrArray *array = NULL;
 	guint i;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	/* execute sync method */
 	array = cd_client_get_sensors_sync (priv->client, NULL, error);
-	if (array == NULL) {
-		ret = FALSE;
-		goto out;
-	}
+	if (array == NULL)
+		return FALSE;
 	if (array->len == 0) {
-		ret = FALSE;
 		/* TRANSLATORS: the user does not have a colorimeter attached */
 		g_set_error_literal (error, CD_ERROR, CD_ERROR_INVALID_ARGUMENTS,
 				     _("There are no supported sensors attached"));
-		goto out;
+		return FALSE;
 	}
 	for (i = 0; i < array->len; i++) {
 		sensor = g_ptr_array_index (array, i);
-
-		ret = cd_sensor_connect_sync (sensor, NULL, error);
-		if (!ret)
-			goto out;
+		if (!cd_sensor_connect_sync (sensor, NULL, error))
+			return FALSE;
 
 		/* lock */
-		ret = cd_sensor_lock_sync (sensor,
-					   NULL,
-					   error);
-		if (!ret)
-			goto out;
+		if (!cd_sensor_lock_sync (sensor, NULL, error))
+			return FALSE;
 	}
 
 	/* spin */
 	loop = g_main_loop_new (NULL, TRUE);
 	g_main_loop_run (loop);
-out:
-	if (loop != NULL)
-		g_main_loop_unref (loop);
-	if (array != NULL)
-		g_ptr_array_unref (array);
-	return ret;
+	g_main_loop_unref (loop);
+	return TRUE;
 }
 
 /**
@@ -1128,43 +1071,37 @@ cd_util_get_sensor_reading (CdUtilPrivate *priv, gchar **values, GError **error)
 	CdColorXYZ *xyz;
 	CdSensorCap cap;
 	CdSensor *sensor;
-	gboolean ret = TRUE;
 	GError *error_local = NULL;
-	GPtrArray *array = NULL;
 	guint i;
 	guint j;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device type "
 				     "e.g. 'lcd'");
-		goto out;
+		return FALSE;
 	}
 
 	/* execute sync method */
 	array = cd_client_get_sensors_sync (priv->client, NULL, error);
-	if (array == NULL) {
-		ret = FALSE;
-		goto out;
-	}
+	if (array == NULL)
+		return FALSE;
 	if (array->len == 0) {
-		ret = FALSE;
 		/* TRANSLATORS: the user does not have a colorimeter attached */
 		g_set_error_literal (error, CD_ERROR, CD_ERROR_INVALID_ARGUMENTS,
 				     _("There are no supported sensors attached"));
-		goto out;
+		return FALSE;
 	}
 	cap = cd_sensor_cap_from_string (values[0]);
 	for (i = 0; i < array->len; i++) {
 		sensor = g_ptr_array_index (array, i);
 
-		ret = cd_sensor_connect_sync (sensor, NULL, error);
-		if (!ret)
-			goto out;
+		if (!cd_sensor_connect_sync (sensor, NULL, error))
+			return FALSE;
 
 		/* TRANSLATORS: this is the sensor title */
 		g_print ("%s: %s - %s\n", _("Sensor"),
@@ -1172,11 +1109,8 @@ cd_util_get_sensor_reading (CdUtilPrivate *priv, gchar **values, GError **error)
 			 cd_sensor_get_model (sensor));
 
 		/* lock */
-		ret = cd_sensor_lock_sync (sensor,
-					   NULL,
-					   error);
-		if (!ret)
-			goto out;
+		if (!cd_sensor_lock_sync (sensor, NULL, error))
+			return FALSE;
 
 		/* get 3 samples sync */
 		for (j = 1; j < 4; j++) {
@@ -1206,8 +1140,7 @@ cd_util_get_sensor_reading (CdUtilPrivate *priv, gchar **values, GError **error)
 				} else {
 					g_propagate_error (error,
 							   error_local);
-					ret = FALSE;
-					goto out;
+					return FALSE;
 				}
 			}
 
@@ -1219,16 +1152,10 @@ cd_util_get_sensor_reading (CdUtilPrivate *priv, gchar **values, GError **error)
 		}
 
 		/* unlock */
-		ret = cd_sensor_unlock_sync (sensor,
-					     NULL,
-					     error);
-		if (!ret)
-			goto out;
+		if (!cd_sensor_unlock_sync (sensor, NULL, error))
+			return FALSE;
 	}
-out:
-	if (array != NULL)
-		g_ptr_array_unref (array);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1238,36 +1165,31 @@ static gboolean
 cd_util_sensor_set_options (CdUtilPrivate *priv, gchar **values, GError **error)
 {
 	CdSensor *sensor;
-	gboolean ret = TRUE;
 	gchar *endptr = NULL;
 	gdouble val;
-	GHashTable *options = NULL;
-	GPtrArray *array = NULL;
 	guint i;
+	_cleanup_hashtable_unref_ GHashTable *options = NULL;
+	_cleanup_ptrarray_unref_ GPtrArray *array = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected key value "
 				     "e.g. 'remote-profile-hash' 'deadbeef'");
-		goto out;
+		return FALSE;
 	}
 
 	/* execute sync method */
 	array = cd_client_get_sensors_sync (priv->client, NULL, error);
-	if (array == NULL) {
-		ret = FALSE;
-		goto out;
-	}
+	if (array == NULL)
+		return FALSE;
 	if (array->len == 0) {
-		ret = FALSE;
 		/* TRANSLATORS: the user does not have a colorimeter attached */
 		g_set_error_literal (error, CD_ERROR, CD_ERROR_INVALID_ARGUMENTS,
 				     _("There are no supported sensors attached"));
-		goto out;
+		return FALSE;
 	}
 
 	/* prepare options for each sensor
@@ -1287,16 +1209,12 @@ cd_util_sensor_set_options (CdUtilPrivate *priv, gchar **values, GError **error)
 	for (i = 0; i < array->len; i++) {
 		sensor = g_ptr_array_index (array, i);
 
-		ret = cd_sensor_connect_sync (sensor, NULL, error);
-		if (!ret)
-			goto out;
+		if (!cd_sensor_connect_sync (sensor, NULL, error))
+			return FALSE;
 
 		/* lock */
-		ret = cd_sensor_lock_sync (sensor,
-					   NULL,
-					   error);
-		if (!ret)
-			goto out;
+		if (!cd_sensor_lock_sync (sensor, NULL, error))
+			return FALSE;
 
 		/* TRANSLATORS: this is the sensor title */
 		g_print ("%s: %s - %s\n", _("Sensor"),
@@ -1304,26 +1222,14 @@ cd_util_sensor_set_options (CdUtilPrivate *priv, gchar **values, GError **error)
 			 cd_sensor_get_model (sensor));
 
 		/* set the options set */
-		ret = cd_sensor_set_options_sync (sensor,
-						  options,
-						  NULL,
-						  error);
-		if (!ret)
-			goto out;
+		if (!cd_sensor_set_options_sync (sensor, options, NULL, error))
+			return FALSE;
 
 		/* unlock */
-		ret = cd_sensor_unlock_sync (sensor,
-					     NULL,
-					     error);
-		if (!ret)
-			goto out;
+		if (!cd_sensor_unlock_sync (sensor, NULL, error))
+			return FALSE;
 	}
-out:
-	if (options != NULL)
-		g_hash_table_unref (options);
-	if (array != NULL)
-		g_ptr_array_unref (array);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1332,20 +1238,18 @@ out:
 static gboolean
 cd_util_create_device (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	gboolean ret = TRUE;
 	guint mask;
-	GHashTable *device_props = NULL;
+	_cleanup_hashtable_unref_ GHashTable *device_props = NULL;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 
 	if (g_strv_length (values) < 3) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device id, scope, kind "
 				     "e.g. 'epson-stylus-800 disk display'");
-		goto out;
+		return FALSE;
 	}
 
 	/* execute sync method */
@@ -1360,21 +1264,13 @@ cd_util_create_device (CdUtilPrivate *priv, gchar **values, GError **error)
 					       device_props,
 					       NULL,
 					       error);
-	if (device == NULL) {
-		ret = FALSE;
-		goto out;
-	}
+	if (device == NULL)
+		return FALSE;
 	g_print ("Created device:\n");
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
 	cd_util_show_device (priv, device);
-out:
-	if (device_props != NULL)
-		g_hash_table_unref (device_props);
-	if (device != NULL)
-		g_object_unref (device);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1383,35 +1279,27 @@ out:
 static gboolean
 cd_util_find_device (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device id "
 				     "e.g. 'epson-stylus-800'");
-		goto out;
+		return FALSE;
 	}
 
 	/* execute sync method */
 	device = cd_client_find_device_sync (priv->client, values[0],
 					     NULL, error);
-	if (device == NULL) {
-		ret = FALSE;
-		goto out;
-	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
+	if (device == NULL)
+		return FALSE;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
 	cd_util_show_device (priv, device);
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1420,18 +1308,16 @@ out:
 static gboolean
 cd_util_find_device_by_property (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected key value "
 				     "e.g. 'XRANDR_name' 'lvds'");
-		goto out;
+		return FALSE;
 	}
 
 	/* execute sync method */
@@ -1440,18 +1326,12 @@ cd_util_find_device_by_property (CdUtilPrivate *priv, gchar **values, GError **e
 							 values[1],
 							 NULL,
 							 error);
-	if (device == NULL) {
-		ret = FALSE;
-		goto out;
-	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
+	if (device == NULL)
+		return FALSE;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
 	cd_util_show_device (priv, device);
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1460,35 +1340,27 @@ out:
 static gboolean
 cd_util_find_profile (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdProfile *profile = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected profile id "
 				     "e.g. 'epson-rgb'");
-		goto out;
+		return FALSE;
 	}
 
 	/* execute sync method */
 	profile = cd_client_find_profile_sync (priv->client, values[0],
 					       NULL, error);
-	if (profile == NULL) {
-		ret = FALSE;
-		goto out;
-	}
-	ret = cd_profile_connect_sync (profile, NULL, error);
-	if (!ret)
-		goto out;
+	if (profile == NULL)
+		return FALSE;
+	if (!cd_profile_connect_sync (profile, NULL, error))
+		return FALSE;
 	cd_util_show_profile (priv, profile);
-out:
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1497,35 +1369,27 @@ out:
 static gboolean
 cd_util_find_profile_by_filename (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdProfile *profile = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected profile filename");
-		goto out;
+		return FALSE;
 	}
 
 	/* execute sync method */
 	profile = cd_client_find_profile_by_filename_sync (priv->client,
 							   values[0],
 							   NULL, error);
-	if (profile == NULL) {
-		ret = FALSE;
-		goto out;
-	}
-	ret = cd_profile_connect_sync (profile, NULL, error);
-	if (!ret)
-		goto out;
+	if (profile == NULL)
+		return FALSE;
+	if (!cd_profile_connect_sync (profile, NULL, error))
+		return FALSE;
 	cd_util_show_profile (priv, profile);
-out:
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1534,18 +1398,16 @@ out:
 static gboolean
 cd_util_get_standard_space (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdProfile *profile = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected standard space "
 				     "e.g. 'adobe-rgb'");
-		goto out;
+		return FALSE;
 	}
 
 	/* execute sync method */
@@ -1553,18 +1415,12 @@ cd_util_get_standard_space (CdUtilPrivate *priv, gchar **values, GError **error)
 						     cd_standard_space_from_string (values[0]),
 						     NULL,
 						     error);
-	if (profile == NULL) {
-		ret = FALSE;
-		goto out;
-	}
-	ret = cd_profile_connect_sync (profile, NULL, error);
-	if (!ret)
-		goto out;
+	if (profile == NULL)
+		return FALSE;
+	if (!cd_profile_connect_sync (profile, NULL, error))
+		return FALSE;
 	cd_util_show_profile (priv, profile);
-out:
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1573,38 +1429,30 @@ out:
 static gboolean
 cd_util_create_profile (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdProfile *profile = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 	guint mask;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected profile id, scope "
 				     "e.g. 'epson-rgb disk'");
-		goto out;
+		return FALSE;
 	}
 
 	/* execute sync method */
 	mask = cd_object_scope_from_string (values[1]);
 	profile = cd_client_create_profile_sync (priv->client, values[0],
 						 mask, NULL, NULL, error);
-	if (profile == NULL) {
-		ret = FALSE;
-		goto out;
-	}
-	ret = cd_profile_connect_sync (profile, NULL, error);
-	if (!ret)
-		goto out;
+	if (profile == NULL)
+		return FALSE;
+	if (!cd_profile_connect_sync (profile, NULL, error))
+		return FALSE;
 	g_print ("Created profile:\n");
 	cd_util_show_profile (priv, profile);
-out:
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -1613,19 +1461,17 @@ out:
 static gboolean
 cd_util_device_add_profile (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	CdProfile *profile = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path, profile path "
 				     "e.g. '/org/device/foo /org/profile/bar'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -1634,14 +1480,11 @@ cd_util_device_add_profile (CdUtilPrivate *priv, gchar **values, GError **error)
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
 
 	/* find the profile */
 	if (g_variant_is_object_path (values[1])) {
@@ -1649,24 +1492,14 @@ cd_util_device_add_profile (CdUtilPrivate *priv, gchar **values, GError **error)
 	} else {
 		profile = cd_client_find_profile_sync (priv->client, values[1],
 						       NULL, error);
-		if (profile == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (profile == NULL)
+			return FALSE;
 	}
-	ret = cd_device_add_profile_sync (device,
-					  CD_DEVICE_RELATION_HARD,
-					  profile,
-					  NULL,
-					  error);
-	if (!ret)
-		goto out;
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	return cd_device_add_profile_sync (device,
+					   CD_DEVICE_RELATION_HARD,
+					   profile,
+					   NULL,
+					   error);
 }
 
 /**
@@ -1675,19 +1508,17 @@ out:
 static gboolean
 cd_util_device_make_profile_default (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	CdProfile *profile = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path, profile path "
 				     "e.g. '/org/device/foo /org/profile/bar'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -1696,14 +1527,11 @@ cd_util_device_make_profile_default (CdUtilPrivate *priv, gchar **values, GError
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
 
 	/* find the profile */
 	if (g_variant_is_object_path (values[1])) {
@@ -1711,21 +1539,10 @@ cd_util_device_make_profile_default (CdUtilPrivate *priv, gchar **values, GError
 	} else {
 		profile = cd_client_find_profile_sync (priv->client, values[1],
 						       NULL, error);
-		if (profile == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (profile == NULL)
+			return FALSE;
 	}
-	ret = cd_device_make_profile_default_sync (device, profile,
-						   NULL, error);
-	if (!ret)
-		goto out;
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	return cd_device_make_profile_default_sync (device, profile, NULL, error);
 }
 
 /**
@@ -1734,18 +1551,16 @@ out:
 static gboolean
 cd_util_delete_device (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	gboolean ret = TRUE;
-	CdDevice *device = NULL;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path "
 				     "e.g. '/org/devices/foo'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -1754,19 +1569,10 @@ cd_util_delete_device (CdUtilPrivate *priv, gchar **values, GError **error)
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_client_delete_device_sync (priv->client, device,
-					    NULL, error);
-	if (!ret)
-		goto out;
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	return ret;
+	return cd_client_delete_device_sync (priv->client, device, NULL, error);
 }
 
 /**
@@ -1775,18 +1581,16 @@ out:
 static gboolean
 cd_util_delete_profile (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	gboolean ret = TRUE;
-	CdProfile *profile = NULL;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected profile path "
 				     "e.g. '/org/profiles/bar'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the profile */
@@ -1796,16 +1600,9 @@ cd_util_delete_profile (CdUtilPrivate *priv, gchar **values, GError **error)
 		profile = cd_client_find_profile_sync (priv->client, values[0],
 						       NULL, error);
 		if (profile == NULL)
-			goto out;
+			return FALSE;
 	}
-	ret = cd_client_delete_profile_sync (priv->client, profile,
-					     NULL, error);
-	if (!ret)
-		goto out;
-out:
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	return cd_client_delete_profile_sync (priv->client, profile, NULL, error);
 }
 
 /**
@@ -1814,18 +1611,16 @@ out:
 static gboolean
 cd_util_profile_set_property (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdProfile *profile = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 
 	if (g_strv_length (values) < 3) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected profile path key value "
 				     "e.g. '/org/profile/foo qualifier RGB.Matte.300dpi'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the profile */
@@ -1835,22 +1630,15 @@ cd_util_profile_set_property (CdUtilPrivate *priv, gchar **values, GError **erro
 		profile = cd_client_find_profile_sync (priv->client, values[0],
 						       NULL, error);
 		if (profile == NULL)
-			goto out;
+			return FALSE;
 	}
-	ret = cd_profile_connect_sync (profile, NULL, error);
-	if (!ret)
-		goto out;
-	ret = cd_profile_set_property_sync (profile,
-					    values[1],
-					    values[2],
-					    NULL,
-					    error);
-	if (!ret)
-		goto out;
-out:
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	if (!cd_profile_connect_sync (profile, NULL, error))
+		return FALSE;
+	return cd_profile_set_property_sync (profile,
+					     values[1],
+					     values[2],
+					     NULL,
+					     error);
 }
 
 /**
@@ -1859,18 +1647,16 @@ out:
 static gboolean
 cd_util_device_set_model (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path, model "
 				     "e.g. '/org/devices/bar \"Stylus 800\"'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -1879,22 +1665,12 @@ cd_util_device_set_model (CdUtilPrivate *priv, gchar **values, GError **error)
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
-	ret = cd_device_set_model_sync (device, values[1],
-					NULL, error);
-	if (!ret)
-		goto out;
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	return ret;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
+	return cd_device_set_model_sync (device, values[1], NULL, error);
 }
 
 /**
@@ -1903,17 +1679,15 @@ out:
 static gboolean
 cd_util_device_set_enabled (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path, True|False");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -1922,24 +1696,15 @@ cd_util_device_set_enabled (CdUtilPrivate *priv, gchar **values, GError **error)
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
-	ret = cd_device_set_enabled_sync (device,
-					  g_strcmp0 (values[1], "True") == 0,
-					  NULL,
-					  error);
-	if (!ret)
-		goto out;
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	return ret;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
+	return cd_device_set_enabled_sync (device,
+					   g_strcmp0 (values[1], "True") == 0,
+					   NULL,
+					   error);
 }
 
 /**
@@ -1950,19 +1715,17 @@ cd_util_device_get_default_profile (CdUtilPrivate *priv,
 				    gchar **values,
 				    GError **error)
 {
-	CdDevice *device = NULL;
-	CdProfile *profile = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path "
 				     "e.g. '/org/devices/bar'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -1971,33 +1734,23 @@ cd_util_device_get_default_profile (CdUtilPrivate *priv,
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
 	profile = cd_device_get_default_profile (device);
 	if (profile == NULL) {
-		ret = FALSE;
 		g_set_error (error,
 			     CD_ERROR, CD_ERROR_INVALID_ARGUMENTS,
 			     "There is no assigned profile for %s",
 			     values[0]);
-		goto out;
+		return FALSE;
 	}
-	ret = cd_profile_connect_sync (profile, NULL, error);
-	if (!ret)
-		goto out;
+	if (!cd_profile_connect_sync (profile, NULL, error))
+		return FALSE;
 	cd_util_show_profile (priv, profile);
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -2006,18 +1759,16 @@ out:
 static gboolean
 cd_util_device_set_vendor (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path, vendor "
 				     "e.g. '/org/devices/bar Epson'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -2026,22 +1777,12 @@ cd_util_device_set_vendor (CdUtilPrivate *priv, gchar **values, GError **error)
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
-	ret = cd_device_set_vendor_sync (device, values[1],
-					 NULL, error);
-	if (!ret)
-		goto out;
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	return ret;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
+	return cd_device_set_vendor_sync (device, values[1], NULL, error);
 }
 
 /**
@@ -2050,18 +1791,16 @@ out:
 static gboolean
 cd_util_device_set_serial (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path, serial "
 				     "e.g. '/org/devices/bar 00001234'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -2070,22 +1809,12 @@ cd_util_device_set_serial (CdUtilPrivate *priv, gchar **values, GError **error)
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
-	ret = cd_device_set_serial_sync (device, values[1],
-					 NULL, error);
-	if (!ret)
-		goto out;
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	return ret;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
+	return cd_device_set_serial_sync (device, values[1], NULL, error);
 }
 
 /**
@@ -2094,18 +1823,16 @@ out:
 static gboolean
 cd_util_device_set_kind (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path, kind "
 				     "e.g. '/org/devices/bar printer'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -2114,22 +1841,12 @@ cd_util_device_set_kind (CdUtilPrivate *priv, gchar **values, GError **error)
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
-	ret = cd_device_set_kind_sync (device, cd_device_kind_from_string (values[1]),
-				       NULL, error);
-	if (!ret)
-		goto out;
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	return ret;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
+	return cd_device_set_kind_sync (device, cd_device_kind_from_string (values[1]), NULL, error);
 }
 
 /**
@@ -2138,31 +1855,28 @@ out:
 static gboolean
 cd_util_device_inhibit (CdUtilPrivate *priv, gchar **values, GError **error)
 {
-	CdDevice *device = NULL;
-	gboolean ret = TRUE;
 	GMainLoop *loop = NULL;
 	gint timeout;
+	_cleanup_object_unref_ CdDevice *device = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path timeout (use 0 for 'never') "
 				     "e.g. '/org/devices/epson-800' 60");
-		goto out;
+		return FALSE;
 	}
 
 	/* check timeout is valid */
 	timeout = atoi (values[1]);
 	if (timeout < 0) {
-		ret = FALSE;
 		g_set_error (error,
 			     CD_ERROR, CD_ERROR_INVALID_ARGUMENTS,
 			     "Not a valid timeout: %s",
 			     values[1]);
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -2171,17 +1885,13 @@ cd_util_device_inhibit (CdUtilPrivate *priv, gchar **values, GError **error)
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
-	ret = cd_device_profiling_inhibit_sync (device, NULL, error);
-	if (!ret)
-		goto out;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
+	if (!cd_device_profiling_inhibit_sync (device, NULL, error))
+		return FALSE;
 
 	/* wait for ctrl-c, as inhibit will be destroyed when the
 	 * colormgr tool is finished */
@@ -2192,12 +1902,8 @@ cd_util_device_inhibit (CdUtilPrivate *priv, gchar **values, GError **error)
 				       loop);
 	}
 	g_main_loop_run (loop);
-out:
-	if (loop != NULL)
-		g_main_loop_unref (loop);
-	if (device != NULL)
-		g_object_unref (device);
-	return ret;
+	g_main_loop_unref (loop);
+	return TRUE;
 }
 
 /**
@@ -2208,19 +1914,17 @@ cd_util_device_get_profile_for_qualifiers (CdUtilPrivate *priv,
 					   gchar **values,
 					   GError **error)
 {
-	CdDevice *device = NULL;
-	CdProfile *profile = NULL;
-	gboolean ret = TRUE;
+	_cleanup_object_unref_ CdDevice *device = NULL;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
 
 	if (g_strv_length (values) < 2) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, "
 				     "expected device path, qualifier "
 				     "e.g. '/org/devices/bar *.*.300dpi'");
-		goto out;
+		return FALSE;
 	}
 
 	/* find the device */
@@ -2229,32 +1933,21 @@ cd_util_device_get_profile_for_qualifiers (CdUtilPrivate *priv,
 	} else {
 		device = cd_client_find_device_sync (priv->client, values[0],
 						     NULL, error);
-		if (device == NULL) {
-			ret = FALSE;
-			goto out;
-		}
+		if (device == NULL)
+			return FALSE;
 	}
-	ret = cd_device_connect_sync (device, NULL, error);
-	if (!ret)
-		goto out;
+	if (!cd_device_connect_sync (device, NULL, error))
+		return FALSE;
 	profile = cd_device_get_profile_for_qualifiers_sync (device,
 							     (const gchar **) &values[1],
 							     NULL,
 							     error);
-	if (profile == NULL) {
-		ret = FALSE;
-		goto out;
-	}
-	ret = cd_profile_connect_sync (profile, NULL, error);
-	if (!ret)
-		goto out;
+	if (profile == NULL)
+		return FALSE;
+	if (!cd_profile_connect_sync (profile, NULL, error))
+		return FALSE;
 	cd_util_show_profile (priv, profile);
-out:
-	if (device != NULL)
-		g_object_unref (device);
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -2265,17 +1958,15 @@ cd_util_import_profile (CdUtilPrivate *priv,
 			gchar **values,
 			GError **error)
 {
-	CdProfile *profile = NULL;
-	gboolean ret = TRUE;
-	GFile *file = NULL;
+	_cleanup_object_unref_ CdProfile *profile = NULL;
+	_cleanup_object_unref_ GFile *file = NULL;
 
 	if (g_strv_length (values) < 1) {
-		ret = FALSE;
 		g_set_error_literal (error,
 				     CD_ERROR,
 				     CD_ERROR_INVALID_ARGUMENTS,
 				     "Not enough arguments, expected: file");
-		goto out;
+		return FALSE;
 	}
 
 	/* import the profile */
@@ -2284,20 +1975,12 @@ cd_util_import_profile (CdUtilPrivate *priv,
 						 file,
 						 NULL,
 						 error);
-	if (profile == NULL) {
-		ret = FALSE;
-		goto out;
-	}
-	ret = cd_profile_connect_sync (profile, NULL, error);
-	if (!ret)
-		goto out;
+	if (profile == NULL)
+		return FALSE;
+	if (!cd_profile_connect_sync (profile, NULL, error))
+		return FALSE;
 	cd_util_show_profile (priv, profile);
-out:
-	if (file != NULL)
-		g_object_unref (file);
-	if (profile != NULL)
-		g_object_unref (profile);
-	return ret;
+	return TRUE;
 }
 
 /**
@@ -2320,10 +2003,10 @@ main (int argc, char *argv[])
 	gboolean value_only = FALSE;
 	gboolean verbose = FALSE;
 	gboolean version = FALSE;
-	gchar *cmd_descriptions = NULL;
-	gchar *filter = NULL;
-	GError *error = NULL;
 	guint retval = 1;
+	_cleanup_error_free_ GError *error = NULL;
+	_cleanup_free_ gchar *cmd_descriptions = NULL;
+	_cleanup_free_ gchar *filter = NULL;
 	const GOptionEntry options[] = {
 		{ "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose,
 			/* TRANSLATORS: command line option */
@@ -2541,10 +2224,8 @@ main (int argc, char *argv[])
 	ret = g_option_context_parse (priv->context, &argc, &argv, &error);
 	if (!ret) {
 		/* TRANSLATORS: the user didn't read the man page */
-		g_print ("%s: %s\n",
-			 _("Failed to parse arguments"),
+		g_print ("%s: %s\n", _("Failed to parse arguments"),
 			 error->message);
-		g_error_free (error);
 		goto out;
 	}
 
@@ -2568,7 +2249,6 @@ main (int argc, char *argv[])
 		/* TRANSLATORS: no colord available */
 		g_print ("%s %s\n", _("No connection to colord:"),
 			 error->message);
-		g_error_free (error);
 		goto out;
 	}
 
@@ -2589,14 +2269,12 @@ main (int argc, char *argv[])
 	ret = cd_util_run (priv, argv[1], (gchar**) &argv[2], &error);
 	if (!ret) {
 		if (g_error_matches (error, CD_ERROR, CD_ERROR_NO_SUCH_CMD)) {
-			gchar *tmp;
+			_cleanup_free_ gchar *tmp = NULL;
 			tmp = g_option_context_get_help (priv->context, TRUE, NULL);
 			g_print ("%s", tmp);
-			g_free (tmp);
 		} else {
 			g_print ("%s\n", error->message);
 		}
-		g_error_free (error);
 		goto out;
 	}
 
@@ -2612,8 +2290,6 @@ out:
 		g_option_context_free (priv->context);
 		g_free (priv);
 	}
-	g_free (filter);
-	g_free (cmd_descriptions);
 	return retval;
 }
 

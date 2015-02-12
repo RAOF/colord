@@ -26,6 +26,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <math.h>
+#include <lcms2.h>
 
 #include <glib.h>
 #include <glib/gstdio.h>
@@ -47,6 +48,7 @@
 #include "cd-transform.h"
 #include "cd-version.h"
 
+#include "cd-cleanup.h"
 #include "cd-test-shared.h"
 
 static void
@@ -214,6 +216,10 @@ colord_spectrum_func (void)
 	g_assert_cmpint (cd_spectrum_get_size (s), ==, 3);
 	g_assert_cmpstr (cd_spectrum_get_id (s), ==, "dave");
 
+	/* get resolution of the spectra */
+	val = cd_spectrum_get_resolution (s);
+	g_assert_cmpfloat (ABS (val - 66.66f), <, 0.01f);
+
 	/* test interpolation */
 	val = cd_spectrum_get_value_for_nm (s, 100.1f);
 	g_assert_cmpfloat (ABS (val - 0.50f), <, 0.001f);
@@ -226,12 +232,28 @@ colord_spectrum_func (void)
 	g_assert_cmpfloat (ABS (cd_spectrum_get_value_for_nm (s, 50) - 0.5), <, 0.0001f);
 	g_assert_cmpfloat (ABS (cd_spectrum_get_value_for_nm (s, 350) - 1.0f), <, 0.0001f);
 
-	/* test normalisation */
+	/* test normalisation to a specific wavelength */
 	cd_spectrum_normalize (s, 200, 1.f);
 	g_assert_cmpfloat (ABS (cd_spectrum_get_value (s, 0) - 0.666f), <, 0.001f);
 	g_assert_cmpfloat (ABS (cd_spectrum_get_value (s, 1) - 1.000f), <, 0.001f);
 	g_assert_cmpfloat (ABS (cd_spectrum_get_value (s, 2) - 1.333f), <, 0.001f);
 	g_assert_cmpfloat (ABS (cd_spectrum_get_norm (s) - 1.333f), <, 0.001f);
+
+	/* test normalisation */
+	cd_spectrum_normalize_max (s, 100.f);
+	g_assert_cmpfloat (ABS (cd_spectrum_get_value (s, 0) - 50.f), <, 0.001f);
+	g_assert_cmpfloat (ABS (cd_spectrum_get_value (s, 1) - 75.f), <, 0.001f);
+	g_assert_cmpfloat (ABS (cd_spectrum_get_value (s, 2) - 100.f), <, 0.001f);
+	g_assert_cmpfloat (ABS (cd_spectrum_get_norm (s) - 100.f), <, 0.001f);
+
+	/* test raw value */
+	g_assert_cmpfloat (ABS (cd_spectrum_get_value_raw (s, 0) - 0.5f), <, 0.001f);
+	g_assert_cmpfloat (ABS (cd_spectrum_get_value_raw (s, 1) - 0.75f), <, 0.001f);
+	g_assert_cmpfloat (ABS (cd_spectrum_get_value_raw (s, 2) - 1.f), <, 0.001f);
+
+	/* test setting of data */
+	cd_spectrum_set_value (s, 0, 10.f);
+	g_assert_cmpfloat (ABS (cd_spectrum_get_value (s, 0) - 10.0f), <, 0.001f);
 
 	cd_spectrum_free (s);
 }
@@ -2080,6 +2102,57 @@ colord_icc_tags_func (void)
 	g_object_unref (icc);
 }
 
+static void
+colord_it8_gamma_func (void)
+{
+	CdColorRGB rgb;
+	CdColorXYZ xyz;
+	CdColorXYZ *tmp;
+	GError *error = NULL;
+	cmsToneCurve *curve;
+	gboolean ret;
+	gdouble gamma_est;
+	guint i;
+	_cleanup_object_unref_ CdIt8 *it8 = NULL;
+
+	/* add some dummy primary data  */
+	it8 = cd_it8_new_with_kind (CD_IT8_KIND_TI3);
+	cd_color_rgb_set (&rgb, 1.f, 0.f, 0.f);
+	cd_color_xyz_set (&xyz, 0.9f, 0.f, 0.f);
+	cd_it8_add_data (it8, &rgb, &xyz);
+	cd_color_rgb_set (&rgb, 0.f, 1.f, 0.f);
+	cd_color_xyz_set (&xyz, 0.f, 0.9f, 0.f);
+	cd_it8_add_data (it8, &rgb, &xyz);
+	cd_color_rgb_set (&rgb, 0.f, 9.f, 1.f);
+	cd_color_xyz_set (&xyz, 0.f, 0.f, 0.9f);
+	cd_it8_add_data (it8, &rgb, &xyz);
+
+	/* find green */
+	tmp = cd_it8_get_xyz_for_rgb (it8, 0.f, 1.f, 0.f, 0.01f);
+	g_assert (tmp != NULL);
+	g_assert_cmpfloat (ABS (tmp->X - 0.0f), <, 0.01);
+	g_assert_cmpfloat (ABS (tmp->Y - 0.9f), <, 0.01);
+	g_assert_cmpfloat (ABS (tmp->Z - 0.0f), <, 0.01);
+
+	/* add some ramp data with a gamma of 2.4 */
+	curve = cmsBuildGamma (NULL, 2.4);
+	for (i = 0; i < 11; i++) {
+		gdouble slice = 0.1f * (gdouble) i;
+		gdouble y = cmsEvalToneCurveFloat (curve, slice);
+		cd_color_rgb_set (&rgb, slice, slice, slice);
+		cd_color_xyz_set (&xyz, 1.f, y, 1.f);
+		cd_it8_add_data (it8, &rgb, &xyz);
+	}
+	cmsFreeToneCurve (curve);
+
+	/* find the data and estimate */
+	ret = cd_it8_utils_calculate_gamma (it8, &gamma_est, &error);
+	g_assert_no_error (error);
+	g_assert (ret);
+	g_assert_cmpfloat (gamma_est, <, 2.5);
+	g_assert_cmpfloat (gamma_est, >, 2.3);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -2116,6 +2189,7 @@ main (int argc, char **argv)
 	g_test_add_func ("/colord/color{blackbody}", colord_color_blackbody_func);
 	g_test_add_func ("/colord/math", cd_test_math_func);
 	g_test_add_func ("/colord/it8{raw}", colord_it8_raw_func);
+	g_test_add_func ("/colord/it8{gamma}", colord_it8_gamma_func);
 	g_test_add_func ("/colord/it8{locale}", colord_it8_locale_func);
 	g_test_add_func ("/colord/it8{normalized}", colord_it8_normalized_func);
 	g_test_add_func ("/colord/it8{ccmx}", colord_it8_ccmx_func);

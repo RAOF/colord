@@ -3,7 +3,7 @@ AC_PREREQ(2.63)
 
 m4_define([cd_major_version], [1])
 m4_define([cd_minor_version], [2])
-m4_define([cd_micro_version], [4])
+m4_define([cd_micro_version], [8])
 m4_define([cd_version],
           [cd_major_version.cd_minor_version.cd_micro_version])
 
@@ -14,7 +14,8 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_PROG_LIBTOOL
 
-GOBJECT_INTROSPECTION_CHECK([0.9.8])
+m4_ifdef([GOBJECT_INTROSPECTION_CHECK], [GOBJECT_INTROSPECTION_CHECK([0.9.8])])
+AM_CONDITIONAL(HAVE_INTROSPECTION, test "x$found_introspection" = xyes)
 GLIB_GSETTINGS
 
 # set up gtk-doc
@@ -38,7 +39,7 @@ AC_SUBST(CD_MICRO_VERSION)
 # REVISION	If the API and ABI remains the same, but bugs are fixed.
 # AGE		Don't use.
 LT_CURRENT=2
-LT_REVISION=2
+LT_REVISION=3
 LT_AGE=0
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
@@ -139,14 +140,58 @@ AX_CHECK_LINK_FLAG([-Wl,-z,relro,-z,now],
 AC_SUBST([RELRO_LDFLAGS])
 
 dnl ---------------------------------------------------------------------------
+dnl - Check headers and functions that may not exist on all platforms
+dnl ---------------------------------------------------------------------------
+AC_CHECK_HEADERS([pwd.h])
+AC_CHECK_HEADERS([syslog.h])
+AC_CHECK_FUNC(getuid, AC_DEFINE([HAVE_GETUID], [], [getuid() is available]))
+
+dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
 COLORD_REQUIRES_PRIVATE="lcms2"
-PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.36.0 gobject-2.0 gthread-2.0 gio-2.0 >= 2.25.9 gio-unix-2.0 gmodule-2.0)
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.36.0 gobject-2.0 gthread-2.0 gio-2.0 >= 2.25.9 gmodule-2.0)
+
+dnl ---------------------------------------------------------------------------
+dnl - Check Linux-specific dependencies
+dnl ---------------------------------------------------------------------------
+AC_CHECK_DEFINE([__unix__], enable_unix="yes", enable_unix="no")
+if test x$enable_unix != xno; then
+	PKG_CHECK_MODULES(GLIB_UNIX, gio-unix-2.0)
+	CD_IT8="\$(top_builddir)/client/cd-it8"
+	CD_CREATE_PROFILE="\$(top_builddir)/client/cd-create-profile"
+else
+	# look for a wine that can run our win32 and win64 client tools
+	case "$build_cpu" in
+	x86_64*)
+		AC_PATH_PROG(WINE, wine64, no);;
+	*)
+		AC_PATH_PROG(WINE, wine, no);;
+	esac
+
+	# we don't have wine, so try to use the system tools instead
+	if test $WINE = no; then
+		AC_PATH_PROG(CD_IT8, [cd-it8], no)
+		if test $CD_IT8 = no; then
+			AC_MSG_ERROR([Non-UNIX build requires either wine or colord])
+		fi
+		AC_PATH_PROG(CD_CREATE_PROFILE, [cd-create-profile], no)
+		if test $CD_CREATE_PROFILE = no; then
+			AC_MSG_ERROR([Non-UNIX build requires either wine or colord])
+		fi
+	else
+		CD_IT8="$WINE \$(top_builddir)/client/cd-it8\$(EXEEXT)"
+		CD_CREATE_PROFILE="$WINE \$(top_builddir)/client/cd-create-profile\$(EXEEXT)"
+	fi
+fi
+AC_SUBST([CD_IT8])
+AC_SUBST([CD_CREATE_PROFILE])
+AM_CONDITIONAL(HAVE_UNIX, test x$enable_unix = xyes)
+
 AC_ARG_ENABLE(gusb, AS_HELP_STRING([--enable-gusb],[Enable GUSB support]),
 	      enable_gusb=$enableval, enable_gusb=yes)
 if test x$enable_gusb != xno; then
-	PKG_CHECK_MODULES(GUSB, gusb >= 0.1.1)
+	PKG_CHECK_MODULES(GUSB, gusb >= 0.2.2)
 	AC_DEFINE(HAVE_GUSB,1,[whether gusb is available])
 fi
 AM_CONDITIONAL(HAVE_GUSB, test x$enable_gusb = xyes)
@@ -248,9 +293,24 @@ dnl ---------------------------------------------------------------------------
 AC_ARG_ENABLE(examples, AS_HELP_STRING([--enable-examples],[enable DBus example code]),
 	      enable_examples=$enableval,enable_examples=yes)
 AM_CONDITIONAL(CD_BUILD_EXAMPLES, test x$enable_examples = xyes)
-PKG_CHECK_MODULES(DBUS, dbus-1, have_dbus=yes, have_dbus=no)
-if test x$enable_examples = xyes -a x$have_dbus = xno ; then
-	AC_MSG_ERROR([DBus examples require dbus-1 package, not found])
+if test x$enable_examples = xyes; then
+	PKG_CHECK_MODULES(DBUS, dbus-1, have_dbus=yes, have_dbus=no)
+	if test x$have_dbus = xno ; then
+		AC_MSG_ERROR([DBus examples require dbus-1 package, not found])
+	fi
+fi
+
+dnl ---------------------------------------------------------------------------
+dnl - Build ArgyllCMS sensor
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE(argyllcms-sensor, AS_HELP_STRING([--enable-argyllcms-sensor],[enable ArgllCMS sensor]),
+	      enable_argyllcms_sensor=$enableval,enable_argyllcms_sensor=yes)
+AM_CONDITIONAL(HAVE_ARGYLLCMS_SENSOR, test x$enable_argyllcms_sensor = xyes)
+if test x$enable_argyllcms_sensor = xyes; then
+	AC_PATH_PROG(SPOTREAD, spotread, no)
+	if test "$SPOTREAD" = "no" ; then
+		AC_MSG_ERROR([argyllcms sensor requires spotread, not found])
+	fi
 fi
 
 dnl ---------------------------------------------------------------------------
@@ -266,6 +326,7 @@ AC_ARG_ENABLE(sane, AS_HELP_STRING([--enable-sane],[Enable SANE support]),
 has_sane=no
 if test x$enable_sane != xno; then
 	PKG_CHECK_MODULES(SANE, sane-backends, has_sane=yes, has_sane=no)
+	PKG_CHECK_MODULES(DBUS, dbus-1, have_dbus=yes, have_dbus=no)
 	if test $has_sane = "no"; then
 		# fall back to detecting the header for some distros
 		AC_CHECK_HEADER(sane/sane.h, has_sane=yes, has_sane=no)
@@ -424,6 +485,8 @@ echo "
         compiler:                  ${CC}
         cflags:                    ${CFLAGS}
         cppflags:                  ${CPPFLAGS}
+        cd-it8:                    ${CD_IT8}
+        cd-create-profile:         ${CD_CREATE_PROFILE}
         gobject-introspection:     ${found_introspection}
         PolicyKit support:         ${enable_polkit}
         Reverse engineering tools: ${enable_reverse}
@@ -433,12 +496,14 @@ echo "
         GUsb support:              ${enable_gusb}
         Extra print profiles:      ${enable_print_profiles}
         Install tests:             ${enable_installed_tests}
+        ArgyllCMS sensor:          ${enable_argyllcms_sensor}
         Building libcolordcompat:  ${build_libcolordcompat}
         Vala API generator:        ${has_vapigen}
         Daemon user:               ${daemon_user}
         udev rules.d dir:          ${with_udevrulesdir}
         using libsystemd-login:    ${enable_systemd_login}
         systemd service dir:       ${with_systemdsystemunitdir}
+        Unix support:              ${enable_unix}
 "
 
 

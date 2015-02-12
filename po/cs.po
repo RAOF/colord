@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: colord\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-31 09:13+0100\n"
-"PO-Revision-Date: 2014-03-31 09:17+0000\n"
+"POT-Creation-Date: 2014-11-24 14:27+0000\n"
+"PO-Revision-Date: 2014-11-10 13:44+0000\n"
 "Last-Translator: Milan Knížek <knizek@volny.cz>\n"
 "Language-Team: Czech (http://www.transifex.com/projects/p/colord/language/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -30,6 +30,7 @@ msgstr "Profil k vytvoření"
 msgid "ICC profile creation program"
 msgstr "Program, který vytvořil profil ICC"
 
+#. TRANSLATORS: the user didn't read the man page
 msgid "Failed to parse arguments"
 msgstr "Selhalo rozpoznání argumentů"
 
@@ -117,11 +118,16 @@ msgstr "Vytvořit CMF z CSV"
 msgid "Create a spectrum from CSV data"
 msgstr "Vytvořit spektrum z textových dat (CSV)"
 
+#. TRANSLATORS: command description
+msgid "Create a CCMX from reference and measurement data"
+msgstr "Vytvořit CCMX z referenčních a změřených dat"
+
 #. TRANSLATORS: this is the profile creation date strftime format
 msgid "%B %e %Y, %I:%M:%S %p"
 msgstr "%B %e %Y, %I:%M:%S %p"
 
 #. TRANSLATORS: profile owner
+#. TRANSLATORS: profile UID
 msgid "Owner"
 msgstr "Vlastník"
 

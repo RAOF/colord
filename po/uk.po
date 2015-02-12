@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Richard Hughes <richard@hughsie.com>, 2011,2013
-# vylekzhanin <vylekzhanin@mail.ru>, 2013
-# vylekzhanin <vylekzhanin@mail.ru>, 2013
+# Serge Vylekzhanin <vylekzhanin@mail.ru>, 2013
+# Serge Vylekzhanin <vylekzhanin@mail.ru>, 2013
 # Yuri Chornoivan <yurchor@ukr.net>, 2009-2014
 msgid ""
 msgstr ""
 "Project-Id-Version: colord\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-31 09:13+0100\n"
-"PO-Revision-Date: 2014-03-31 09:59+0000\n"
+"POT-Creation-Date: 2014-11-24 14:27+0000\n"
+"PO-Revision-Date: 2014-11-10 13:44+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/projects/p/colord/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,7 @@ msgstr "Профіль, який слід створити"
 msgid "ICC profile creation program"
 msgstr "Програма для створення профілів ICC"
 
+#. TRANSLATORS: the user didn't read the man page
 msgid "Failed to parse arguments"
 msgstr "Не вдалося обробити аргументи"
 
@@ -116,11 +117,16 @@ msgstr "Створити CMF на основі даних CSV"
 msgid "Create a spectrum from CSV data"
 msgstr "Створити спектр на основі даних CSV"
 
+#. TRANSLATORS: command description
+msgid "Create a CCMX from reference and measurement data"
+msgstr "Створити CCMX на основі еталонних даних та даних вимірювань"
+
 #. TRANSLATORS: this is the profile creation date strftime format
 msgid "%B %e %Y, %I:%M:%S %p"
 msgstr "%B %e %Y, %I:%M:%S %p"
 
 #. TRANSLATORS: profile owner
+#. TRANSLATORS: profile UID
 msgid "Owner"
 msgstr "Власник"
 

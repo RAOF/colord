@@ -755,6 +755,7 @@ cd_it8_get_data_item
 cd_it8_get_spectrum_array
 cd_it8_get_spectrum_by_id
 cd_it8_has_option
+cd_it8_get_xyz_for_rgb
 <SUBSECTION Standard>
 CD_IS_IT8
 CD_IS_IT8_CLASS
@@ -771,6 +772,7 @@ cd_it8_get_type
 cd_it8_utils_calculate_ccmx
 cd_it8_utils_calculate_xyz_from_cmf
 cd_it8_utils_calculate_cri_from_cmf
+cd_it8_utils_calculate_gamma
 </SECTION>
 
 <SECTION>
@@ -943,13 +945,16 @@ cd_spectrum_planckian_new
 cd_spectrum_free
 cd_spectrum_dup
 cd_spectrum_normalize
+cd_spectrum_normalize_max
 cd_spectrum_get_id
 cd_spectrum_get_data
 cd_spectrum_get_start
 cd_spectrum_get_end
 cd_spectrum_get_norm
+cd_spectrum_get_resolution
 cd_spectrum_get_size
 cd_spectrum_get_value
+cd_spectrum_get_value_raw
 cd_spectrum_get_wavelength
 cd_spectrum_get_value_for_nm
 cd_spectrum_set_id
@@ -957,6 +962,7 @@ cd_spectrum_set_data
 cd_spectrum_set_start
 cd_spectrum_set_end
 cd_spectrum_set_norm
+cd_spectrum_set_value
 cd_spectrum_add_value
 cd_spectrum_multiply
 <SUBSECTION Standard>

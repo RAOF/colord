@@ -106,7 +106,6 @@ struct _CdSensorPrivate
 	GHashTable			*metadata;
 #ifdef HAVE_GUSB
 	GUsbContext			*usb_ctx;
-	GUsbDeviceList			*device_list;
 #endif
 };
 
@@ -1106,6 +1105,7 @@ cd_sensor_open_usb_device (CdSensor *sensor,
 			   gint interface,
 			   GError **error)
 {
+#ifdef HAVE_UDEV
 	CdSensorPrivate *priv = sensor->priv;
 	guint8 busnum;
 	guint8 devnum;
@@ -1114,8 +1114,8 @@ cd_sensor_open_usb_device (CdSensor *sensor,
 	/* convert from GUdevDevice to GUsbDevice */
 	busnum = g_udev_device_get_sysfs_attr_as_int (priv->device, "busnum");
 	devnum = g_udev_device_get_sysfs_attr_as_int (priv->device, "devnum");
-	device = g_usb_device_list_find_by_bus_address (priv->device_list,
-							busnum, devnum, error);
+	device = g_usb_context_find_by_bus_address (priv->usb_ctx,
+						    busnum, devnum, error);
 	if (device == NULL)
 		return NULL;
 
@@ -1130,6 +1130,10 @@ cd_sensor_open_usb_device (CdSensor *sensor,
 		return NULL;
 	}
 	return g_object_ref (device);
+#else
+	g_set_error_literal (error, 1, 0, "failed: no gudev support");
+	return NULL;
+#endif
 }
 #endif
 
@@ -1283,7 +1287,7 @@ void
 cd_sensor_set_index (CdSensor *sensor,
 		     guint idx)
 {
-	_cleanup_free_ gchar *id;
+	_cleanup_free_ gchar *id = NULL;
 	id = g_strdup_printf ("%s-%02i",
 			      cd_sensor_kind_to_string (sensor->priv->kind),
 			      idx);
@@ -1503,7 +1507,6 @@ cd_sensor_init (CdSensor *sensor)
 	sensor->priv->mode = CD_SENSOR_CAP_UNKNOWN;
 #ifdef HAVE_GUSB
 	sensor->priv->usb_ctx = g_usb_context_new (NULL);
-	sensor->priv->device_list = g_usb_device_list_new (sensor->priv->usb_ctx);
 #endif
 	sensor->priv->options = g_hash_table_new_full (g_str_hash,
 						       g_str_equal,
@@ -1542,7 +1545,6 @@ cd_sensor_finalize (GObject *object)
 	g_hash_table_unref (priv->metadata);
 #ifdef HAVE_GUSB
 	g_object_unref (priv->usb_ctx);
-	g_object_unref (priv->device_list);
 #endif
 #ifdef HAVE_UDEV
 	if (priv->device != NULL)

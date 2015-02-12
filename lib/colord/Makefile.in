@@ -95,6 +95,7 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/as-linguas.m4 \
 	$(top_srcdir)/m4/ax_check_compile_flag.m4 \
+	$(top_srcdir)/m4/ax_check_define.m4 \
 	$(top_srcdir)/m4/ax_check_link_flag.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gtk-doc.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
@@ -146,7 +147,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(insttestdir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libcolord_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) libcolordprivate.la
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	libcolordprivate.la
 am_libcolord_la_OBJECTS = libcolord_la-cd-client.lo \
 	libcolord_la-cd-client-sync.lo libcolord_la-cd-device.lo \
 	libcolord_la-cd-device-sync.lo libcolord_la-cd-profile.lo \
@@ -162,7 +164,7 @@ libcolord_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(CFLAGS) $(libcolord_la_LDFLAGS) $(LDFLAGS) -o $@
 libcolordprivate_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 am_libcolordprivate_la_OBJECTS =  \
 	libcolordprivate_la-cd-context-lcms.lo \
 	libcolordprivate_la-cd-buffer.lo \
@@ -188,7 +190,8 @@ PROGRAMS = $(insttest_PROGRAMS)
 am_cd_test_daemon_OBJECTS = cd_test_daemon-cd-test-shared.$(OBJEXT) \
 	cd_test_daemon-cd-test-daemon.$(OBJEXT)
 cd_test_daemon_OBJECTS = $(am_cd_test_daemon_OBJECTS)
-cd_test_daemon_DEPENDENCIES = $(am__DEPENDENCIES_1) $(lib_LTLIBRARIES)
+cd_test_daemon_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(lib_LTLIBRARIES)
 cd_test_daemon_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(cd_test_daemon_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o \
@@ -197,7 +200,7 @@ am_cd_test_private_OBJECTS = cd_test_private-cd-test-shared.$(OBJEXT) \
 	cd_test_private-cd-test-private.$(OBJEXT)
 cd_test_private_OBJECTS = $(am_cd_test_private_OBJECTS)
 cd_test_private_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(lib_LTLIBRARIES)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) $(lib_LTLIBRARIES)
 cd_test_private_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(cd_test_private_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
@@ -461,6 +464,8 @@ BASH_COMPLETION_CFLAGS = @BASH_COMPLETION_CFLAGS@
 BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
+CD_CREATE_PROFILE = @CD_CREATE_PROFILE@
+CD_IT8 = @CD_IT8@
 CD_MAJOR_VERSION = @CD_MAJOR_VERSION@
 CD_MICRO_VERSION = @CD_MICRO_VERSION@
 CD_MINOR_VERSION = @CD_MINOR_VERSION@
@@ -493,6 +498,8 @@ GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_COMPILE_SCHEMAS = @GLIB_COMPILE_SCHEMAS@
 GLIB_LIBS = @GLIB_LIBS@
+GLIB_UNIX_CFLAGS = @GLIB_UNIX_CFLAGS@
+GLIB_UNIX_LIBS = @GLIB_UNIX_LIBS@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GNOME_DESKTOP_CFLAGS = @GNOME_DESKTOP_CFLAGS@
@@ -589,6 +596,7 @@ SANE_LIBS = @SANE_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SPOTREAD = @SPOTREAD@
 SQLITE_CFLAGS = @SQLITE_CFLAGS@
 SQLITE_LIBS = @SQLITE_LIBS@
 STRIP = @STRIP@
@@ -598,6 +606,7 @@ USE_NLS = @USE_NLS@
 VAPIGEN = @VAPIGEN@
 VERSION = @VERSION@
 WARNINGFLAGS_C = @WARNINGFLAGS_C@
+WINE = @WINE@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -665,6 +674,7 @@ udevrulesdir = @udevrulesdir@
 @HAVE_INTROSPECTION_TRUE@INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)
 AM_CPPFLAGS = \
 	$(GLIB_CFLAGS)						\
+	$(GLIB_UNIX_CFLAGS)					\
 	$(LCMS_CFLAGS)						\
 	$(PIE_CFLAGS)						\
 	$(UDEV_CFLAGS)						\
@@ -741,7 +751,8 @@ libcolordprivate_la_LIBADD = \
 	$(LIBM)							\
 	$(UDEV_LIBS)						\
 	$(LCMS_LIBS)						\
-	$(GLIB_LIBS)
+	$(GLIB_LIBS)						\
+	$(GLIB_UNIX_LIBS)
 
 libcolordprivate_la_LDFLAGS = \
 	$(PIE_LDFLAGS)						\
@@ -767,6 +778,7 @@ libcolord_la_SOURCES = \
 libcolord_la_LIBADD = \
 	$(UDEV_LIBS)						\
 	$(GLIB_LIBS)						\
+	$(GLIB_UNIX_LIBS)					\
 	libcolordprivate.la
 
 libcolord_la_LDFLAGS = \
@@ -794,6 +806,7 @@ cd_test_daemon_SOURCES = \
 
 cd_test_daemon_LDADD = \
 	$(GLIB_LIBS)						\
+	$(GLIB_UNIX_LIBS)					\
 	$(lib_LTLIBRARIES)
 
 cd_test_daemon_CFLAGS = $(WARNINGFLAGS_C)
@@ -804,6 +817,7 @@ cd_test_private_SOURCES = \
 
 cd_test_private_LDADD = \
 	$(GLIB_LIBS)						\
+	$(GLIB_UNIX_LIBS)					\
 	$(UDEV_LIBS)						\
 	$(lib_LTLIBRARIES)
 

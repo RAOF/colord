@@ -32,6 +32,9 @@
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #define HAVE_GETTEXT 1
 
+/* getuid() is available */
+#define HAVE_GETUID /**/
+
 /* whether gusb is available */
 #define HAVE_GUSB 1
 
@@ -47,6 +50,9 @@
 /* Define to 1 if you have the <memory.h> header file. */
 #define HAVE_MEMORY_H 1
 
+/* Define to 1 if you have the <pwd.h> header file. */
+#define HAVE_PWD_H 1
+
 /* Use SANE support for detecting scanners */
 /* #undef HAVE_SANE */
 
@@ -61,6 +67,9 @@
 
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
+
+/* Define to 1 if you have the <syslog.h> header file. */
+#define HAVE_SYSLOG_H 1
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #define HAVE_SYS_STAT_H 1
@@ -88,7 +97,7 @@
 #define PACKAGE_NAME "colord"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "colord 1.2.4"
+#define PACKAGE_STRING "colord 1.2.8"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "colord"
@@ -97,7 +106,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.2.4"
+#define PACKAGE_VERSION "1.2.8"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -109,4 +118,4 @@
 #define USE_POLKIT 1
 
 /* Version number of package */
-#define VERSION "1.2.4"
+#define VERSION "1.2.8"

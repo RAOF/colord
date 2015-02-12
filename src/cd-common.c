@@ -74,7 +74,7 @@ cd_main_get_sender_uid (GDBusConnection *connection,
 			GError **error)
 {
 	guint uid = G_MAXUINT;
-	_cleanup_variant_unref_ GVariant *value;
+	_cleanup_variant_unref_ GVariant *value = NULL;
 
 	/* call into DBus to get the user ID that issued the request */
 	value = g_dbus_connection_call_sync (connection,
@@ -159,12 +159,14 @@ cd_main_sender_authenticated (GDBusConnection *connection,
 		return TRUE;
 	}
 
+#ifdef HAVE_GETUID
 	/* a client running as the daemon user may also do all actions */
 	if (uid == getuid ()) {
 		g_debug ("CdCommon: not checking %s for %s as running as daemon user",
 			 action_id, sender);
 		return TRUE;
 	}
+#endif
 
 #ifdef USE_POLKIT
 	/* get authority */

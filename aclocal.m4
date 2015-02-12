@@ -1577,6 +1577,7 @@ AC_SUBST([am__untar])
 
 m4_include([m4/as-linguas.m4])
 m4_include([m4/ax_check_compile_flag.m4])
+m4_include([m4/ax_check_define.m4])
 m4_include([m4/ax_check_link_flag.m4])
 m4_include([m4/gettext.m4])
 m4_include([m4/gtk-doc.m4])

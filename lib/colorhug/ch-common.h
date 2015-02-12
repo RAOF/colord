@@ -51,7 +51,7 @@ G_BEGIN_DECLS
 #define	CH_USB_PID_LEGACY			0xf8da
 
 /* the default timeout in client tools */
-#define CH_DEVICE_USB_TIMEOUT			5000 /* ms */
+#define CH_DEVICE_USB_TIMEOUT			10000 /* ms */
 
 /* constants for ownership tags */
 #define CH_OWNER_LENGTH_MAX			60
@@ -929,8 +929,9 @@ G_BEGIN_DECLS
  * The hardware versions are as follows:
  * 0x00		= Pre-production hardware
  * 0x01		= ColorHug
- * 0x02		= ColorHug+
- * 0x03-0x0f	= Reserved for future use
+ * 0x02		= ColorHug2
+ * 0x03		= ColorHug+
+ * 0x04-0x0f	= Reserved for future use
  *
  * IN:  [1:cmd]
  * OUT: [1:retval][1:cmd][1:hw_version]

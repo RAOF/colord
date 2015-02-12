@@ -93,6 +93,7 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/as-linguas.m4 \
 	$(top_srcdir)/m4/ax_check_compile_flag.m4 \
+	$(top_srcdir)/m4/ax_check_define.m4 \
 	$(top_srcdir)/m4/ax_check_link_flag.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gtk-doc.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
@@ -128,7 +129,7 @@ am__DEPENDENCIES_1 =
 cd_self_test_DEPENDENCIES = $(COLORD_PRIVATE_LIBS) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -159,7 +160,7 @@ colord_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(COLORD_PRIVATE_LIBS) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 colord_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(colord_CFLAGS) $(CFLAGS) \
 	$(colord_LDFLAGS) $(LDFLAGS) -o $@
@@ -484,6 +485,8 @@ BASH_COMPLETION_CFLAGS = @BASH_COMPLETION_CFLAGS@
 BASH_COMPLETION_LIBS = @BASH_COMPLETION_LIBS@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
+CD_CREATE_PROFILE = @CD_CREATE_PROFILE@
+CD_IT8 = @CD_IT8@
 CD_MAJOR_VERSION = @CD_MAJOR_VERSION@
 CD_MICRO_VERSION = @CD_MICRO_VERSION@
 CD_MINOR_VERSION = @CD_MINOR_VERSION@
@@ -516,6 +519,8 @@ GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_COMPILE_SCHEMAS = @GLIB_COMPILE_SCHEMAS@
 GLIB_LIBS = @GLIB_LIBS@
+GLIB_UNIX_CFLAGS = @GLIB_UNIX_CFLAGS@
+GLIB_UNIX_LIBS = @GLIB_UNIX_LIBS@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GNOME_DESKTOP_CFLAGS = @GNOME_DESKTOP_CFLAGS@
@@ -612,6 +617,7 @@ SANE_LIBS = @SANE_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SPOTREAD = @SPOTREAD@
 SQLITE_CFLAGS = @SQLITE_CFLAGS@
 SQLITE_LIBS = @SQLITE_LIBS@
 STRIP = @STRIP@
@@ -621,6 +627,7 @@ USE_NLS = @USE_NLS@
 VAPIGEN = @VAPIGEN@
 VERSION = @VERSION@
 WARNINGFLAGS_C = @WARNINGFLAGS_C@
+WINE = @WINE@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -697,6 +704,7 @@ dist_introspection_DATA = \
 AM_CPPFLAGS = \
 	$(PIE_CFLAGS)					\
 	$(GLIB_CFLAGS)					\
+	$(GLIB_UNIX_CFLAGS)				\
 	$(POLKIT_CFLAGS)				\
 	$(LCMS_CFLAGS)					\
 	$(GUDEV_CFLAGS)					\
@@ -741,7 +749,8 @@ colord_LDADD = \
 	$(GUSB_LIBS)					\
 	$(LIBSYSTEMD_LOGIN_LIBS)			\
 	$(COLORD_PRIVATE_LIBS)				\
-	$(GLIB_LIBS)
+	$(GLIB_LIBS)					\
+	$(GLIB_UNIX_LIBS)
 
 colord_LDFLAGS = \
 	$(PIE_LDFLAGS)					\
@@ -785,7 +794,8 @@ cd_self_test_LDADD = \
 	$(LCMS_LIBS)					\
 	$(SQLITE_LIBS)					\
 	$(LIBSYSTEMD_LOGIN_LIBS)			\
-	$(GLIB_LIBS)
+	$(GLIB_LIBS)					\
+	$(GLIB_UNIX_LIBS)
 
 cd_self_test_CFLAGS = $(WARNINGFLAGS_C)
 BUILT_SOURCES = \

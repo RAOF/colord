@@ -76,6 +76,15 @@ cd-spectrum
 @value: 
 
 
+<!-- ##### FUNCTION cd_spectrum_normalize_max ##### -->
+<para>
+
+</para>
+
+@spectrum: 
+@value: 
+
+
 <!-- ##### FUNCTION cd_spectrum_get_id ##### -->
 <para>
 
@@ -121,6 +130,15 @@ cd-spectrum
 @Returns: 
 
 
+<!-- ##### FUNCTION cd_spectrum_get_resolution ##### -->
+<para>
+
+</para>
+
+@spectrum: 
+@Returns: 
+
+
 <!-- ##### FUNCTION cd_spectrum_get_size ##### -->
 <para>
 
@@ -131,6 +149,16 @@ cd-spectrum
 
 
 <!-- ##### FUNCTION cd_spectrum_get_value ##### -->
+<para>
+
+</para>
+
+@spectrum: 
+@idx: 
+@Returns: 
+
+
+<!-- ##### FUNCTION cd_spectrum_get_value_raw ##### -->
 <para>
 
 </para>
@@ -203,6 +231,16 @@ cd-spectrum
 
 @spectrum: 
 @norm: 
+
+
+<!-- ##### FUNCTION cd_spectrum_set_value ##### -->
+<para>
+
+</para>
+
+@spectrum: 
+@idx: 
+@data: 
 
 
 <!-- ##### FUNCTION cd_spectrum_add_value ##### -->

@@ -445,3 +445,16 @@ cd-it8
 @Returns: 
 
 
+<!-- ##### FUNCTION cd_it8_get_xyz_for_rgb ##### -->
+<para>
+
+</para>
+
+@it8: 
+@R: 
+@G: 
+@B: 
+@delta: 
+@Returns: 
+
+
