@@ -421,6 +421,7 @@ libcolordprivate.so.2 libcolord2 #MINVER#
  cd_it8_get_spectrum_by_id@Base 1.2.0
  cd_it8_get_title@Base 0.1.29
  cd_it8_get_type@Base 0.1.29
+ cd_it8_get_xyz_for_rgb@Base 1.2.8
  cd_it8_has_option@Base 0.1.29
  cd_it8_load_from_data@Base 0.1.29
  cd_it8_load_from_file@Base 0.1.29
@@ -440,6 +441,7 @@ libcolordprivate.so.2 libcolord2 #MINVER#
  cd_it8_set_title@Base 0.1.29
  cd_it8_utils_calculate_ccmx@Base 0.1.29
  cd_it8_utils_calculate_cri_from_cmf@Base 1.2.0
+ cd_it8_utils_calculate_gamma@Base 1.2.8
  cd_it8_utils_calculate_xyz_from_cmf@Base 1.2.0
  cd_mat33_clear@Base 0.1.29
  cd_mat33_copy@Base 0.1.29
@@ -483,21 +485,25 @@ libcolordprivate.so.2 libcolord2 #MINVER#
  cd_spectrum_get_end@Base 1.2.0
  cd_spectrum_get_id@Base 1.2.0
  cd_spectrum_get_norm@Base 1.2.0
+ cd_spectrum_get_resolution@Base 1.2.8
  cd_spectrum_get_size@Base 1.2.0
  cd_spectrum_get_start@Base 1.2.0
  cd_spectrum_get_type@Base 1.2.0
  cd_spectrum_get_value@Base 1.2.0
  cd_spectrum_get_value_for_nm@Base 1.2.0
+ cd_spectrum_get_value_raw@Base 1.2.8
  cd_spectrum_get_wavelength@Base 1.2.0
  cd_spectrum_multiply@Base 1.2.0
  cd_spectrum_new@Base 1.2.0
  cd_spectrum_normalize@Base 1.2.0
+ cd_spectrum_normalize_max@Base 1.2.8
  cd_spectrum_planckian_new@Base 1.2.0
  cd_spectrum_set_data@Base 1.2.0
  cd_spectrum_set_end@Base 1.2.0
  cd_spectrum_set_id@Base 1.2.0
  cd_spectrum_set_norm@Base 1.2.0
  cd_spectrum_set_start@Base 1.2.0
+ cd_spectrum_set_value@Base 1.2.8
  cd_spectrum_sized_new@Base 1.2.0
  cd_standard_space_from_string@Base 0.1.29
  cd_standard_space_to_string@Base 0.1.29
