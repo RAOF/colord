@@ -24,6 +24,11 @@ confflags = \
  --enable-vala \
  --disable-silent-rules
 
+# Manually set spotread; the argyll sensor doesn't actually need argyll to build,
+# this value isn't actually used anywhere, and argyll is a significant size to unnecessarily
+# install on the buildds.
+confflags += SPOTREAD=/usr/bin/spotread
+
 # Disabled; Needs Argyll >= 1.6 (not yet in Debian) to be useful
 # Installs plugin into global search path; we'll probably need to patch
 # Argyll to look in a private directory for its plugins instead.

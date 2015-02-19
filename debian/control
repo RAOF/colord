@@ -80,7 +80,9 @@ Depends:
  adduser,
  acl,
  policykit-1 (>= 0.103),
- colord-data
+ colord-data,
+Suggests:
+ colord-sensor-argyll
 Pre-Depends: ${misc:Pre-Depends}
 Multi-Arch: foreign
 Description: system service to manage device colour profiles -- system daemon
@@ -91,6 +93,25 @@ Description: system service to manage device colour profiles -- system daemon
  store, and a mechanism for session applications to set system policy.
  .
  This package contains the dbus-activated colord system daemon.
+
+Package: colord-sensor-argyll
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ colord,
+ argyll,
+Pre-Depends: ${misc:Pre-Depends}
+Enhances: colord
+Description: system service to manage device colour profiles -- argyll sensor plugin
+ colord is a system service that makes it easy to manage, install and generate
+ colour profiles to accurately colour manage input and output devices.
+ .
+ It provides a D-Bus API for system frameworks to query, a persistent data
+ store, and a mechanism for session applications to set system policy.
+ .
+ This package contains a sensor plugin that uses the Argyll tools, allowing colord to
+ support colourimeters that are supported by Argyll.
 
 # Package: colord-argyll-plugin
 # Architecture: any
