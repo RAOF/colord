@@ -110,8 +110,8 @@ Description: system service to manage device colour profiles -- argyll sensor pl
  It provides a D-Bus API for system frameworks to query, a persistent data
  store, and a mechanism for session applications to set system policy.
  .
- This package contains a sensor plugin that uses the Argyll tools, allowing colord to
- support colourimeters that are supported by Argyll.
+ This package contains a sensor plugin that uses the Argyll tools, allowing
+ colord to support colourimeters that are supported by Argyll.
 
 # Package: colord-argyll-plugin
 # Architecture: any
