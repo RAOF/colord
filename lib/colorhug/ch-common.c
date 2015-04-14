@@ -141,6 +141,9 @@ ch_strerror (ChError error_enum)
 	case CH_ERROR_I2C_SLAVE_CONFIG:
 		str = "I2C set slave config failed";
 		break;
+	case CH_ERROR_SELF_TEST_EEPROM:
+		str = "Self test failed: EEPROM";
+		break;
 	default:
 		str = "Unknown error, please report";
 		break;
@@ -434,6 +437,8 @@ ch_device_mode_from_firmware (const guint8 *data, gsize data_len)
 			return CH_DEVICE_MODE_FIRMWARE2;
 		if (memcmp (data + i, CH_FIRMWARE_ID_TOKEN_PLUS, 8) == 0)
 			return CH_DEVICE_MODE_FIRMWARE_PLUS;
+		if (memcmp (data + i, CH_FIRMWARE_ID_TOKEN_ALS, 8) == 0)
+			return CH_DEVICE_MODE_FIRMWARE_ALS;
 	}
 	return CH_DEVICE_MODE_UNKNOWN;
 }

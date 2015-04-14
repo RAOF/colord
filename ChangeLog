@@ -1,6 +1,257 @@
+commit f4c0fb3012ddaffa8ea42db4188ecc962f89b70e
+Author: Richard Hughes <richard@hughsie.com>
+Date:   2015-04-08
+
+    Release colord 1.2.10
+
+M	NEWS
+M	RELEASE
+M	doc/website/download.html
+M	po/cs.po
+M	po/da_DK.po
+M	po/de.po
+M	po/el.po
+M	po/en_GB.po
+M	po/es.po
+M	po/eu.po
+M	po/fi.po
+M	po/fr.po
+M	po/gl.po
+M	po/he.po
+M	po/hu.po
+M	po/id.po
+M	po/it.po
+M	po/ja.po
+M	po/ko.po
+M	po/lv.po
+M	po/nb.po
+M	po/nl.po
+M	po/pl.po
+M	po/pt_BR.po
+M	po/pt_PT.po
+M	po/ro.po
+M	po/ru.po
+M	po/sk.po
+M	po/sl.po
+M	po/sr.po
+M	po/sv.po
+M	po/tr.po
+M	po/uk.po
+M	po/zh_CN.po
+M	po/zh_TW.po
+
+commit 059f0af0716e9b893e937af015387e98b11626f2
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-03-25
+
+    Add a vendor quirk for Google
+
+M	lib/colord/cd-quirk.c
+
+commit 41ea4fb7ad0a36165971772c428ca2691e6300a0
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-03-22
+
+    trivial: Fix a typo spotted by Pedro Massieu, many thanks
+
+M	doc/website/faq.html
+M	man/cd-create-profile.sgml
+M	man/cd-fix-profile.sgml
+
+commit 3e866bea5aa1b014a3b11777f79e6bb28daea6c6
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-03-16
+
+    trivial: Remove translations with no actual strings
+
+D	po/bg.po
+D	po/bg_BG.po
+D	po/fa.po
+D	po/ga.po
+D	po/hr.po
+D	po/ia.po
+D	po/ka.po
+D	po/lt.po
+D	po/ms.po
+D	po/nn.po
+D	po/sq.po
+D	po/te.po
+D	po/zh_HK.po
+
+commit 474d3440581ee272a3b01914ba2efe22465904a0
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-03-16
+
+    trivial: Fix the version checking header to have actual values
+
+M	lib/colorhug/ch-version.h.in
+
+commit 7fba4c4968beb228f9f5bbb9fbf13e0d0b7d4b82
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-03-03
+
+    colorhug: Add GUIDs for each device
+
+    This is required to write fwupd-compatible update descriptions.
+
+M	lib/colorhug/ch-common.h
+M	lib/colorhug/ch-device.c
+M	lib/colorhug/ch-device.h
+
+commit ac67f811f0b55b8adf4e35b822be91b8f72a64a4
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-02-27
+
+    trivial: ColorHugALS just became simpler
+
+M	lib/colorhug/ch-common.h
+
+commit dc79e9f87752554ec2114b1844d0da70c2313536
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-02-25
+
+    trivial: Add the hardware version return codes for ColorHugALS
+
+M	lib/colorhug/ch-common.h
+
+commit 089e8ac1626259293252e6cd020fc02638d389f4
+Merge: fc55182 301f24d
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-02-23
+
+    Merge pull request #12 from twaugh/fix-bad-free
+
+    Fix session-helper failing to find argyll tool.
+
+commit 301f24d02158f1e12a2e7ccdf9970d02ecddd534
+Author: Tim Waugh <twaugh@redhat.com>
+Date:	2015-02-23
+
+    Fix session-helper failing to find argyll tool.
+
+    We don't want to free the thing we're trying to return. This fixes the
+    bug introduced in commit b6f7c4d117a06f059a6e852e2dce8c13a3bb1f2c.
+
+    See:
+      https://bugzilla.redhat.com/show_bug.cgi?id=1190720
+
+M	contrib/session-helper/cd-main.c
+
+commit fc55182bd3e642a788b49c188ee54de35c8ea50f
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-02-20
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
+commit dbca12584d38ae28aa04fc238136d86d367e37db
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-02-20
+
+    Release colord 1.2.9
+
+M	NEWS
+M	doc/website/download.html
+
+commit 8a2ebf256c830c7fee3aeed4fe4b0dfef88894ed
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-02-20
+
+    trivial: Update the GtkDoc markup for the ColorHugALS support
+
+M	lib/colorhug/ch-common.h
+
+commit 47295896713aeb42584d20ae0edd7a6075636c30
+Author: Christopher James Halse Rogers <raof@ubuntu.com>
+Date:	2015-02-19
+
+    Fix reporting of logind errors.
+
+    The sd_* functions follow the kernel style of returning the negation
+    of the relevant
+    errno value on error. We therefore need to negate the return value
+    before passing
+    it to strerror().
+
+M	src/cd-main.c
+
+commit d4c31cc698c1085fd5f9a83b614772ea0119a8c2
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-02-16
+
+    colorhug: Return the exact address on verification failure
+
+M	lib/colorhug/ch-device-queue.c
+
+commit d8bc0e74f608753f84c89ff0d8d5e6babc1a1b62
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-02-09
+
+    colorhug: Add CH_ERROR_SELF_TEST_EEPROM error code
+
+M	lib/colorhug/ch-common.c
+M	lib/colorhug/ch-common.h
+
+commit ef72e9006e06c0bd315435a64b1157d5d71e8ae6
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-02-09
+
+    trivial: Hide the _LAST enum from the gtk-doc scanner
+
+M	lib/colorhug/ch-common.h
+
+commit 2e3bfe11115873d408a58769a7f5ccfd43054a7d
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-02-05
+
+    colorhug: Add support for the ColorHug ALS device
+
+M	lib/colorhug/ch-common.c
+M	lib/colorhug/ch-common.h
+M	lib/colorhug/ch-device-queue.c
+M	lib/colorhug/ch-device.c
+M	lib/colorhug/ch-device.h
+M	lib/colorhug/ch-inhx32.c
+M	lib/colorhug/ch-inhx32.h
+M	rules/69-cd-sensors.rules.in
+
+commit 98204831008414576eba2907277842c62e5a4aee
+Author: Christopher James Halse Rogers <raof@ubuntu.com>
+Date:	2015-02-13
+
+    Fix cd-test-private linking.
+
+    cd-test-private directly uses symbols from lcms2, so it's not
+    incorrect for it
+    to explicitly link to LCMS_LIBS.
+
+    I'm not entirely sure why libtool isn't adding that link
+    automatically, though.
+
+M	lib/colord/Makefile.am
+
+commit 8360abdc60975853cef7286983cc9eb19404ef5d
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-01-15
+
+    trivial: Endpoints are uint8 in size
+
+M	lib/colorhug/ch-common.h
+
+commit c5a77d70d1d4935a4ccec5f1a0ffab2972c02a21
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-01-15
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
 commit 3d1bbfe7b35326009d4e6c734ab57443fac303ff
 Author: Richard Hughes <richard@hughsie.com>
-Date:   2015-01-15
+Date:	2015-01-15
 
     Release colord 1.2.8
 

@@ -1,3 +1,26 @@
+Version 1.2.10
+~~~~~~~~~~~~~~
+Released: 2015-04-08
+
+New Features:
+ - colorhug: Add GUIDs for each device (Richard Hughes)
+
+Bugfixes:
+ - Add a vendor quirk for Google (Richard Hughes)
+ - Fix session-helper failing to find argyll tool (Tim Waugh)
+
+Version 1.2.9
+~~~~~~~~~~~~~
+Released: 2015-02-20
+
+New Features:
+ - colorhug: Add support for the ColorHug ALS device (Richard Hughes)
+ - colorhug: Return the exact address on verification failure (Richard Hughes)
+
+Bugfixes:
+ - Fix cd-test-private linking (Christopher James Halse Rogers)
+ - Fix reporting of logind errors (Christopher James Halse Rogers)
+
 Version 1.2.8
 ~~~~~~~~~~~~~
 Released: 2015-01-15
