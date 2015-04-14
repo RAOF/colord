@@ -1,3 +1,16 @@
+colord (1.2.10-1) UNRELEASED; urgency=medium
+
+  * Remove no-longer-used colord.conf (Closes: 751212)
+  * Add new symbols to libcolord-private symbols file
+  * Add new functions to libcolorhug2 symbols file
+  * Add newly-introduced symbols to symbols file
+  * Update DEP8 control for libtool-bin split
+  * Output better logs on DEP8 failures
+  * Add colord-sensor-argyll package
+  * Disable strangely-failing DEP8 test
+
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Tue, 14 Apr 2015 12:26:37 +1000
+
 colord (1.2.1-1) unstable; urgency=medium
 
   * New upstream stable release. Fixes unsafe pointer cast, so
