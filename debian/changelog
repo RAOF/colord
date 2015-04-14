@@ -1,4 +1,4 @@
-colord (1.2.10-1) UNRELEASED; urgency=medium
+colord (1.2.10-1) experimental; urgency=medium
 
   * Remove no-longer-used colord.conf (Closes: 751212)
   * Add new symbols to libcolord-private symbols file
@@ -9,7 +9,7 @@ colord (1.2.10-1) UNRELEASED; urgency=medium
   * Add colord-sensor-argyll package
   * Disable strangely-failing DEP8 test
 
- -- Christopher James Halse Rogers <raof@ubuntu.com>  Tue, 14 Apr 2015 12:26:37 +1000
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Tue, 14 Apr 2015 08:33:53 -0500
 
 colord (1.2.1-1) unstable; urgency=medium
 
