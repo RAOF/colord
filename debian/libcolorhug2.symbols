@@ -3,7 +3,9 @@ libcolorhug.so.2 libcolorhug2 #MINVER#
  ch_command_to_string@Base 0.1.30
  ch_device_check_firmware@Base 1.2.4
  ch_device_error_quark@Base 0.1.30
+ ch_device_get_guid@Base 1.2.10
  ch_device_get_mode@Base 0.1.30
+ ch_device_get_runcode_address@Base 1.2.10
  ch_device_is_colorhug@Base 0.1.30
  ch_device_mode_from_firmware@Base 1.2.4
  ch_device_mode_to_string@Base 0.1.30
@@ -78,6 +80,7 @@ libcolorhug.so.2 libcolorhug2 #MINVER#
  ch_device_write_command_finish@Base 0.1.30
  ch_double_to_packed_float@Base 0.1.30
  ch_inhx32_to_bin@Base 0.1.30
+ ch_inhx32_to_bin_full@Base 1.2.10
  ch_measure_mode_to_string@Base 0.1.30
  ch_multiplier_to_string@Base 0.1.30
  ch_packed_float_add@Base 0.1.30
