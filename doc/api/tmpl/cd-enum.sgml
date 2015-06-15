@@ -9,12 +9,10 @@ cd-enum
 
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -182,6 +180,7 @@ cd-enum
 @CD_SENSOR_KIND_SPYDER4: 
 @CD_SENSOR_KIND_COLOR_MUNKI_SMILE: 
 @CD_SENSOR_KIND_COLORHUG2: 
+@CD_SENSOR_KIND_SPYDER5: 
 
 <!-- ##### MACRO CD_SENSOR_KIND_COLORHUG_SPECTRO ##### -->
 <para>

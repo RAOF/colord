@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!DOCTYPE book PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">
-<book xmlns="http://www.devhelp.net/book" title="colord Reference Manual" link="index.html" author="Richard Hughes" name="colord" version="2" language="c">
+<book xmlns="" title="colord Reference Manual" link="index.html" author="Richard Hughes" name="colord" version="2" language="c">
   <chapters>
     <sub name="D-Bus API Reference" link="ref-dbus.html">
       <sub name="Annotation Glossary" link="ref-dbus.html#annotation-glossary"/>
@@ -40,98 +39,6 @@
     <sub name="License" link="license.html"/>
   </chapters>
   <functions>
-    <keyword type="" name="GetDevices ()" link="ColorManager.html#ColorManager.GetDevices"/>
-    <keyword type="" name="GetDevicesByKind ()" link="ColorManager.html#ColorManager.GetDevicesByKind"/>
-    <keyword type="" name="FindDeviceById ()" link="ColorManager.html#ColorManager.FindDeviceById"/>
-    <keyword type="" name="FindSensorById ()" link="ColorManager.html#ColorManager.FindSensorById"/>
-    <keyword type="" name="FindDeviceByProperty ()" link="ColorManager.html#ColorManager.FindDeviceByProperty"/>
-    <keyword type="" name="FindProfileById ()" link="ColorManager.html#ColorManager.FindProfileById"/>
-    <keyword type="" name="FindProfileByProperty ()" link="ColorManager.html#ColorManager.FindProfileByProperty"/>
-    <keyword type="" name="FindProfileByFilename ()" link="ColorManager.html#ColorManager.FindProfileByFilename"/>
-    <keyword type="" name="GetStandardSpace ()" link="ColorManager.html#ColorManager.GetStandardSpace"/>
-    <keyword type="" name="GetProfiles ()" link="ColorManager.html#ColorManager.GetProfiles"/>
-    <keyword type="" name="GetSensors ()" link="ColorManager.html#ColorManager.GetSensors"/>
-    <keyword type="" name="GetProfilesByKind ()" link="ColorManager.html#ColorManager.GetProfilesByKind"/>
-    <keyword type="" name="CreateProfileWithFd ()" link="ColorManager.html#ColorManager.CreateProfileWithFd"/>
-    <keyword type="" name="CreateProfile ()" link="ColorManager.html#ColorManager.CreateProfile"/>
-    <keyword type="" name="CreateDevice ()" link="ColorManager.html#ColorManager.CreateDevice"/>
-    <keyword type="" name="DeleteDevice ()" link="ColorManager.html#ColorManager.DeleteDevice"/>
-    <keyword type="" name="DeleteProfile ()" link="ColorManager.html#ColorManager.DeleteProfile"/>
-    <keyword type="" name="The Changed signal" link="ColorManager.html#ColorManager::Changed"/>
-    <keyword type="" name="The DeviceAdded signal" link="ColorManager.html#ColorManager::DeviceAdded"/>
-    <keyword type="" name="The DeviceRemoved signal" link="ColorManager.html#ColorManager::DeviceRemoved"/>
-    <keyword type="" name="The DeviceChanged signal" link="ColorManager.html#ColorManager::DeviceChanged"/>
-    <keyword type="" name="The ProfileAdded signal" link="ColorManager.html#ColorManager::ProfileAdded"/>
-    <keyword type="" name="The ProfileRemoved signal" link="ColorManager.html#ColorManager::ProfileRemoved"/>
-    <keyword type="" name="The SensorAdded signal" link="ColorManager.html#ColorManager::SensorAdded"/>
-    <keyword type="" name="The SensorRemoved signal" link="ColorManager.html#ColorManager::SensorRemoved"/>
-    <keyword type="" name="The ProfileChanged signal" link="ColorManager.html#ColorManager::ProfileChanged"/>
-    <keyword type="" name="The &quot;DaemonVersion&quot; property" link="ColorManager.html#ColorManager:DaemonVersion"/>
-    <keyword type="" name="The &quot;SystemVendor&quot; property" link="ColorManager.html#ColorManager:SystemVendor"/>
-    <keyword type="" name="The &quot;SystemModel&quot; property" link="ColorManager.html#ColorManager:SystemModel"/>
-    <keyword type="" name="SetProperty ()" link="Device.html#Device.SetProperty"/>
-    <keyword type="" name="AddProfile ()" link="Device.html#Device.AddProfile"/>
-    <keyword type="" name="RemoveProfile ()" link="Device.html#Device.RemoveProfile"/>
-    <keyword type="" name="MakeProfileDefault ()" link="Device.html#Device.MakeProfileDefault"/>
-    <keyword type="" name="GetProfileForQualifiers ()" link="Device.html#Device.GetProfileForQualifiers"/>
-    <keyword type="" name="GetProfileRelation ()" link="Device.html#Device.GetProfileRelation"/>
-    <keyword type="" name="ProfilingInhibit ()" link="Device.html#Device.ProfilingInhibit"/>
-    <keyword type="" name="ProfilingUninhibit ()" link="Device.html#Device.ProfilingUninhibit"/>
-    <keyword type="" name="SetEnabled ()" link="Device.html#Device.SetEnabled"/>
-    <keyword type="" name="The Changed signal" link="Device.html#Device::Changed"/>
-    <keyword type="" name="The &quot;Created&quot; property" link="Device.html#Device:Created"/>
-    <keyword type="" name="The &quot;Modified&quot; property" link="Device.html#Device:Modified"/>
-    <keyword type="" name="The &quot;Model&quot; property" link="Device.html#Device:Model"/>
-    <keyword type="" name="The &quot;Serial&quot; property" link="Device.html#Device:Serial"/>
-    <keyword type="" name="The &quot;Vendor&quot; property" link="Device.html#Device:Vendor"/>
-    <keyword type="" name="The &quot;Colorspace&quot; property" link="Device.html#Device:Colorspace"/>
-    <keyword type="" name="The &quot;Kind&quot; property" link="Device.html#Device:Kind"/>
-    <keyword type="" name="The &quot;DeviceId&quot; property" link="Device.html#Device:DeviceId"/>
-    <keyword type="" name="The &quot;Profiles&quot; property" link="Device.html#Device:Profiles"/>
-    <keyword type="" name="The &quot;Mode&quot; property" link="Device.html#Device:Mode"/>
-    <keyword type="" name="The &quot;Format&quot; property" link="Device.html#Device:Format"/>
-    <keyword type="" name="The &quot;Scope&quot; property" link="Device.html#Device:Scope"/>
-    <keyword type="" name="The &quot;Owner&quot; property" link="Device.html#Device:Owner"/>
-    <keyword type="" name="The &quot;Enabled&quot; property" link="Device.html#Device:Enabled"/>
-    <keyword type="" name="The &quot;Seat&quot; property" link="Device.html#Device:Seat"/>
-    <keyword type="" name="The &quot;Embedded&quot; property" link="Device.html#Device:Embedded"/>
-    <keyword type="" name="The &quot;Metadata&quot; property" link="Device.html#Device:Metadata"/>
-    <keyword type="" name="The &quot;ProfilingInhibitors&quot; property" link="Device.html#Device:ProfilingInhibitors"/>
-    <keyword type="" name="SetProperty ()" link="Profile.html#Profile.SetProperty"/>
-    <keyword type="" name="InstallSystemWide ()" link="Profile.html#Profile.InstallSystemWide"/>
-    <keyword type="" name="The Changed signal" link="Profile.html#Profile::Changed"/>
-    <keyword type="" name="The &quot;ProfileId&quot; property" link="Profile.html#Profile:ProfileId"/>
-    <keyword type="" name="The &quot;Title&quot; property" link="Profile.html#Profile:Title"/>
-    <keyword type="" name="The &quot;Metadata&quot; property" link="Profile.html#Profile:Metadata"/>
-    <keyword type="" name="The &quot;Qualifier&quot; property" link="Profile.html#Profile:Qualifier"/>
-    <keyword type="" name="The &quot;Format&quot; property" link="Profile.html#Profile:Format"/>
-    <keyword type="" name="The &quot;Kind&quot; property" link="Profile.html#Profile:Kind"/>
-    <keyword type="" name="The &quot;Colorspace&quot; property" link="Profile.html#Profile:Colorspace"/>
-    <keyword type="" name="The &quot;HasVcgt&quot; property" link="Profile.html#Profile:HasVcgt"/>
-    <keyword type="" name="The &quot;IsSystemWide&quot; property" link="Profile.html#Profile:IsSystemWide"/>
-    <keyword type="" name="The &quot;Filename&quot; property" link="Profile.html#Profile:Filename"/>
-    <keyword type="" name="The &quot;Created&quot; property" link="Profile.html#Profile:Created"/>
-    <keyword type="" name="The &quot;Scope&quot; property" link="Profile.html#Profile:Scope"/>
-    <keyword type="" name="The &quot;Owner&quot; property" link="Profile.html#Profile:Owner"/>
-    <keyword type="" name="The &quot;Warnings&quot; property" link="Profile.html#Profile:Warnings"/>
-    <keyword type="" name="Lock ()" link="Sensor.html#Sensor.Lock"/>
-    <keyword type="" name="Unlock ()" link="Sensor.html#Sensor.Unlock"/>
-    <keyword type="" name="GetSample ()" link="Sensor.html#Sensor.GetSample"/>
-    <keyword type="" name="SetOptions ()" link="Sensor.html#Sensor.SetOptions"/>
-    <keyword type="" name="The ButtonPressed signal" link="Sensor.html#Sensor::ButtonPressed"/>
-    <keyword type="" name="The &quot;SensorId&quot; property" link="Sensor.html#Sensor:SensorId"/>
-    <keyword type="" name="The &quot;Kind&quot; property" link="Sensor.html#Sensor:Kind"/>
-    <keyword type="" name="The &quot;State&quot; property" link="Sensor.html#Sensor:State"/>
-    <keyword type="" name="The &quot;Mode&quot; property" link="Sensor.html#Sensor:Mode"/>
-    <keyword type="" name="The &quot;Serial&quot; property" link="Sensor.html#Sensor:Serial"/>
-    <keyword type="" name="The &quot;Model&quot; property" link="Sensor.html#Sensor:Model"/>
-    <keyword type="" name="The &quot;Vendor&quot; property" link="Sensor.html#Sensor:Vendor"/>
-    <keyword type="" name="The &quot;Native&quot; property" link="Sensor.html#Sensor:Native"/>
-    <keyword type="" name="The &quot;Embedded&quot; property" link="Sensor.html#Sensor:Embedded"/>
-    <keyword type="" name="The &quot;Locked&quot; property" link="Sensor.html#Sensor:Locked"/>
-    <keyword type="" name="The &quot;Capabilities&quot; property" link="Sensor.html#Sensor:Capabilities"/>
-    <keyword type="" name="The &quot;Options&quot; property" link="Sensor.html#Sensor:Options"/>
-    <keyword type="" name="The &quot;Metadata&quot; property" link="Sensor.html#Sensor:Metadata"/>
     <keyword type="function" name="cd_color_swatch_get_name ()" link="colord-cd-color.html#cd-color-swatch-get-name" since="0.1.32"/>
     <keyword type="function" name="cd_color_swatch_get_value ()" link="colord-cd-color.html#cd-color-swatch-get-value" since="0.1.32"/>
     <keyword type="function" name="cd_color_xyz_new ()" link="colord-cd-color.html#cd-color-xyz-new" since="0.1.0"/>
@@ -720,5 +627,45 @@
     <keyword type="function" name="cd_sensor_to_string ()" link="colord-cd-sensor.html#cd-sensor-to-string"/>
     <keyword type="macro" name="CD_SENSOR_ERROR" link="colord-cd-sensor.html#CD-SENSOR-ERROR:CAPS"/>
     <keyword type="macro" name="CD_SENSOR_TYPE_ERROR" link="colord-cd-sensor.html#CD-SENSOR-TYPE-ERROR:CAPS"/>
+    <keyword type="constant" name="CD_ICC_ERROR_FAILED_TO_OPEN" link="colord-cd-icc.html#CD-ICC-ERROR-FAILED-TO-OPEN:CAPS"/>
+    <keyword type="constant" name="CD_ICC_ERROR_FAILED_TO_PARSE" link="colord-cd-icc.html#CD-ICC-ERROR-FAILED-TO-PARSE:CAPS"/>
+    <keyword type="constant" name="CD_ICC_ERROR_INVALID_LOCALE" link="colord-cd-icc.html#CD-ICC-ERROR-INVALID-LOCALE:CAPS"/>
+    <keyword type="constant" name="CD_ICC_ERROR_NO_DATA" link="colord-cd-icc.html#CD-ICC-ERROR-NO-DATA:CAPS"/>
+    <keyword type="constant" name="CD_ICC_ERROR_FAILED_TO_SAVE" link="colord-cd-icc.html#CD-ICC-ERROR-FAILED-TO-SAVE:CAPS"/>
+    <keyword type="constant" name="CD_ICC_ERROR_FAILED_TO_CREATE" link="colord-cd-icc.html#CD-ICC-ERROR-FAILED-TO-CREATE:CAPS"/>
+    <keyword type="constant" name="CD_ICC_ERROR_INVALID_COLORSPACE" link="colord-cd-icc.html#CD-ICC-ERROR-INVALID-COLORSPACE:CAPS"/>
+    <keyword type="constant" name="CD_ICC_ERROR_CORRUPTION_DETECTED" link="colord-cd-icc.html#CD-ICC-ERROR-CORRUPTION-DETECTED:CAPS"/>
+    <keyword type="constant" name="CD_ICC_ERROR_INTERNAL" link="colord-cd-icc.html#CD-ICC-ERROR-INTERNAL:CAPS"/>
+    <keyword type="constant" name="CD_ICC_LOAD_FLAGS_NONE" link="colord-cd-icc.html#CD-ICC-LOAD-FLAGS-NONE:CAPS"/>
+    <keyword type="constant" name="CD_ICC_LOAD_FLAGS_NAMED_COLORS" link="colord-cd-icc.html#CD-ICC-LOAD-FLAGS-NAMED-COLORS:CAPS"/>
+    <keyword type="constant" name="CD_ICC_LOAD_FLAGS_TRANSLATIONS" link="colord-cd-icc.html#CD-ICC-LOAD-FLAGS-TRANSLATIONS:CAPS"/>
+    <keyword type="constant" name="CD_ICC_LOAD_FLAGS_METADATA" link="colord-cd-icc.html#CD-ICC-LOAD-FLAGS-METADATA:CAPS"/>
+    <keyword type="constant" name="CD_ICC_LOAD_FLAGS_FALLBACK_MD5" link="colord-cd-icc.html#CD-ICC-LOAD-FLAGS-FALLBACK-MD5:CAPS"/>
+    <keyword type="constant" name="CD_ICC_LOAD_FLAGS_PRIMARIES" link="colord-cd-icc.html#CD-ICC-LOAD-FLAGS-PRIMARIES:CAPS"/>
+    <keyword type="constant" name="CD_ICC_LOAD_FLAGS_CHARACTERIZATION" link="colord-cd-icc.html#CD-ICC-LOAD-FLAGS-CHARACTERIZATION:CAPS"/>
+    <keyword type="constant" name="CD_ICC_LOAD_FLAGS_ALL" link="colord-cd-icc.html#CD-ICC-LOAD-FLAGS-ALL:CAPS"/>
+    <keyword type="constant" name="CD_ICC_SAVE_FLAGS_NONE" link="colord-cd-icc.html#CD-ICC-SAVE-FLAGS-NONE:CAPS"/>
+    <keyword type="constant" name="CD_ICC_STORE_SEARCH_FLAGS_NONE" link="CdIccStore.html#CD-ICC-STORE-SEARCH-FLAGS-NONE:CAPS"/>
+    <keyword type="constant" name="CD_ICC_STORE_SEARCH_FLAGS_CREATE_LOCATION" link="CdIccStore.html#CD-ICC-STORE-SEARCH-FLAGS-CREATE-LOCATION:CAPS"/>
+    <keyword type="constant" name="CD_ICC_STORE_SEARCH_KIND_SYSTEM" link="CdIccStore.html#CD-ICC-STORE-SEARCH-KIND-SYSTEM:CAPS"/>
+    <keyword type="constant" name="CD_ICC_STORE_SEARCH_KIND_MACHINE" link="CdIccStore.html#CD-ICC-STORE-SEARCH-KIND-MACHINE:CAPS"/>
+    <keyword type="constant" name="CD_ICC_STORE_SEARCH_KIND_USER" link="CdIccStore.html#CD-ICC-STORE-SEARCH-KIND-USER:CAPS"/>
+    <keyword type="constant" name="CD_TRANSFORM_ERROR_FAILED_TO_SETUP_TRANSFORM" link="colord-cd-transform.html#CD-TRANSFORM-ERROR-FAILED-TO-SETUP-TRANSFORM:CAPS"/>
+    <keyword type="constant" name="CD_TRANSFORM_ERROR_INVALID_COLORSPACE" link="colord-cd-transform.html#CD-TRANSFORM-ERROR-INVALID-COLORSPACE:CAPS"/>
+    <keyword type="constant" name="CD_TRANSFORM_ERROR_LAST" link="colord-cd-transform.html#CD-TRANSFORM-ERROR-LAST:CAPS"/>
+    <keyword type="constant" name="CD_INTERP_ERROR_FAILED" link="colord-cd-interp.html#CD-INTERP-ERROR-FAILED:CAPS"/>
+    <keyword type="constant" name="CD_INTERP_KIND_LINEAR" link="colord-cd-interp.html#CD-INTERP-KIND-LINEAR:CAPS"/>
+    <keyword type="constant" name="CD_INTERP_KIND_AKIMA" link="colord-cd-interp.html#CD-INTERP-KIND-AKIMA:CAPS"/>
+    <keyword type="constant" name="CD_IT8_ERROR_FAILED" link="colord-cd-it8.html#CD-IT8-ERROR-FAILED:CAPS"/>
+    <keyword type="constant" name="CD_IT8_ERROR_INVALID_FORMAT" link="colord-cd-it8.html#CD-IT8-ERROR-INVALID-FORMAT:CAPS"/>
+    <keyword type="constant" name="CD_IT8_ERROR_UNKNOWN_KIND" link="colord-cd-it8.html#CD-IT8-ERROR-UNKNOWN-KIND:CAPS"/>
+    <keyword type="constant" name="CD_IT8_KIND_UNKNOWN" link="colord-cd-it8.html#CD-IT8-KIND-UNKNOWN:CAPS"/>
+    <keyword type="constant" name="CD_IT8_KIND_TI1" link="colord-cd-it8.html#CD-IT8-KIND-TI1:CAPS"/>
+    <keyword type="constant" name="CD_IT8_KIND_TI3" link="colord-cd-it8.html#CD-IT8-KIND-TI3:CAPS"/>
+    <keyword type="constant" name="CD_IT8_KIND_CCMX" link="colord-cd-it8.html#CD-IT8-KIND-CCMX:CAPS"/>
+    <keyword type="constant" name="CD_IT8_KIND_CAL" link="colord-cd-it8.html#CD-IT8-KIND-CAL:CAPS"/>
+    <keyword type="constant" name="CD_IT8_KIND_CCSS" link="colord-cd-it8.html#CD-IT8-KIND-CCSS:CAPS"/>
+    <keyword type="constant" name="CD_IT8_KIND_SPECT" link="colord-cd-it8.html#CD-IT8-KIND-SPECT:CAPS"/>
+    <keyword type="constant" name="CD_IT8_KIND_CMF" link="colord-cd-it8.html#CD-IT8-KIND-CMF:CAPS"/>
   </functions>
 </book>
