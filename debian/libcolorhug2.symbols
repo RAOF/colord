@@ -2,6 +2,7 @@ libcolorhug.so.2 libcolorhug2 #MINVER#
  ch_color_select_to_string@Base 0.1.30
  ch_command_to_string@Base 0.1.30
  ch_device_check_firmware@Base 1.2.4
+ ch_device_close@Base 1.2.11
  ch_device_error_quark@Base 0.1.30
  ch_device_get_guid@Base 1.2.10
  ch_device_get_mode@Base 0.1.30
