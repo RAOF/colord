@@ -1,4 +1,4 @@
-colord (1.2.11-1) UNRELEASED; urgency=medium
+colord (1.2.11-1) unstable; urgency=medium
 
   * Merge new upstream 1.2.11 release. (Closes: 782477)
   * Cherry pick commit to check for, and prefer, libsystemd over
