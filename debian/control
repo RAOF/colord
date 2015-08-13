@@ -27,7 +27,6 @@ Build-Depends:
 Build-Depends-Indep:
  argyll,
 Standards-Version: 3.9.6
-XS-Testsuite: autopkgtest
 Section: graphics
 Homepage: http://www.freedesktop.org/software/colord/
 Vcs-Git: git://anonscm.debian.org/collab-maint/colord.git
