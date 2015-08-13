@@ -1,4 +1,4 @@
-colord (1.2.11-1) UNRELEASED; urgency=medium
+colord (1.2.11-1) unstable; urgency=medium
 
   * Add missing GFDL licence for documentation
   * Merge new upstream 1.2.11 release. (Closes: 782477)
@@ -14,7 +14,7 @@ colord (1.2.11-1) UNRELEASED; urgency=medium
   * Add colord-sensor-argyll package
   * Disable strangely-failing DEP8 test
 
- -- Christopher James Halse Rogers <raof@ubuntu.com>  Thu, 13 Aug 2015 16:54:17 +1000
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Thu, 13 Aug 2015 08:56:11 +0200
 
 colord (1.2.1-1) unstable; urgency=medium
 
