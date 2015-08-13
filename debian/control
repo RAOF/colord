@@ -30,7 +30,7 @@ Standards-Version: 3.9.6
 XS-Testsuite: autopkgtest
 Section: graphics
 Homepage: http://www.freedesktop.org/software/colord/
-Vcs-Git: git://anonscm.debian.org/git/collab-maint/colord.git
+Vcs-Git: git://anonscm.debian.org/collab-maint/colord.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/colord.git;a=summary
 
 Package: libcolord-dev
