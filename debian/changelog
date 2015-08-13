@@ -1,20 +1,10 @@
-colord (1.2.11-2) UNRELEASED; urgency=medium
-
-  * [c52b5f] Add missing GFDL licence for documentation
-
- -- Christopher James Halse Rogers <raof@ubuntu.com>  Thu, 23 Jul 2015 09:32:41 +0800
-
 colord (1.2.11-1) UNRELEASED; urgency=medium
 
+  * Add missing GFDL licence for documentation
   * Merge new upstream 1.2.11 release. (Closes: 782477)
   * Cherry pick commit to check for, and prefer, libsystemd over
     libsystemd-login. (Closes: 779777)
   * debian/libcolorhug2.symbols: Add new ch_device_close symbol.
-
- -- Christopher James Halse Rogers <raof@ubuntu.com>  Sun, 12 Jul 2015 18:03:09 +1000
-
-colord (1.2.10-1) UNRELEASED; urgency=medium
-
   * Remove no-longer-used colord.conf (Closes: 751212)
   * Add new symbols to libcolord-private symbols file
   * Add new functions to libcolorhug2 symbols file
@@ -24,7 +14,7 @@ colord (1.2.10-1) UNRELEASED; urgency=medium
   * Add colord-sensor-argyll package
   * Disable strangely-failing DEP8 test
 
- -- Christopher James Halse Rogers <raof@ubuntu.com>  Tue, 14 Apr 2015 08:33:53 -0500
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Thu, 13 Aug 2015 16:54:17 +1000
 
 colord (1.2.1-1) unstable; urgency=medium
 
