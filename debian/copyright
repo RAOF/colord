@@ -46,7 +46,7 @@ Files: debian/*
 Copyright: 2011 Christopher James Halse Rogers <raof@ubuntu.com>
 License: GPL-2+
 
-Files: data/profiles
+Files: data/profiles/*
 Copyright: © 2012 Richard Huges <richard@hughsie.com>
 License: CC0
 
