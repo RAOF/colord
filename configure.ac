@@ -3,7 +3,7 @@ AC_PREREQ(2.63)
 
 m4_define([cd_major_version], [1])
 m4_define([cd_minor_version], [2])
-m4_define([cd_micro_version], [11])
+m4_define([cd_micro_version], [12])
 m4_define([cd_version],
           [cd_major_version.cd_minor_version.cd_micro_version])
 
@@ -264,15 +264,19 @@ fi
 AM_CONDITIONAL(BUILD_LIBCOLORDCOMPAT, test x$build_libcolordcompat = xyes)
 
 dnl ---------------------------------------------------------------------------
-dnl - Use libsystemd-login to track the process seat
+dnl - Use systemd-login to track the process seat
 dnl ---------------------------------------------------------------------------
-AC_ARG_ENABLE(systemd-login, AS_HELP_STRING([--enable-systemd-login],[Build systemd-login support]),
+AC_ARG_ENABLE(systemd-login, AS_HELP_STRING([--enable-systemd-login],[Build systemd seat-tracking support]),
 	      enable_systemd_login=$enableval, enable_systemd_login=yes)
 AM_CONDITIONAL(HAVE_LIBSYSTEMD_LOGIN, test x$enable_systemd_login = xyes)
 if test x$enable_systemd_login != xno; then
-	PKG_CHECK_MODULES(LIBSYSTEMD_LOGIN,
-			  [libsystemd-login >= 44])
-	AC_DEFINE([HAVE_LIBSYSTEMD_LOGIN], 1, [Define to 1 if libsystemd-login is available])
+	PKG_CHECK_MODULES(LIBSYSTEMD,
+			  [libsystemd],
+			  [LIBSYSTEMD_LOGIN_CFLAGS=$LIBSYSTEMD_CFLAGS;
+			   LIBSYSTEMD_LOGIN_LIBS=$LIBSYSTEMD_LIBS],
+			  [PKG_CHECK_MODULES(LIBSYSTEMD_LOGIN,
+			                     [libsystemd-login >= 44])])
+	AC_DEFINE([HAVE_LIBSYSTEMD_LOGIN], 1, [Define to 1 if systemd login is available])
 fi
 AC_SUBST(HAVE_LIBSYSTEMD_LOGIN)
 AC_SUBST(LIBSYSTEMD_LOGIN_CFLAGS)
@@ -472,6 +476,7 @@ lib/compat/Makefile
 lib/dtp94/Makefile
 lib/huey/Makefile
 lib/munki/Makefile
+lib/ospark/Makefile
 ])
 AC_OUTPUT
 
@@ -501,7 +506,7 @@ echo "
         Vala API generator:        ${has_vapigen}
         Daemon user:               ${daemon_user}
         udev rules.d dir:          ${with_udevrulesdir}
-        using libsystemd-login:    ${enable_systemd_login}
+        systemd-login support:     ${enable_systemd_login}
         systemd service dir:       ${with_systemdsystemunitdir}
         Unix support:              ${enable_unix}
 "
