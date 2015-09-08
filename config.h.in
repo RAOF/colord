@@ -43,7 +43,7 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if libsystemd-login is available */
+/* Define to 1 if systemd login is available */
 #undef HAVE_LIBSYSTEMD_LOGIN
 
 /* Define to 1 if you have the <memory.h> header file. */

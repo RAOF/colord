@@ -1,6 +1,108 @@
+commit 168025b9530e877ee25c707944f95e0f60859eb7
+Author: Richard Hughes <richard@hughsie.com>
+Date:   2015-08-19
+
+    Release colord 1.2.12
+
+M	NEWS
+M	doc/website/download.html
+M	po/fr.po
+M	po/hu.po
+
+commit 5e60749423a6437506c463d94335e889a5654f42
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-07-29
+
+    trivial: Fix 'make distcheck'
+
+M	lib/ospark/Makefile.am
+
+commit eeac836f256fe07004d67e13c3c89532982af9bd
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-07-20
+
+    Allow creating devices with the same device ID from different users
+
+M	src/cd-device-array.c
+M	src/cd-device-array.h
+M	src/cd-main.c
+M	src/cd-self-test.c
+
+commit 3a309fd52572a1b1f11878c7fbca8705149d6313
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-06-04
+
+    Add a new private library libospark for future use
+
+M	configure.ac
+M	lib/Makefile.am
+M	lib/colord/cd-buffer.c
+A	lib/ospark/Makefile.am
+A	lib/ospark/lsusb.txt
+A	lib/ospark/osp-device.c
+A	lib/ospark/osp-device.h
+A	lib/ospark/osp-enum.c
+A	lib/ospark/osp-enum.h
+A	lib/ospark/osp-self-test.c
+A	lib/ospark/ospark.h
+A	lib/ospark/protocol-dump.csv
+
+commit 2801cba5ac52436d6cc5c8d6877eb661375e26ca
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-06-26
+
+    ColorHug: When converting HEX to BIN pad out the entire size
+
+    This allows us to get a SHA1 hash that we can verify from the device.
+
+M	lib/colorhug/ch-inhx32.c
+
+commit 2b26b510bab62ec9505c6edce09d6615b55396e3
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-06-25
+
+    ColorHug: Add ch_device_queue_read_firmware()
+
+    This allows us to dump a firmware for validation.
+
+M	lib/colorhug/ch-device-queue.c
+M	lib/colorhug/ch-device-queue.h
+
+commit c706874746f6eff28a871903d32ee9f698802ce9
+Merge: 7c7e1a8 326801d
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-06-15
+
+    Merge pull request #15 from RAOF/use-libsystemd
+
+    Check for, and prefer, libsystemd over libsystemd-login.
+
+commit 326801df70a832232022c76e95dfd9e2cfa15fd3
+Author: Christopher James Halse Rogers <raof@ubuntu.com>
+Date:	2015-06-15
+
+    Check for, and prefer, libsystemd over libsystemd-login.
+
+    Systemd 209 merged all the sundry libsystemd-* libraries into a
+    single libsystemd
+    library. Update the systemd-login check to first test for libsystemd,
+    then
+    libsystemd-login if the first check fails.
+
+M	configure.ac
+
+commit 7c7e1a856a7df1be1dc8905c8373fabea58db1d6
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-06-08
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
 commit 017133ea94d5d1a0310349b765fa065d00b78f1e
 Author: Richard Hughes <richard@hughsie.com>
-Date:   2015-06-08
+Date:	2015-06-08
 
     Release colord 1.2.11
 

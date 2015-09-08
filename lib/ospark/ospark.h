@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2012 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2013 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -19,26 +19,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if !defined (__COLORHUG_H_INSIDE__) && !defined (CH_COMPILATION)
-#error "Only <colorhug.h> can be included directly."
-#endif
-
-#ifndef __CH_VERSION_H
-#define __CH_VERSION_H
-
-/* compile time version
+/**
+ * SECTION:ospark
+ * @short_description: Userspace library for the OceanOptics Spark device
+ *
+ * This library allows you to control the OceanOptics Spark spectro.
  */
-#define CH_MAJOR_VERSION				(1)
-#define CH_MINOR_VERSION				(2)
-#define CH_MICRO_VERSION				(12)
 
-/* check whether a Ch version equal to or greater than
- * major.minor.micro.
- */
-#define CH_CHECK_VERSION(major,minor,micro)    \
-    (CH_MAJOR_VERSION > (major) || \
-     (CH_MAJOR_VERSION == (major) && CH_MINOR_VERSION > (minor)) || \
-     (CH_MAJOR_VERSION == (major) && CH_MINOR_VERSION == (minor) && \
-      CH_MICRO_VERSION >= (micro)))
+#ifndef __OSPARK_H__
+#define __OSPARK_H__
 
-#endif /* __CH_VERSION_H */
+#define __OSPARK_H_INSIDE__
+
+#include <ospark/osp-device.h>
+#include <ospark/osp-enum.h>
+
+#undef __OSPARK_H_INSIDE__
+
+#endif /* __OSPARK_H__ */
+
