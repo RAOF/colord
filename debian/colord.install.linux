@@ -2,7 +2,12 @@ debian/tmp/etc/
 lib/udev/rules.d/
 usr/bin/
 usr/lib/colord*
+usr/lib/*/colord-plugins
+usr/lib/*/colord-sensors/lib*-private.so
+usr/lib/*/colord-sensors/libcolord_sensor_colorhug.so
+usr/lib/*/colord-sensors/libcolord_sensor_dtp94.so
 usr/lib/*/colord-sensors/libcolord_sensor_dummy.so
+usr/lib/*/colord-sensors/libcolord_sensor_huey.so
 usr/share/glib-2.0/schemas
 usr/share/dbus-1
 usr/share/man

@@ -25,7 +25,7 @@ Build-Depends:
  bash-completion,
  dh-systemd (>= 1.4),
 Build-Depends-Indep:
- argyll,
+ argyll [linux-any],
 Standards-Version: 3.9.6
 Section: graphics
 Homepage: http://www.freedesktop.org/software/colord/
@@ -94,7 +94,7 @@ Description: system service to manage device colour profiles -- system daemon
  This package contains the dbus-activated colord system daemon.
 
 Package: colord-sensor-argyll
-Architecture: any
+Architecture: linux-any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},

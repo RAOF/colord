@@ -36,14 +36,10 @@ confflags += SPOTREAD=/usr/bin/spotread
 
 ifeq ($(DEB_HOST_ARCH_OS),linux)
 	confflags += --enable-sane --enable-gusb --enable-systemd-login --enable-udev
+	indep_flags = --enable-print-profiles
 else
 	confflags += --disable-sane --disable-gusb --disable-systemd-login --disable-udev
-endif
-
-ifeq ($(DEB_HOST_ARCH_OS),hurd)
 	indep_flags = --disable-print-profiles
-else
-	indep_flags = --enable-print-profiles
 endif
 
 override_dh_auto_configure-arch:
