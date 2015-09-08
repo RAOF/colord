@@ -42,6 +42,7 @@ libcolorhug.so.2 libcolorhug2 #MINVER#
  ch_device_queue_process@Base 0.1.30
  ch_device_queue_process_async@Base 0.1.30
  ch_device_queue_process_finish@Base 0.1.30
+ ch_device_queue_read_firmware@Base 1.2.12
  ch_device_queue_read_flash@Base 0.1.30
  ch_device_queue_read_sram@Base 0.1.30
  ch_device_queue_reset@Base 0.1.30
