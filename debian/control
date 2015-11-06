@@ -101,6 +101,8 @@ Depends:
  colord,
  argyll,
 Pre-Depends: ${misc:Pre-Depends}
+Replaces: colord (<< 1.2.11-1~)
+Breaks: colord (<< 1.2.11-1~)
 Enhances: colord
 Description: system service to manage device colour profiles -- argyll sensor plugin
  colord is a system service that makes it easy to manage, install and generate
