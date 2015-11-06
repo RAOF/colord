@@ -1,3 +1,22 @@
+colord (1.2.12-1) UNRELEASED; urgency=medium
+
+  * Bump standards-version; no changes required
+  * Use canonical Vcs-Git URL
+  * Fix Files: glob in debian/copyright to actually match
+  * Drop obsolete XS-Testsuite stanza; dpkg handles this now
+  * Move hardening-check lintian override to correct package
+  * Fix FTBFS on !Linux architectures.
+    Argyll is now linux-only, so guard all the features that rely on it
+    behind linux-any.
+    Thanks to Pino Toscano <pino@debian.org> (Closes: 795536)
+  * Update libcolorhug symbols for 1.2.12 release
+  * Really, truly, remove obsolete colord.conf. (Closes: 751212)
+  * colord-plugin-argyll: fix upgrade from Jessie.
+    This package was split out of colord as argyll has become Linux-only, so we need
+    to do the Breaks/Replaces dance. (Closes: 798355)
+
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Fri, 06 Nov 2015 16:45:40 +0000
+
 colord (1.2.11-1) unstable; urgency=medium
 
   * Add missing GFDL licence for documentation
