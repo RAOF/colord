@@ -1,4 +1,4 @@
-colord (1.2.12-1) UNRELEASED; urgency=medium
+colord (1.2.12-1) unstable; urgency=medium
 
   * Bump standards-version; no changes required
   * Use canonical Vcs-Git URL
@@ -15,7 +15,7 @@ colord (1.2.12-1) UNRELEASED; urgency=medium
     This package was split out of colord as argyll has become Linux-only, so we need
     to do the Breaks/Replaces dance. (Closes: 798355)
 
- -- Christopher James Halse Rogers <raof@ubuntu.com>  Fri, 06 Nov 2015 16:45:40 +0000
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Fri, 06 Nov 2015 10:51:38 -0600
 
 colord (1.2.11-1) unstable; urgency=medium
 
