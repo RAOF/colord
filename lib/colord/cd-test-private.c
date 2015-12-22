@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2010-2013 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2010-2015 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU Lesser General Public License Version 2.1
  *
@@ -48,7 +48,6 @@
 #include "cd-transform.h"
 #include "cd-version.h"
 
-#include "cd-cleanup.h"
 #include "cd-test-shared.h"
 
 static void
@@ -58,7 +57,7 @@ colord_it8_cri_util_func (void)
 	CdIt8 *tcs;
 	CdIt8 *test;
 	CdSpectrum *f4;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 	gboolean ret;
 	gdouble value = 0.f;
@@ -111,15 +110,15 @@ static void
 colord_it8_spectra_util_func (void)
 {
 	CdColorXYZ value;
-	CdIt8 *cmf;
-	CdIt8 *spectra;
 	CdSpectrum *data;
-	CdSpectrum *unity;
-	GError *error = NULL;
 	GFile *file;
-	GPtrArray *array;
 	gboolean ret;
 	gchar *filename;
+	g_autoptr(CdIt8) cmf = NULL;
+	g_autoptr(CdIt8) spectra = NULL;
+	g_autoptr(CdSpectrum) unity = NULL;
+	g_autoptr(GError) error = NULL;
+	g_autoptr(GPtrArray) array = NULL;
 
 	/* load a CMF */
 	cmf = cd_it8_new ();
@@ -157,17 +156,12 @@ colord_it8_spectra_util_func (void)
 	g_assert_cmpfloat (value.Y, <, 1.f + 0.01);
 	g_assert_cmpfloat (value.Z, >, 0.813050f - 0.01);
 	g_assert_cmpfloat (value.Z, <, 0.813050f + 0.01);
-	g_ptr_array_unref (array);
-
-	cd_spectrum_free (unity);
-	g_object_unref (cmf);
-	g_object_unref (spectra);
 }
 
 static void
 colord_spectrum_planckian_func (void)
 {
-	CdSpectrum *s;
+	g_autoptr(CdSpectrum) s = NULL;
 	guint i;
 
 	s = cd_spectrum_planckian_new (2940);
@@ -182,14 +176,72 @@ colord_spectrum_planckian_func (void)
 		g_assert_cmpfloat (cd_spectrum_get_value (s, i), >, 1.f);
 		g_assert_cmpfloat (cd_spectrum_get_value (s, i), <, 241.f);
 	}
+}
 
-	cd_spectrum_free (s);
+static void
+colord_spectrum_subtract_func (void)
+{
+	g_autoptr(CdSpectrum) s = NULL;
+	g_autoptr(CdSpectrum) s1 = NULL;
+	g_autoptr(CdSpectrum) s2 = NULL;
+	g_autoptr(CdSpectrum) s3 = NULL;
+	g_autoptr(CdSpectrum) s4 = NULL;
+
+	/* source data */
+	s1 = cd_spectrum_new ();
+	cd_spectrum_set_id (s1, "Source");
+	cd_spectrum_set_start (s1, 360);
+	cd_spectrum_set_end (s1, 780);
+	cd_spectrum_add_value (s1, 11);
+	cd_spectrum_add_value (s1, 12);
+	cd_spectrum_add_value (s1, 13);
+	cd_spectrum_add_value (s1, 14);
+
+	/* background */
+	s2 = cd_spectrum_new ();
+	cd_spectrum_set_id (s2, "DarkCalibration");
+	cd_spectrum_set_start (s2, 360);
+	cd_spectrum_set_end (s2, 780);
+	cd_spectrum_add_value (s2, 10);
+	cd_spectrum_add_value (s2, 10);
+	cd_spectrum_add_value (s2, 10);
+	cd_spectrum_add_value (s2, 15);
+
+	/* subtract */
+	s = cd_spectrum_subtract (s1, s2, 5);
+	g_assert_cmpstr (cd_spectrum_get_id (s), ==, "Source-DarkCalibration");
+	g_assert_cmpint (cd_spectrum_get_size (s), ==, 4);
+	g_assert_cmpint (cd_spectrum_get_value_raw (s, 0), ==, 1);
+	g_assert_cmpint (cd_spectrum_get_value_raw (s, 1), ==, 2);
+	g_assert_cmpint (cd_spectrum_get_value_raw (s, 2), ==, 3);
+	g_assert_cmpint (cd_spectrum_get_value_raw (s, 3), ==, -1);
+
+	/* limit this */
+	cd_spectrum_limit_min (s, 0.f);
+	cd_spectrum_limit_max (s, 2.f);
+	g_assert_cmpint (cd_spectrum_get_value_raw (s, 0), ==, 1);
+	g_assert_cmpint (cd_spectrum_get_value_raw (s, 1), ==, 2);
+	g_assert_cmpint (cd_spectrum_get_value_raw (s, 2), ==, 2);
+	g_assert_cmpint (cd_spectrum_get_value_raw (s, 3), ==, 0);
+
+	/* require resampling */
+	s3 = cd_spectrum_new ();
+	cd_spectrum_set_id (s3, "DC");
+	cd_spectrum_set_start (s3, 360);
+	cd_spectrum_set_end (s3, 780);
+	cd_spectrum_add_value (s3, 10);
+	s4 = cd_spectrum_subtract (s1, s3, 84);
+	g_assert_cmpstr (cd_spectrum_get_id (s4), ==, "Source-DC");
+	g_assert_cmpint (cd_spectrum_get_size (s4), ==, 6);
+	g_assert_cmpint (cd_spectrum_get_value_raw (s4, 0), ==, 1);
+	g_assert_cmpint (cd_spectrum_get_value_raw (s4, 5), ==, 4);
 }
 
 static void
 colord_spectrum_func (void)
 {
-	CdSpectrum *s;
+	g_autoptr(CdSpectrum) s = NULL;
+	g_autofree gchar *txt = NULL;
 	gdouble val;
 
 	s = cd_spectrum_new ();
@@ -207,6 +259,12 @@ colord_spectrum_func (void)
 	cd_spectrum_add_value (s, 0.75f);
 	cd_spectrum_add_value (s, 1.00f);
 
+	/* check printable */
+	txt = cd_spectrum_to_string (s, 100, 15);
+	g_print ("\n%s\n", txt);
+
+	g_assert_cmpfloat (ABS (cd_spectrum_get_value_max (s) - 1.f), <, 0.0001f);
+	g_assert_cmpfloat (ABS (cd_spectrum_get_value_min (s) - 0.5f), <, 0.0001f);
 	g_assert_cmpfloat (ABS (cd_spectrum_get_start (s) - 100.f), <, 0.0001f);
 	g_assert_cmpfloat (ABS (cd_spectrum_get_end (s) - 300.f), <, 0.0001f);
 	g_assert_cmpfloat (ABS (cd_spectrum_get_value (s, 0) - 0.50f), <, 0.0001f);
@@ -254,8 +312,61 @@ colord_spectrum_func (void)
 	/* test setting of data */
 	cd_spectrum_set_value (s, 0, 10.f);
 	g_assert_cmpfloat (ABS (cd_spectrum_get_value (s, 0) - 10.0f), <, 0.001f);
+}
 
-	cd_spectrum_free (s);
+static void
+colord_spect_cx_func (void)
+{
+	gdouble tmp;
+	g_autoptr(CdSpectrum) sp = NULL;
+	g_autoptr(CdSpectrum) sp_resampled = NULL;
+
+	/* create test spectrum */
+	sp = cd_spectrum_new ();
+	cd_spectrum_set_start (sp, 100);
+	cd_spectrum_set_end (sp, 200);
+	g_assert_cmpfloat (fabs (cd_spectrum_get_end (sp) - 200.f), <, 0.001);
+
+	/* we don't calculate the coefficients with no data */
+	cd_spectrum_get_wavelength_cal (sp, &tmp, NULL, NULL);
+	g_assert_cmpfloat (fabs (tmp - -1.f), <, 0.001);
+
+	/* try again, this time with data added first */
+	cd_spectrum_add_value (sp, 1.f);
+	cd_spectrum_add_value (sp, 2.f);
+	cd_spectrum_add_value (sp, 3.f);
+	cd_spectrum_set_end (sp, 200);
+	cd_spectrum_get_wavelength_cal (sp, &tmp, NULL, NULL);
+	g_assert_cmpfloat (fabs (tmp - 50.f), <, 0.001);
+
+	/* test with linear polynomials */
+	g_assert_cmpfloat (fabs (cd_spectrum_get_end (sp) - 200.f), <, 0.001);
+	tmp = cd_spectrum_get_wavelength (sp, 0);
+	g_assert_cmpfloat (fabs (tmp - 100), <, 0.001);
+	tmp = cd_spectrum_get_wavelength (sp, 1);
+	g_assert_cmpfloat (fabs (tmp - 150), <, 0.001);
+	tmp = cd_spectrum_get_wavelength (sp, 2);
+	g_assert_cmpfloat (fabs (tmp - 200), <, 0.001);
+
+	/* test with 3rd order polynomials */
+	cd_spectrum_set_wavelength_cal (sp, 100.1f, 1.1f, 0.1f);
+	g_assert_cmpfloat (fabs (cd_spectrum_get_end (sp) - 305.3999f), <, 0.01);
+	tmp = cd_spectrum_get_wavelength (sp, 0);
+	g_assert_cmpfloat (fabs (tmp - 100), <, 0.001);
+	tmp = cd_spectrum_get_wavelength (sp, 1);
+	g_assert_cmpfloat (fabs (tmp - 201.2999), <, 0.01);
+	tmp = cd_spectrum_get_wavelength (sp, 2);
+	g_assert_cmpfloat (fabs (tmp - 305.3999), <, 0.01);
+
+	/* resample to linear data space */
+	cd_spectrum_set_wavelength_cal (sp, 50.1f, 50.1f, 0.0f);
+	sp_resampled = cd_spectrum_resample (sp, 100, 300, 100);
+	tmp = cd_spectrum_get_value_for_nm (sp_resampled, 100.f);
+	g_assert_cmpfloat (fabs (tmp - 1.f), <, 0.001);
+	tmp = cd_spectrum_get_value_for_nm (sp_resampled, 200.f);
+	g_assert_cmpfloat (fabs (tmp - 1.998f), <, 0.001);
+	tmp = cd_spectrum_get_value_for_nm (sp_resampled, 300.f);
+	g_assert_cmpfloat (fabs (tmp - 2.498f), <, 0.001);
 }
 
 static void
@@ -263,7 +374,7 @@ colord_it8_spect_func (void)
 {
 	CdIt8 *it8;
 	CdSpectrum *spectrum;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 	GPtrArray *spectral_data;
 	gboolean ret;
@@ -291,11 +402,57 @@ colord_it8_spect_func (void)
 	g_assert_cmpfloat (ABS (cd_spectrum_get_value (spectrum, 1) - 1.00f), <, 0.01f);
 	g_ptr_array_unref (spectral_data);
 
-	/* save to file */
+	/* normalize this */
+	cd_spectrum_set_norm (spectrum, 100);
+
+	/* save to non-normalised file */
+	cd_it8_set_normalized (it8, FALSE);
+	cd_it8_set_enable_created (it8, FALSE);
 	ret = cd_it8_save_to_data (it8, &data, NULL, &error);
 	g_assert_no_error (error);
 	g_assert (ret);
 	g_assert (data != NULL);
+	ret = cd_test_compare_lines (data,
+		"SPECT  \n"
+		"DESCRIPTOR	\"Spectral Power\"\n"
+		"SPECTRAL_START_NM	350.0\n"
+		"SPECTRAL_END_NM	740.0\n"
+		"SPECTRAL_BANDS	2\n"
+		"NUMBER_OF_FIELDS	2\n"
+		"NUMBER_OF_SETS	1\n"
+		"BEGIN_DATA_FORMAT\n"
+		" SPEC_350	SPEC_740\n"
+		"END_DATA_FORMAT\n"
+		"BEGIN_DATA\n"
+		" 1.0	100.0\n"
+		"END_DATA\n", &error);
+	g_assert_no_error (error);
+	g_assert (ret);
+	g_free (data);
+
+	/* save to normalised file */
+	cd_it8_set_normalized (it8, TRUE);
+	ret = cd_it8_save_to_data (it8, &data, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (ret);
+	g_assert (data != NULL);
+	ret = cd_test_compare_lines (data,
+		"SPECT  \n"
+		"DESCRIPTOR	\"Spectral Power\"\n"
+		"SPECTRAL_START_NM	350.0\n"
+		"SPECTRAL_END_NM	740.0\n"
+		"SPECTRAL_BANDS	2\n"
+		"NUMBER_OF_FIELDS	2\n"
+		"SPECTRAL_NORM	100.0\n"
+		"NUMBER_OF_SETS	1\n"
+		"BEGIN_DATA_FORMAT\n"
+		" SPEC_350	SPEC_740\n"
+		"END_DATA_FORMAT\n"
+		"BEGIN_DATA\n"
+		" 0.01	1.0\n"
+		"END_DATA\n", &error);
+	g_assert_no_error (error);
+	g_assert (ret);
 	g_free (data);
 
 	g_free (filename);
@@ -308,7 +465,7 @@ colord_it8_ccss_func (void)
 {
 	CdIt8 *it8;
 	CdSpectrum *spectrum;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 	GPtrArray *spectral_data;
 	gboolean ret;
@@ -364,7 +521,7 @@ colord_it8_raw_func (void)
 	gboolean ret;
 	gchar *data;
 	gchar *filename;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 	GFile *file_new;
 	gsize data_len;
@@ -434,7 +591,7 @@ colord_it8_locale_func (void)
 	const gchar *orig_locale;
 	gboolean ret;
 	gchar *data;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 
 	/* set to a locale with ',' as the decimal point */
 	orig_locale = setlocale (LC_NUMERIC, NULL);
@@ -476,7 +633,7 @@ colord_it8_normalized_func (void)
 	CdIt8 *it8;
 	gboolean ret;
 	gchar *filename;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 	GFile *file_new;
 
@@ -535,7 +692,7 @@ colord_it8_ccmx_util_func (void)
 	CdIt8 *ref;
 	gboolean ret;
 	gchar *filename;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 
 	/* load reference */
@@ -576,7 +733,7 @@ colord_it8_ccmx_func (void)
 	const CdMat3x3 *matrix;
 	gboolean ret;
 	gchar *filename;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 	GFile *file_new;
 
@@ -806,7 +963,7 @@ colord_dom_func (void)
 	const GNode *tmp;
 	gboolean ret;
 	gchar *str;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 
 	dom = cd_dom_new ();
 
@@ -856,7 +1013,7 @@ colord_dom_color_func (void)
 		"</named>";
 	const GNode *tmp;
 	gboolean ret;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 
 	dom = cd_dom_new ();
 
@@ -893,7 +1050,7 @@ colord_dom_localized_func (void)
 	const gchar *lang;
 	const GNode *tmp;
 	gboolean ret;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GHashTable *hash;
 
 	dom = cd_dom_new ();
@@ -924,7 +1081,7 @@ static void
 colord_color_func (void)
 {
 	CdColorUVW uvw;
-	CdColorXYZ *xyz;
+	g_autoptr(CdColorXYZ) xyz = NULL;
 	CdColorXYZ xyz_src;
 	CdColorYxy yxy;
 
@@ -954,8 +1111,6 @@ colord_color_func (void)
 	g_assert_cmpfloat (ABS (xyz->X - 2.0), <, 0.01);
 	g_assert_cmpfloat (ABS (xyz->Y - 1.0), <, 0.01);
 	g_assert_cmpfloat (ABS (xyz->Z - 0.5), <, 0.01);
-
-	cd_color_xyz_free (xyz);
 }
 
 
@@ -1063,7 +1218,7 @@ colord_interp_linear_func (void)
 	gdouble tmp;
 	gdouble x;
 	gdouble y;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	guint i;
 	guint new_length = 10;
 	const gdouble data[] = { 0.100000, 0.211111, 0.322222, 0.366667,
@@ -1119,7 +1274,7 @@ colord_interp_akima_func (void)
 	gboolean ret;
 	gdouble x;
 	gdouble y;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	guint i;
 	guint new_length = 10;
 	const gdouble data[] = { 0.100000, 0.232810, 0.329704, 0.372559,
@@ -1178,7 +1333,7 @@ static void
 colord_icc_clear_func (void)
 {
 	CdIcc *icc;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	gboolean ret;
 	GBytes *payload;
 	const gchar *tmp;
@@ -1225,7 +1380,6 @@ colord_icc_clear_func (void)
 	tmp = cd_icc_get_model (icc, NULL, &error);
 	g_assert_error (error, CD_ICC_ERROR, CD_ICC_ERROR_NO_DATA);
 	g_assert (tmp == NULL);
-	g_error_free (error);
 
 	g_bytes_unref (payload);
 	g_object_unref (icc);
@@ -1244,7 +1398,7 @@ colord_icc_func (void)
 	gchar *filename;
 	gchar *tmp;
 	GDateTime *created;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 	GHashTable *metadata;
 	gpointer handle;
@@ -1369,7 +1523,7 @@ colord_icc_edid_func (void)
 	CdColorYxy white;
 	CdIcc *icc;
 	gboolean ret;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 
 	/* create a profile from the EDID data */
 	icc = cd_icc_new ();
@@ -1394,7 +1548,7 @@ colord_icc_characterization_func (void)
 	gchar *md5;
 	gboolean ret;
 	gchar *filename;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 
 	/* load source file */
@@ -1424,7 +1578,7 @@ static void
 colord_icc_empty_func (void)
 {
 	CdIcc *icc;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 	gboolean ret;
 	gchar *filename;
@@ -1440,7 +1594,6 @@ colord_icc_empty_func (void)
 				&error);
 	g_assert_error (error, CD_ICC_ERROR, CD_ICC_ERROR_FAILED_TO_PARSE);
 	g_assert (!ret);
-	g_error_free (error);
 	g_free (filename);
 	g_object_unref (file);
 	g_object_unref (icc);
@@ -1450,7 +1603,7 @@ static void
 colord_icc_corrupt_dict_func (void)
 {
 	CdIcc *icc;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	gboolean ret;
 	gchar *filename;
 	int fd;
@@ -1483,7 +1636,7 @@ colord_icc_save_func (void)
 	const gchar *str;
 	gboolean ret;
 	gchar *filename;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 
 	/* load source file */
@@ -1557,7 +1710,7 @@ colord_icc_localized_func (void)
 	gboolean ret;
 	gchar *filename;
 	gchar *tmp;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 
 	/* open a localized profile */
@@ -1633,7 +1786,7 @@ colord_transform_func (void)
 	const guint width = 1920;
 	gboolean ret;
 	gchar *filename;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 	GTimer *timer;
 	guint8 data_in[3] = { 127, 32, 64 };
@@ -1755,7 +1908,7 @@ _copy_files (const gchar *src, const gchar *dest)
 {
 	gboolean ret;
 	gchar *data;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	gsize len;
 
 	ret = g_file_get_contents (src, &data, &len, &error);
@@ -1796,7 +1949,7 @@ colord_icc_store_func (void)
 	gchar *filename2;
 	gchar *newroot;
 	gchar *root;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GPtrArray *array;
 	guint added = 0;
 	guint removed = 0;
@@ -1921,7 +2074,7 @@ colord_icc_util_func (void)
 	CdIcc *icc_reference;
 	gboolean ret;
 	gdouble coverage = 0;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 
 	icc_reference = cd_icc_new ();
 	ret = cd_icc_create_default (icc_reference, &error);
@@ -1955,7 +2108,7 @@ colord_edid_func (void)
 	GBytes *data_edid;
 	gchar *data;
 	gchar *filename;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	gsize length = 0;
 
 	edid = cd_edid_new ();
@@ -2042,7 +2195,7 @@ static void
 colord_icc_tags_func (void)
 {
 	CdIcc *icc;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GFile *file;
 	gboolean ret;
 	gchar **tags;
@@ -2108,12 +2261,12 @@ colord_it8_gamma_func (void)
 	CdColorRGB rgb;
 	CdColorXYZ xyz;
 	CdColorXYZ *tmp;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	cmsToneCurve *curve;
 	gboolean ret;
 	gdouble gamma_est;
 	guint i;
-	_cleanup_object_unref_ CdIt8 *it8 = NULL;
+	g_autoptr(CdIt8) it8 = NULL;
 
 	/* add some dummy primary data  */
 	it8 = cd_it8_new_with_kind (CD_IT8_KIND_TI3);
@@ -2164,6 +2317,8 @@ main (int argc, char **argv)
 	/* tests go here */
 	g_test_add_func ("/colord/spectrum", colord_spectrum_func);
 	g_test_add_func ("/colord/spectrum{planckian}", colord_spectrum_planckian_func);
+	g_test_add_func ("/colord/spectrum{subtract}", colord_spectrum_subtract_func);
+	g_test_add_func ("/colord/spectrum{cx}", colord_spect_cx_func);
 	g_test_add_func ("/colord/edid", colord_edid_func);
 	g_test_add_func ("/colord/transform", colord_transform_func);
 	g_test_add_func ("/colord/icc", colord_icc_func);

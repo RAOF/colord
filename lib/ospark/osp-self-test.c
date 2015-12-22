@@ -24,8 +24,6 @@
 #include <glib-object.h>
 #include <colord.h>
 
-#include "cd-cleanup.h"
-
 #include "osp-device.h"
 #include "osp-enum.h"
 
@@ -35,8 +33,8 @@
 static GUsbDevice *
 osp_client_get_default (GError **error)
 {
-	_cleanup_object_unref_ GUsbContext *usb_ctx = NULL;
-	_cleanup_object_unref_ GUsbDevice *device = NULL;
+	g_autoptr(GUsbContext) usb_ctx = NULL;
+	g_autoptr(GUsbDevice) device = NULL;
 
 	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
@@ -45,7 +43,7 @@ osp_client_get_default (GError **error)
 	if (usb_ctx == NULL) {
 		g_set_error (error,
 			     G_USB_DEVICE_ERROR,
-			     G_USB_DEVICE_ERROR_NO_DEVICE,
+			     G_USB_DEVICE_ERROR_NOT_SUPPORTED,
 			     "No device found; USB initialisation failed");
 		return NULL;
 	}
@@ -70,9 +68,9 @@ osp_test_protocol_func (void)
 	guint8 cmd[4];
 	guint i;
 	guint j;
-	_cleanup_strv_free_ gchar **lines = NULL;
-	_cleanup_free_ gchar *data = NULL;
-	_cleanup_error_free_ GError *error = NULL;
+	g_auto(GStrv) lines = NULL;
+	g_autofree gchar *data = NULL;
+	g_autoptr(GError) error = NULL;
 
 	if (!g_file_test ("protocol-dump.csv", G_FILE_TEST_EXISTS))
 		return;
@@ -81,7 +79,7 @@ osp_test_protocol_func (void)
 
 	lines = g_strsplit (data, "\n", -1);
 	for (i = 0; lines[i] != NULL; i++) {
-		_cleanup_strv_free_ gchar **tokens = NULL;
+		g_auto(GStrv) tokens = NULL;
 		tmp = g_strstr_len (lines[i], -1, "OUT txn");
 		if (tmp == NULL)
 			continue;
@@ -96,12 +94,12 @@ osp_test_protocol_func (void)
 static void
 osp_test_reading_xyz_func (void)
 {
-	CdSpectrum *sp;
 	guint i, j;
-	_cleanup_error_free_ GError *error = NULL;
-	_cleanup_object_unref_ GUsbDevice *device = NULL;
-	_cleanup_free_ gchar *serial = NULL;
-	_cleanup_free_ gchar *fwver = NULL;
+	g_autofree gchar *fwver = NULL;
+	g_autofree gchar *serial = NULL;
+	g_autoptr(CdSpectrum) sp = NULL;
+	g_autoptr(GError) error = NULL;
+	g_autoptr(GUsbDevice) device = NULL;
 
 	/* load the device */
 	device = osp_client_get_default (&error);
@@ -131,7 +129,50 @@ osp_test_reading_xyz_func (void)
 			g_print ("*");
 		g_print ("\n");
 	}
-	cd_spectrum_free (sp);
+}
+
+static void
+osp_test_wavelength_cal_func (void)
+{
+	g_autoptr(GError) error = NULL;
+	g_autoptr(GUsbDevice) device = NULL;
+	g_autofree gdouble *coefficients = NULL;
+	gdouble start;
+
+	/* load the device */
+	device = osp_client_get_default (&error);
+	if (device == NULL && g_error_matches (error,
+					       G_USB_DEVICE_ERROR,
+					       G_USB_DEVICE_ERROR_NO_DEVICE)) {
+		g_debug ("skipping tests: %s", error->message);
+		return;
+	}
+	g_assert_no_error (error);
+	g_assert (device != NULL);
+
+	/* get coefficients */
+	coefficients = osp_device_get_wavelength_cal (device, NULL, &error);
+	g_assert_no_error (error);
+	g_assert (coefficients != NULL);
+	g_assert_cmpfloat (ABS (coefficients[0] - 0.37f), <, 0.1f);
+	g_assert_cmpfloat (ABS (coefficients[1] - 0.00f), <, 0.1f);
+	g_assert_cmpfloat (ABS (coefficients[2] - 0.00f), <, 0.1f);
+
+	/* get start */
+	start = osp_device_get_wavelength_start (device, &error);
+	g_assert_no_error (error);
+	g_assert (start > 0);
+	g_assert_cmpfloat (ABS (start - 355), <, 5);
+
+	/* get irradiance coefficients */
+	coefficients = osp_device_get_irradiance_cal (device, NULL, &error);
+	g_assert_error (error, OSP_DEVICE_ERROR, OSP_DEVICE_ERROR_NO_DATA);
+	g_clear_error (&error);
+
+	/* get nonlinearity coefficients */
+	coefficients = osp_device_get_nonlinearity_cal (device, NULL, &error);
+	g_assert_error (error, OSP_DEVICE_ERROR, OSP_DEVICE_ERROR_NO_DATA);
+	g_clear_error (&error);
 }
 
 int
@@ -144,6 +185,7 @@ main (int argc, char **argv)
 
 	/* tests go here */
 	g_test_add_func ("/Spark/protocol", osp_test_protocol_func);
+	g_test_add_func ("/Spark/wavelength-cal", osp_test_wavelength_cal_func);
 	g_test_add_func ("/Spark/reading-xyz", osp_test_reading_xyz_func);
 
 	return g_test_run ();

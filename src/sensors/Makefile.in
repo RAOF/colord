@@ -92,6 +92,7 @@ host_triplet = @host@
 @CD_BUILD_REVERSE_TRUE@noinst_PROGRAMS = cd-sensor-dump$(EXEEXT) \
 @CD_BUILD_REVERSE_TRUE@	cd-parse-beagle$(EXEEXT)
 @HAVE_GUSB_TRUE@am__append_1 = \
+@HAVE_GUSB_TRUE@	libcolord_sensor_spark.la			\
 @HAVE_GUSB_TRUE@	libcolord_sensor_colorhug.la			\
 @HAVE_GUSB_TRUE@	libcolord_sensor_dtp94.la			\
 @HAVE_GUSB_TRUE@	libcolord_sensor_huey.la
@@ -173,8 +174,7 @@ libcolord_sensor_argyll_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 @HAVE_GUSB_TRUE@libcolord_sensor_colorhug_la_DEPENDENCIES =  \
 @HAVE_GUSB_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 @HAVE_GUSB_TRUE@	$(top_builddir)/lib/colorhug/libcolorhug.la
-am__libcolord_sensor_colorhug_la_SOURCES_DIST = cd-sensor-colorhug.c \
-	cd-sensor-colorhug.h
+am__libcolord_sensor_colorhug_la_SOURCES_DIST = cd-sensor-colorhug.c
 @HAVE_GUSB_TRUE@am_libcolord_sensor_colorhug_la_OBJECTS = libcolord_sensor_colorhug_la-cd-sensor-colorhug.lo
 libcolord_sensor_colorhug_la_OBJECTS =  \
 	$(am_libcolord_sensor_colorhug_la_OBJECTS)
@@ -187,8 +187,7 @@ libcolord_sensor_colorhug_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 @HAVE_GUSB_TRUE@libcolord_sensor_dtp94_la_DEPENDENCIES =  \
 @HAVE_GUSB_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 @HAVE_GUSB_TRUE@	$(top_builddir)/lib/dtp94/libdtp94-private.la
-am__libcolord_sensor_dtp94_la_SOURCES_DIST = cd-sensor-dtp94.c \
-	cd-sensor-dtp94.h
+am__libcolord_sensor_dtp94_la_SOURCES_DIST = cd-sensor-dtp94.c
 @HAVE_GUSB_TRUE@am_libcolord_sensor_dtp94_la_OBJECTS =  \
 @HAVE_GUSB_TRUE@	libcolord_sensor_dtp94_la-cd-sensor-dtp94.lo
 libcolord_sensor_dtp94_la_OBJECTS =  \
@@ -211,8 +210,7 @@ libcolord_sensor_dummy_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 @HAVE_GUSB_TRUE@libcolord_sensor_huey_la_DEPENDENCIES =  \
 @HAVE_GUSB_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 @HAVE_GUSB_TRUE@	$(top_builddir)/lib/huey/libhuey-private.la
-am__libcolord_sensor_huey_la_SOURCES_DIST = cd-sensor-huey.c \
-	cd-sensor-huey.h
+am__libcolord_sensor_huey_la_SOURCES_DIST = cd-sensor-huey.c
 @HAVE_GUSB_TRUE@am_libcolord_sensor_huey_la_OBJECTS =  \
 @HAVE_GUSB_TRUE@	libcolord_sensor_huey_la-cd-sensor-huey.lo
 libcolord_sensor_huey_la_OBJECTS =  \
@@ -222,6 +220,20 @@ libcolord_sensor_huey_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(libcolord_sensor_huey_la_CFLAGS) $(CFLAGS) \
 	$(libcolord_sensor_huey_la_LDFLAGS) $(LDFLAGS) -o $@
 @HAVE_GUSB_TRUE@am_libcolord_sensor_huey_la_rpath = -rpath \
+@HAVE_GUSB_TRUE@	$(plugindir)
+@HAVE_GUSB_TRUE@libcolord_sensor_spark_la_DEPENDENCIES =  \
+@HAVE_GUSB_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+@HAVE_GUSB_TRUE@	$(top_builddir)/lib/ospark/libospark-private.la
+am__libcolord_sensor_spark_la_SOURCES_DIST = cd-sensor-spark.c
+@HAVE_GUSB_TRUE@am_libcolord_sensor_spark_la_OBJECTS =  \
+@HAVE_GUSB_TRUE@	libcolord_sensor_spark_la-cd-sensor-spark.lo
+libcolord_sensor_spark_la_OBJECTS =  \
+	$(am_libcolord_sensor_spark_la_OBJECTS)
+libcolord_sensor_spark_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(libcolord_sensor_spark_la_CFLAGS) $(CFLAGS) \
+	$(libcolord_sensor_spark_la_LDFLAGS) $(LDFLAGS) -o $@
+@HAVE_GUSB_TRUE@am_libcolord_sensor_spark_la_rpath = -rpath \
 @HAVE_GUSB_TRUE@	$(plugindir)
 PROGRAMS = $(noinst_PROGRAMS)
 am__cd_parse_beagle_SOURCES_DIST = cd-parse-beagle.c
@@ -294,13 +306,15 @@ SOURCES = $(libcolord_sensor_argyll_la_SOURCES) \
 	$(libcolord_sensor_colorhug_la_SOURCES) \
 	$(libcolord_sensor_dtp94_la_SOURCES) \
 	$(libcolord_sensor_dummy_la_SOURCES) \
-	$(libcolord_sensor_huey_la_SOURCES) $(cd_parse_beagle_SOURCES) \
-	$(cd_sensor_dump_SOURCES)
+	$(libcolord_sensor_huey_la_SOURCES) \
+	$(libcolord_sensor_spark_la_SOURCES) \
+	$(cd_parse_beagle_SOURCES) $(cd_sensor_dump_SOURCES)
 DIST_SOURCES = $(am__libcolord_sensor_argyll_la_SOURCES_DIST) \
 	$(am__libcolord_sensor_colorhug_la_SOURCES_DIST) \
 	$(am__libcolord_sensor_dtp94_la_SOURCES_DIST) \
 	$(libcolord_sensor_dummy_la_SOURCES) \
 	$(am__libcolord_sensor_huey_la_SOURCES_DIST) \
+	$(am__libcolord_sensor_spark_la_SOURCES_DIST) \
 	$(am__cd_parse_beagle_SOURCES_DIST) \
 	$(am__cd_sensor_dump_SOURCES_DIST)
 am__can_run_installinfo = \
@@ -545,6 +559,7 @@ srcdir = @srcdir@
 sysconfdir = @sysconfdir@
 systemdsystemunitdir = @systemdsystemunitdir@
 target_alias = @target_alias@
+tmpfilesdir = @tmpfilesdir@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
@@ -620,9 +635,18 @@ libcolord_sensor_dummy_la_SOURCES = cd-sensor-dummy.c
 libcolord_sensor_dummy_la_LIBADD = $(GLIB_LIBS)
 libcolord_sensor_dummy_la_LDFLAGS = -module -avoid-version
 libcolord_sensor_dummy_la_CFLAGS = $(WARNINGFLAGS_C)
+@HAVE_GUSB_TRUE@libcolord_sensor_spark_la_SOURCES = \
+@HAVE_GUSB_TRUE@	cd-sensor-spark.c
+
+@HAVE_GUSB_TRUE@libcolord_sensor_spark_la_LIBADD = \
+@HAVE_GUSB_TRUE@	$(GLIB_LIBS)					\
+@HAVE_GUSB_TRUE@	$(GUSB_LIBS)					\
+@HAVE_GUSB_TRUE@	$(top_builddir)/lib/ospark/libospark-private.la
+
+@HAVE_GUSB_TRUE@libcolord_sensor_spark_la_LDFLAGS = -module -avoid-version
+@HAVE_GUSB_TRUE@libcolord_sensor_spark_la_CFLAGS = $(WARNINGFLAGS_C)
 @HAVE_GUSB_TRUE@libcolord_sensor_huey_la_SOURCES = \
-@HAVE_GUSB_TRUE@	cd-sensor-huey.c				\
-@HAVE_GUSB_TRUE@	cd-sensor-huey.h
+@HAVE_GUSB_TRUE@	cd-sensor-huey.c
 
 @HAVE_GUSB_TRUE@libcolord_sensor_huey_la_LIBADD = \
 @HAVE_GUSB_TRUE@	$(GLIB_LIBS)					\
@@ -632,8 +656,7 @@ libcolord_sensor_dummy_la_CFLAGS = $(WARNINGFLAGS_C)
 @HAVE_GUSB_TRUE@libcolord_sensor_huey_la_LDFLAGS = -module -avoid-version
 @HAVE_GUSB_TRUE@libcolord_sensor_huey_la_CFLAGS = $(WARNINGFLAGS_C)
 @HAVE_GUSB_TRUE@libcolord_sensor_dtp94_la_SOURCES = \
-@HAVE_GUSB_TRUE@	cd-sensor-dtp94.c				\
-@HAVE_GUSB_TRUE@	cd-sensor-dtp94.h
+@HAVE_GUSB_TRUE@	cd-sensor-dtp94.c
 
 @HAVE_GUSB_TRUE@libcolord_sensor_dtp94_la_LIBADD = \
 @HAVE_GUSB_TRUE@	$(GLIB_LIBS)					\
@@ -643,8 +666,7 @@ libcolord_sensor_dummy_la_CFLAGS = $(WARNINGFLAGS_C)
 @HAVE_GUSB_TRUE@libcolord_sensor_dtp94_la_LDFLAGS = -module -avoid-version
 @HAVE_GUSB_TRUE@libcolord_sensor_dtp94_la_CFLAGS = $(WARNINGFLAGS_C)
 @HAVE_GUSB_TRUE@libcolord_sensor_colorhug_la_SOURCES = \
-@HAVE_GUSB_TRUE@	cd-sensor-colorhug.c				\
-@HAVE_GUSB_TRUE@	cd-sensor-colorhug.h
+@HAVE_GUSB_TRUE@	cd-sensor-colorhug.c
 
 @HAVE_GUSB_TRUE@libcolord_sensor_colorhug_la_LIBADD = \
 @HAVE_GUSB_TRUE@	$(GLIB_LIBS)					\
@@ -745,6 +767,9 @@ libcolord_sensor_dummy.la: $(libcolord_sensor_dummy_la_OBJECTS) $(libcolord_sens
 libcolord_sensor_huey.la: $(libcolord_sensor_huey_la_OBJECTS) $(libcolord_sensor_huey_la_DEPENDENCIES) $(EXTRA_libcolord_sensor_huey_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libcolord_sensor_huey_la_LINK) $(am_libcolord_sensor_huey_la_rpath) $(libcolord_sensor_huey_la_OBJECTS) $(libcolord_sensor_huey_la_LIBADD) $(LIBS)
 
+libcolord_sensor_spark.la: $(libcolord_sensor_spark_la_OBJECTS) $(libcolord_sensor_spark_la_DEPENDENCIES) $(EXTRA_libcolord_sensor_spark_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(libcolord_sensor_spark_la_LINK) $(am_libcolord_sensor_spark_la_rpath) $(libcolord_sensor_spark_la_OBJECTS) $(libcolord_sensor_spark_la_LIBADD) $(LIBS)
+
 clean-noinstPROGRAMS:
 	@list='$(noinst_PROGRAMS)'; test -n "$$list" || exit 0; \
 	echo " rm -f" $$list; \
@@ -779,6 +804,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcolord_sensor_dtp94_la-cd-sensor-dtp94.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcolord_sensor_dummy_la-cd-sensor-dummy.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcolord_sensor_huey_la-cd-sensor-huey.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcolord_sensor_spark_la-cd-sensor-spark.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -842,6 +868,13 @@ libcolord_sensor_huey_la-cd-sensor-huey.lo: cd-sensor-huey.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cd-sensor-huey.c' object='libcolord_sensor_huey_la-cd-sensor-huey.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcolord_sensor_huey_la_CFLAGS) $(CFLAGS) -c -o libcolord_sensor_huey_la-cd-sensor-huey.lo `test -f 'cd-sensor-huey.c' || echo '$(srcdir)/'`cd-sensor-huey.c
+
+libcolord_sensor_spark_la-cd-sensor-spark.lo: cd-sensor-spark.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcolord_sensor_spark_la_CFLAGS) $(CFLAGS) -MT libcolord_sensor_spark_la-cd-sensor-spark.lo -MD -MP -MF $(DEPDIR)/libcolord_sensor_spark_la-cd-sensor-spark.Tpo -c -o libcolord_sensor_spark_la-cd-sensor-spark.lo `test -f 'cd-sensor-spark.c' || echo '$(srcdir)/'`cd-sensor-spark.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcolord_sensor_spark_la-cd-sensor-spark.Tpo $(DEPDIR)/libcolord_sensor_spark_la-cd-sensor-spark.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cd-sensor-spark.c' object='libcolord_sensor_spark_la-cd-sensor-spark.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcolord_sensor_spark_la_CFLAGS) $(CFLAGS) -c -o libcolord_sensor_spark_la-cd-sensor-spark.lo `test -f 'cd-sensor-spark.c' || echo '$(srcdir)/'`cd-sensor-spark.c
 
 cd_parse_beagle-cd-parse-beagle.o: cd-parse-beagle.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cd_parse_beagle_CFLAGS) $(CFLAGS) -MT cd_parse_beagle-cd-parse-beagle.o -MD -MP -MF $(DEPDIR)/cd_parse_beagle-cd-parse-beagle.Tpo -c -o cd_parse_beagle-cd-parse-beagle.o `test -f 'cd-parse-beagle.c' || echo '$(srcdir)/'`cd-parse-beagle.c

@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2010-2014 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2010-2015 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU Lesser General Public License Version 2.1
  *
@@ -203,7 +203,7 @@ typedef enum {
 /**
  * CdSensorCap:
  *
- * The sensor capabilities.
+ * The sensor capabilities, i.e. things the sensor can do.
  **/
 typedef enum {
 	CD_SENSOR_CAP_UNKNOWN,			/* Since: 0.1.6 */
@@ -213,7 +213,7 @@ typedef enum {
 	CD_SENSOR_CAP_SPOT,			/* Since: 0.1.6 */
 	CD_SENSOR_CAP_PROJECTOR,		/* Since: 0.1.6 */
 	CD_SENSOR_CAP_AMBIENT,			/* Since: 0.1.6 */
-	CD_SENSOR_CAP_CALIBRATION,		/* Since: 0.1.6 */
+	CD_SENSOR_CAP_CALIBRATION,		/* Since: 0.1.6 (hint: raw measurement) */
 	CD_SENSOR_CAP_LED,			/* Since: 0.1.17 */
 	CD_SENSOR_CAP_PLASMA,			/* Since: 0.1.29 */
 	CD_SENSOR_CAP_LCD_CCFL,			/* Since: 0.1.31 */
@@ -221,6 +221,9 @@ typedef enum {
 	CD_SENSOR_CAP_LCD_WHITE_LED,		/* Since: 0.1.31 */
 	CD_SENSOR_CAP_WIDE_GAMUT_LCD_CCFL,	/* Since: 0.1.31 */
 	CD_SENSOR_CAP_WIDE_GAMUT_LCD_RGB_LED,	/* Since: 0.1.31 */
+	CD_SENSOR_CAP_SPECTRAL,			/* Since: 1.3.1 */
+	CD_SENSOR_CAP_CALIBRATION_DARK,		/* Since: 1.3.1 */
+	CD_SENSOR_CAP_CALIBRATION_IRRADIANCE,	/* Since: 1.3.1 */
 	/*< private >*/
 	CD_SENSOR_CAP_LAST
 } CdSensorCap;
@@ -318,6 +321,8 @@ typedef enum {
  * @CD_SENSOR_ERROR_FAILED_TO_AUTHENTICATE:	Authentication failed
  * @CD_SENSOR_ERROR_REQUIRED_POSITION_CALIBRATE:	The sensor needs to be in the calibrate position
  * @CD_SENSOR_ERROR_REQUIRED_POSITION_SURFACE:		The sensor needs to be in the surface position
+ * @CD_SENSOR_ERROR_REQUIRED_DARK_CALIBRATION:		The sensor needs dark calibration
+ * @CD_SENSOR_ERROR_REQUIRED_IRRADIANCE_CALIBRATION:	The sensor needs irradiance calibration
  *
  * The sensor error code.
  *
@@ -333,6 +338,8 @@ typedef enum {
 	CD_SENSOR_ERROR_FAILED_TO_AUTHENTICATE,		/* Since: 0.1.26 */
 	CD_SENSOR_ERROR_REQUIRED_POSITION_CALIBRATE,	/* Since: 0.1.26 */
 	CD_SENSOR_ERROR_REQUIRED_POSITION_SURFACE,	/* Since: 0.1.26 */
+	CD_SENSOR_ERROR_REQUIRED_DARK_CALIBRATION,	/* Since: 1.2.13 */
+	CD_SENSOR_ERROR_REQUIRED_IRRADIANCE_CALIBRATION, /* Since: 1.1.1 */
 	/*< private >*/
 	CD_SENSOR_ERROR_LAST
 } CdSensorError;

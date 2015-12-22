@@ -1,6 +1,825 @@
+commit f25cb7b0ef73b20810dc34f6741890c3f61b030d
+Author: Richard Hughes <richard@hughsie.com>
+Date:   2015-11-27
+
+    Release colord 1.3.1
+
+M	NEWS
+M	RELEASE
+M	configure.ac
+M	doc/website/download.html
+M	po/cs.po
+M	po/da.po
+M	po/de.po
+M	po/el.po
+M	po/en_GB.po
+M	po/es.po
+M	po/eu.po
+M	po/fi.po
+M	po/fr.po
+M	po/gl.po
+M	po/he.po
+M	po/hu.po
+M	po/id.po
+M	po/it.po
+M	po/ja.po
+M	po/ko.po
+M	po/lv.po
+M	po/nb.po
+C096	po/nb.po	po/nb_NO.po
+M	po/nl.po
+M	po/pl.po
+M	po/pt_BR.po
+M	po/pt_PT.po
+M	po/ro.po
+M	po/ru.po
+M	po/sk.po
+M	po/sl.po
+M	po/sr.po
+M	po/sv.po
+M	po/tr.po
+M	po/uk.po
+M	po/zh_CN.po
+M	po/zh_TW.po
+
+commit e58bdfef1328eecdd95256b37cb0a7f720dd9f64
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-11-16
+
+    Ignore the ColorHug+ in DFU mode
+
+M	rules/69-cd-sensors.rules.in
+
+commit aaf920170220c2b1f3208b7c8fa3d26a07fc021b
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-29
+
+    ospark: Do a 10us dark reading before the main reading
+
+    The spark device does not adjust the VRef- of the ADC for dark
+    current, and so
+    we have to do this manually in software.
+
+M	lib/ospark/osp-device.c
+M	src/sensors/cd-sensor-spark.c
+
+commit af360010b39e27dae203df55908b9afb5b63c6a1
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-28
+
+    trivial: Add some more gtk-doc to libospark
+
+M	lib/ospark/osp-device.c
+
+commit 7ba666dd87419603cb6cf3d8a2a01b42b95d249c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-27
+
+    trivial: Fix a crash when we read from a ColorHug with no calibration
+
+M	lib/colorhug/ch-device-queue.c
+M	src/sensors/cd-sensor-colorhug.c
+
+commit cb05574d94135c7b99527eaaed633d8898717d78
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-27
+
+    libcolord: Add two new sensor capability enum values for calibration
+
+    This is so we can avoid playing tricks in sensors that support more
+    than one
+    kind of calibration, for instance the Spark sensor.
+
+M	client/cd-util.c
+M	lib/colord/cd-enum.c
+M	lib/colord/cd-enum.h
+M	src/cd-sensor.c
+M	src/sensors/cd-sensor-spark.c
+
+commit a81cc2c66376de784af8d32167bb39ce3d71b944
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-26
+
+    data: Build Rec709 correctly
+
+    Fixes https://github.com/hughsie/colord/issues/17
+
+M	data/profiles/Makefile.am
+
+commit 35937d18cfa1a172ecd74d70d96626f4d02ae9e2
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-26
+
+    libospark: Support irradiance calibration on the Spark device
+
+M	lib/ospark/osp-device.c
+M	src/sensors/cd-sensor-spark.c
+
+commit c6b75def8ce9d51368d12412d2a722a02ae8a9f3
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-26
+
+    libospark: Measure the sensor response time
+
+    This allows us to check the device integration time.
+
+M	lib/ospark/osp-device.c
+
+commit 0d33f1c83f72516ae1ee746fbba993adfec8f601
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-26
+
+    libospark: Only show protocol debugging with an env var
+
+M	lib/ospark/osp-device.c
+
+commit 1563dbc3088e5cbacdb3919bc27c738232fd82af
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-26
+
+    libcolord: Add an error enum for missing irradiance calibration
+
+M	client/cd-util.c
+M	lib/colord/cd-enum.c
+M	lib/colord/cd-enum.h
+
+commit 2378c8a3b0c007c0767572dfe79bb64a567bf449
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-26
+
+    libcolord: Modify cd_spectrum_subtract() to include a resolution value
+
+    This allows us to resample the spectra in case they have differing
+    start, end,
+    or source resolutions.
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+M	src/sensors/cd-sensor-spark.c
+
+commit 965408aa8ed6721b883ffad0f4ca8b23825b86fc
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-26
+
+    libcolord: Add cd_spectrum_planckian_new_full()
+
+    This allows you to include start, end and resolution values.
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+
+commit d23289f740e2ef2625c0e0dc930abbf7e312b760
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-26
+
+    Use the correct console size when using get-spectral-reading
+
+M	client/cd-util.c
+
+commit d49b89f32422759b6cf182417ccb05146d0662cf
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-24
+
+    libospark: Add methods for getting the nonlinearity and irradiance
+    calibrations
+
+    Although, disappointingly, there appears to be no stored data on
+    the device.
+
+M	lib/ospark/osp-device.c
+M	lib/ospark/osp-device.h
+M	lib/ospark/osp-self-test.c
+
+commit 1bb5be35f41e5dbe1b6be87862525c3604ced5cf
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-26
+
+    colorhug: Fix a crash in the conversion to GTask
+
+M	lib/colorhug/ch-device-queue.c
+
+commit d55ea848606838ee6eb79c7b479e70d73859673f
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-16
+
+    Add cd_spectrum_resample()
+
+    This resamples a spectrum to a linear data scale.
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+M	src/sensors/cd-sensor-spark.c
+
+commit 8ac504885925b9613649ff7408579feec17aa59d
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-16
+
+    libospark: Use pixel to wavelength calibration
+
+    This device does not have a linear relationship between pixel
+    position and
+    wavelength.
+
+M	lib/ospark/osp-device.c
+M	lib/ospark/osp-device.h
+M	lib/ospark/osp-self-test.c
+
+commit 6c3a8185bb09d5cab4a1821be43c26a5a42cffe5
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-16
+
+    libcolord: Add cd_spectrum_set_wavelength_cal()
+
+    This allows us to have a non-linear relationship between pixel
+    index and
+    wavelength value.
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+
+commit ea20f28db7b672793012b398a219d907b3da02d9
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-16
+
+    libcolord: Do not limit values when subtracting spectra
+
+    Also, fix a few bugs when checking for spectra validity.
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-test-private.c
+M	src/sensors/cd-sensor-spark.c
+
+commit c1c8a65544904a3bf6aef8af4d61eafef2f4778c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-16
+
+    libcolord: Add cd_spectrum_limit_min()
+
+    This allows us to enforce a ceil() or floor() for the spectrum.
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+
+commit 070e1584ead7b339b1d36e3e6221a0fa0ac08ae1
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-15
+
+    Allow returning spectral readings from the Spark sensor
+
+M	src/sensors/cd-sensor-spark.c
+
+commit b06424f93356e5f8a847afd2987eb72326ccaecc
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-15
+
+    libcolord: Fix saving non-normalized spectra
+
+    The conditional was the wrong way around, so add some self tests to
+    catch this.
+
+M	lib/colord/cd-it8.c
+M	lib/colord/cd-test-private.c
+M	lib/colord/cd-test-shared.c
+M	lib/colord/cd-test-shared.h
+
+commit ed02a5536667b9baff98872d923aeaf1a987b1ed
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-15
+
+    libospark: Ensure we get maximum precision from the spectral sensor
+
+    The device is limited to return values of 0x3fff per pixel, so aim
+    for exactly
+    half of that after the initial test measurement.
+
+M	lib/ospark/osp-device.c
+
+commit 0ab58b405cfb0addc885f1d17e602451d8a39e1e
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-15
+
+    Add get-spectral-reading command to colormgr
+
+    This displays a bar graph on the console of the spectrum.
+
+M	client/cd-util.c
+
+commit 93e1798bef9e31d9fd9210a30ca1414a858a5b1c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-15
+
+    libcolord: Add cd_sensor_get_spectrum()
+
+M	lib/colord/cd-sensor-sync.c
+M	lib/colord/cd-sensor-sync.h
+M	lib/colord/cd-sensor.c
+M	lib/colord/cd-sensor.h
+
+commit d2479cf23bdd50a23030290256bbd3624bdc283c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-15
+
+    Add the GetSpectrum() sensor D-Bus method
+
+    This allows clients to query a spectrum from a locked sensor.
+
+M	src/cd-sensor.c
+M	src/cd-sensor.h
+M	src/org.freedesktop.ColorManager.Sensor.xml
+
+commit 86952ef1f351b1a65eca750a74294fdcb8f72715
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-15
+
+    libcolord: Add a spectral sensor capability
+
+    The idea here is to use this for sensors that can return a full
+    spectrum rather
+    than just a XYZ value.
+
+M	lib/colord/cd-enum.c
+M	lib/colord/cd-enum.h
+M	src/sensors/cd-sensor-spark.c
+
+commit 06587781dd6fc7a20fe79f24df1cfa23776debbe
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-15
+
+    libcolord: Add cd_spectrum_to_string()
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+
+commit 78ca84c488d96caa9634c1cfe201f4a6ee15b3ef
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    Save the Spark dark calibration to a file
+
+M	src/sensors/cd-sensor-spark.c
+
+commit 3005658a8667f029890a4e02db05938602593f0a
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    libospark: Add osp_device_take_spectrum_full() and add autoscaling
+
+    This allows us to return the most accurate reading possible.
+
+M	lib/ospark/osp-device.c
+M	lib/ospark/osp-device.h
+
+commit b149c14bde4761e71c7438e372b53f83f1d02c84
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    libospark: Correctly set the normalization when returning
+
+    This was uncovered when trying to subtract a normalized dark
+    calibration.
+
+M	lib/ospark/osp-device.c
+
+commit 2dd52eacb5bd19ff5262f4dccf76acd4b325fc72
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    trivial: Fill the screen when doing the spark sensor debug
+
+M	src/sensors/cd-sensor-spark.c
+
+commit 3b8d845416cd1fa6297f95bf71aefe849d5287e8
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    trivial: Use the normalised value when subtracting spectra
+
+M	lib/colord/cd-spectrum.c
+
+commit bdb8f32b0de4a42f9f9e11e527a8e2409c8938e2
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    libcolord: Add cd_spectrum_get_value_max()
+
+    This is useful for auto-normalizing results.
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+
+commit b8fa671e213306906c9d0ca352d9db697390637c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    libcolorhug: Port to GTask
+
+M	lib/colorhug/ch-device-queue.c
+M	lib/colorhug/ch-device.c
+
+commit 4bf389ae3d9881d4d54866c710b07d4de10456ec
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    libcolord: Port to GTask
+
+M	configure.ac
+M	lib/colord/cd-client.c
+M	lib/colord/cd-device.c
+M	lib/colord/cd-profile.c
+M	lib/colord/cd-sensor.c
+
+commit 188bd64a23a3b3f440916b2923aeaf5b89ae25b7
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    libcolord: Actually connect to the daemon during the tests
+
+    I have no idea how this actually worked before...
+
+M	lib/colord/cd-test-daemon.c
+
+commit fd7f80cc81bd6e0f3c66c1a69356dfa04ca6fed8
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    libcolord: Fix a tiny memory leak in cd_icc_get_tag_data()
+
+M	lib/colord/cd-icc.c
+
+commit f0f1e666716135c7ce9f54c634c55043c938b554
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    Port all the sensor plugins to GTask
+
+M	src/sensors/Makefile.am
+M	src/sensors/cd-sensor-argyll.c
+M	src/sensors/cd-sensor-colorhug.c
+M	src/sensors/cd-sensor-dtp94.c
+M	src/sensors/cd-sensor-dummy.c
+M	src/sensors/cd-sensor-huey.c
+M	src/sensors/cd-sensor-munki.c
+M	src/sensors/cd-sensor-spark.c
+
+commit d0be37876f751048aaa72dbff01971d54e498c42
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    Use a D65 illuminant for the spark XYZ conversion
+
+M	src/sensors/cd-sensor-spark.c
+
+commit 0142968a33bcb8efcef95d090ea87189ac9cb083
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    Reset the sensor back to idle after each action
+
+    This means the sensor drivers no longer have to do this.
+
+M	src/cd-sensor.c
+
+commit 859404ae80c504db4d6a1c5991e29f0f27fecf44
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    Add cd_sensor_set_state_in_idle() which is threadsafe
+
+M	src/cd-sensor.c
+M	src/cd-sensor.h
+
+commit 3df1968e6d9ea253a443a0b96fe5bda1337c9db1
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    trivial: Use g_autoptr() in more places
+
+M	src/sensors/cd-parse-beagle.c
+
+commit 9cf5929cd5a7aa75ad4a80c49e3ba5f0ec8a9e63
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-14
+
+    libospark: Don't assume the seral number buffer is NUL terminated
+
+M	lib/ospark/osp-device.c
+
+commit deda671ec979571fee329caf2148554a40d6acd7
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    trivial: Remove the *unused* sensor headers
+
+M	src/sensors/Makefile.am
+D	src/sensors/cd-sensor-argyll.h
+D	src/sensors/cd-sensor-colorhug.h
+D	src/sensors/cd-sensor-dtp94.h
+D	src/sensors/cd-sensor-dummy.h
+D	src/sensors/cd-sensor-huey.h
+
+commit 307cc591f8a42b0468a1ac898a307a8f2080d108
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    Install the tmpfiles.d snippet in the right place
+
+M	configure.ac
+M	data/Makefile.am
+
+commit 07c265ef6cf8fe6604472a15987040938433f129
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    Use g_autoptr() in more places
+
+M	client/cd-it8.c
+M	contrib/session-helper/cd-example.c
+M	lib/colord/cd-it8-utils.c
+M	lib/colord/cd-it8.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-daemon.c
+M	lib/colord/cd-test-private.c
+M	lib/colorhug/ch-device-queue.c
+M	lib/colorhug/ch-self-test.c
+M	lib/ospark/osp-self-test.c
+M	src/cd-main.c
+M	src/cd-sensor-client.c
+M	src/cd-sensor.c
+M	src/sensors/cd-parse-beagle.c
+M	src/sensors/cd-sensor-argyll.c
+M	src/sensors/cd-sensor-dump.c
+M	src/sensors/cd-sensor-huey.c
+M	src/sensors/cd-sensor-munki.c
+M	src/sensors/cd-sensor-spark.c
+
+commit d1c8abfd482310fdb3bdbb7464216f7f61e221b7
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    Add g_autoptr() defines for cd_color*
+
+M	client/cd-util.c
+M	contrib/session-helper/cd-main.c
+M	lib/colord/cd-color.h
+M	lib/colord/cd-test-private.c
+M	src/cd-sensor.c
+
+commit 67ba1c8ec83cbc8f9776cbbf6f0dc7c50897e565
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    Use G_DECLARE_DERIVABLE_TYPE in libcolord
+
+    This gives us the g_autoptr() macros for free.
+
+M	client/cd-create-profile.c
+M	client/cd-fix-profile.c
+M	client/cd-iccdump.c
+M	client/cd-it8.c
+M	client/cd-util.c
+M	configure.ac
+M	contrib/colord-sane/cd-main.c
+M	contrib/session-helper/cd-main.c
+M	contrib/session-helper/cd-state.c
+M	lib/colord/Makefile.am
+D	lib/colord/cd-cleanup.h
+M	lib/colord/cd-client.c
+M	lib/colord/cd-client.h
+M	lib/colord/cd-device.c
+M	lib/colord/cd-device.h
+M	lib/colord/cd-dom.c
+M	lib/colord/cd-dom.h
+M	lib/colord/cd-edid.c
+M	lib/colord/cd-edid.h
+M	lib/colord/cd-icc-store.c
+M	lib/colord/cd-icc-store.h
+M	lib/colord/cd-icc-utils.c
+M	lib/colord/cd-icc.c
+M	lib/colord/cd-icc.h
+M	lib/colord/cd-interp-akima.c
+M	lib/colord/cd-interp-akima.h
+M	lib/colord/cd-interp-linear.h
+M	lib/colord/cd-interp.c
+M	lib/colord/cd-interp.h
+M	lib/colord/cd-it8-utils.c
+M	lib/colord/cd-it8.c
+M	lib/colord/cd-it8.h
+M	lib/colord/cd-profile.c
+M	lib/colord/cd-profile.h
+M	lib/colord/cd-sensor.c
+M	lib/colord/cd-sensor.h
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-test-daemon.c
+M	lib/colord/cd-test-private.c
+M	lib/colord/cd-test-shared.c
+M	lib/colord/cd-transform.c
+M	lib/colord/cd-transform.h
+M	lib/colorhug/ch-device-queue.c
+M	lib/colorhug/ch-device-queue.h
+M	lib/colorhug/ch-inhx32.c
+M	lib/compat/cd-compat-edid.c
+M	lib/huey/huey-ctx.c
+M	lib/huey/huey-ctx.h
+M	lib/ospark/osp-device.c
+M	lib/ospark/osp-self-test.c
+M	src/cd-common.c
+M	src/cd-device-array.c
+M	src/cd-device-array.h
+M	src/cd-device-db.c
+M	src/cd-device-db.h
+M	src/cd-device.c
+M	src/cd-device.h
+M	src/cd-inhibit.c
+M	src/cd-inhibit.h
+M	src/cd-main.c
+M	src/cd-mapping-db.c
+M	src/cd-mapping-db.h
+M	src/cd-profile-array.c
+M	src/cd-profile-array.h
+M	src/cd-profile-db.c
+M	src/cd-profile-db.h
+M	src/cd-profile.c
+M	src/cd-profile.h
+M	src/cd-sensor-client.c
+M	src/cd-sensor-client.h
+M	src/cd-sensor.c
+M	src/cd-sensor.h
+M	src/plugins/cd-plugin-camera.c
+M	src/plugins/cd-plugin-sane.c
+M	src/plugins/cd-plugin-scanner.c
+M	src/sensors/cd-sensor-argyll.c
+M	src/sensors/cd-sensor-colorhug.c
+M	src/sensors/cd-sensor-dtp94.c
+M	src/sensors/cd-sensor-dummy.c
+M	src/sensors/cd-sensor-huey.c
+M	src/sensors/cd-sensor-spark.c
+M	src/sensors/cd-spawn.c
+
+commit 7999005038cbeaa35221bc7053b74c6cd1daca1b
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    Port to g_autoptr()
+
+M	client/cd-create-profile.c
+M	client/cd-fix-profile.c
+M	client/cd-iccdump.c
+M	client/cd-it8.c
+M	client/cd-util.c
+M	contrib/colord-sane/cd-main.c
+M	contrib/session-helper/cd-main.c
+M	contrib/session-helper/cd-state.c
+M	lib/colord/cd-cleanup.h
+M	lib/colord/cd-client.c
+M	lib/colord/cd-device.c
+M	lib/colord/cd-dom.c
+M	lib/colord/cd-edid.c
+M	lib/colord/cd-icc-store.c
+M	lib/colord/cd-icc-utils.c
+M	lib/colord/cd-icc.c
+M	lib/colord/cd-interp-akima.c
+M	lib/colord/cd-it8-utils.c
+M	lib/colord/cd-it8.c
+M	lib/colord/cd-profile.c
+M	lib/colord/cd-sensor.c
+M	lib/colord/cd-test-daemon.c
+M	lib/colord/cd-test-shared.c
+M	lib/colord/cd-transform.c
+M	lib/colorhug/ch-device-queue.c
+M	lib/colorhug/ch-inhx32.c
+M	lib/compat/cd-compat-edid.c
+M	lib/ospark/osp-device.c
+M	lib/ospark/osp-self-test.c
+M	src/cd-common.c
+M	src/cd-device-db.c
+M	src/cd-device.c
+M	src/cd-inhibit.c
+M	src/cd-main.c
+M	src/cd-mapping-db.c
+M	src/cd-profile-db.c
+M	src/cd-profile.c
+M	src/cd-sensor.c
+M	src/plugins/cd-plugin-camera.c
+M	src/plugins/cd-plugin-sane.c
+M	src/plugins/cd-plugin-scanner.c
+M	src/sensors/cd-sensor-argyll.c
+M	src/sensors/cd-sensor-colorhug.c
+M	src/sensors/cd-sensor-dtp94.c
+M	src/sensors/cd-sensor-dummy.c
+M	src/sensors/cd-sensor-huey.c
+M	src/sensors/cd-sensor-spark.c
+M	src/sensors/cd-spawn.c
+
+commit 0b7f570b5de671f8d1f7855bb01c0f991ba33752
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    Add the start of a Spark sensor driver
+
+M	src/sensors/Makefile.am
+A	src/sensors/cd-sensor-spark.c
+
+commit 43f5e453a1a9e8c333155db780659396b09dc160
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    libcolord: Add cd_spectrum_subtract()
+
+M	lib/colord/cd-spectrum.c
+M	lib/colord/cd-spectrum.h
+M	lib/colord/cd-test-private.c
+
+commit 3e5a5b0decacc5146d9baafc6bba2ad91591afa8
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    trivial: Add a missing file in a header for internal use only
+
+M	lib/colord/colord-private.h
+
+commit c6d4239217fffffac72c81047af24b3aa0a10122
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    Add a sensor error for missing dark calibration
+
+M	client/cd-util.c
+M	lib/colord/cd-enum.c
+M	lib/colord/cd-enum.h
+
+commit 21eb54857e942ab8bccecd9914e19083dd57288b
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    libcolord: Make cd_spectrum_free() NULL-safe
+
+M	lib/colord/cd-spectrum.c
+
+commit 2b2c59792551cbadb8eacca50d8751e44c76d413
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    Post branch version bump
+
+M	configure.ac
+
+commit 458e7779b41c4f58164dcdb52b7bd1ff3e9e210e
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-10-13
+
+    libcolord: Return an error when we fail to estimate the gamma value
+
+M	lib/colord/cd-it8-utils.c
+
+commit ce88ff07ebf1b6500c542f82fe07b36554be6ca3
+Author: Tobias Hunger <tobias.hunger@gmail.com>
+Date:	2015-10-01
+
+    Add a tmpfiles.d snippet to fix stateless systems
+
+    Signed-off-by: Richard Hughes <richard@hughsie.com>
+
+M	contrib/colord.spec.in
+M	data/Makefile.am
+A	data/colord.conf
+
+commit a47a96de5e80acc75409bb3696a309bb92ab6430
+Author: Simon McVittie <simon.mcvittie@collabora.co.uk>
+Date:	2015-09-24
+
+    Add a systemd user service corresponding to the D-Bus session service
+
+    This ensures that it ends up in its own cgroup under systemd user
+    sessions where dbus-daemon uses systemd activation, rather than
+    being treated as part of dbus.service.
+
+    Bug: https://bugs.freedesktop.org/show_bug.cgi?id=92165
+
+    Signed-off-by: Richard Hughes <richard@hughsie.com>
+
+M	contrib/colord.spec.in
+M	contrib/session-helper/Makefile.am
+A	contrib/session-helper/colord-session.service.in
+M	contrib/session-helper/org.freedesktop.ColorHelper.service.in
+
+commit dfe3d0c32e686f40d8c4ec831a100eb944bde5d0
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2015-08-19
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
 commit 168025b9530e877ee25c707944f95e0f60859eb7
 Author: Richard Hughes <richard@hughsie.com>
-Date:   2015-08-19
+Date:	2015-08-19
 
     Release colord 1.2.12
 

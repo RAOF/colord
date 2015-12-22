@@ -108,7 +108,8 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am \
 	$(am__dist_bashcompletion_DATA_DIST) \
-	$(am__dist_dbus_DATA_DIST) $(am__DIST_COMMON)
+	$(am__dist_dbus_DATA_DIST) $(am__dist_tmpfiles_DATA_DIST) \
+	$(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = org.freedesktop.ColorManager.conf
@@ -169,11 +170,14 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(dbusservicemaindir)" \
 	"$(DESTDIR)$(bashcompletiondir)" "$(DESTDIR)$(dbusdir)" \
+	"$(DESTDIR)$(tmpfilesdir)" \
 	"$(DESTDIR)$(systemdservicemaindir)"
 am__dist_bashcompletion_DATA_DIST = colormgr
 am__dist_dbus_DATA_DIST = org.freedesktop.ColorManager.conf
+am__dist_tmpfiles_DATA_DIST = colord.conf
 DATA = $(dbusservicemain_DATA) $(dist_bashcompletion_DATA) \
-	$(dist_dbus_DATA) $(systemdservicemain_DATA)
+	$(dist_dbus_DATA) $(dist_tmpfiles_DATA) \
+	$(systemdservicemain_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 am__recursive_targets = \
@@ -446,6 +450,7 @@ srcdir = @srcdir@
 sysconfdir = @sysconfdir@
 systemdsystemunitdir = @systemdsystemunitdir@
 target_alias = @target_alias@
+tmpfilesdir = @tmpfilesdir@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
@@ -465,6 +470,7 @@ SUBDIRS = \
 @HAVE_UNIX_TRUE@dbusservicemain_in_files = org.freedesktop.ColorManager.service.in
 @HAVE_UNIX_TRUE@dbusservicemain_DATA = $(dbusservicemain_in_files:.service.in=.service)
 @HAVE_UNIX_TRUE@systemdservicemain_in_files = colord.service.in
+@HAVE_UNIX_TRUE@dist_tmpfiles_DATA = colord.conf
 @HAVE_SYSTEMD_TRUE@systemdservicemaindir = $(systemdsystemunitdir)
 @HAVE_SYSTEMD_TRUE@systemdservicemain_DATA = $(systemdservicemain_in_files:.service.in=.service)
 EXTRA_DIST = $(dbusservicemain_in_files) \
@@ -581,6 +587,27 @@ uninstall-dist_dbusDATA:
 	@list='$(dist_dbus_DATA)'; test -n "$(dbusdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(dbusdir)'; $(am__uninstall_files_from_dir)
+install-dist_tmpfilesDATA: $(dist_tmpfiles_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_tmpfiles_DATA)'; test -n "$(tmpfilesdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(tmpfilesdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(tmpfilesdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(tmpfilesdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(tmpfilesdir)" || exit $$?; \
+	done
+
+uninstall-dist_tmpfilesDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_tmpfiles_DATA)'; test -n "$(tmpfilesdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(tmpfilesdir)'; $(am__uninstall_files_from_dir)
 install-systemdservicemainDATA: $(systemdservicemain_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(systemdservicemain_DATA)'; test -n "$(systemdservicemaindir)" || list=; \
@@ -762,7 +789,7 @@ check: check-recursive
 all-am: Makefile $(DATA)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(dbusservicemaindir)" "$(DESTDIR)$(bashcompletiondir)" "$(DESTDIR)$(dbusdir)" "$(DESTDIR)$(systemdservicemaindir)"; do \
+	for dir in "$(DESTDIR)$(dbusservicemaindir)" "$(DESTDIR)$(bashcompletiondir)" "$(DESTDIR)$(dbusdir)" "$(DESTDIR)$(tmpfilesdir)" "$(DESTDIR)$(systemdservicemaindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -819,7 +846,7 @@ info-am:
 
 install-data-am: install-dbusservicemainDATA \
 	install-dist_bashcompletionDATA install-dist_dbusDATA \
-	install-systemdservicemainDATA
+	install-dist_tmpfilesDATA install-systemdservicemainDATA
 
 install-dvi: install-dvi-recursive
 
@@ -865,7 +892,7 @@ ps-am:
 
 uninstall-am: uninstall-dbusservicemainDATA \
 	uninstall-dist_bashcompletionDATA uninstall-dist_dbusDATA \
-	uninstall-systemdservicemainDATA
+	uninstall-dist_tmpfilesDATA uninstall-systemdservicemainDATA
 
 .MAKE: $(am__recursive_targets) install-am install-strip
 
@@ -875,17 +902,17 @@ uninstall-am: uninstall-dbusservicemainDATA \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am \
 	install-dbusservicemainDATA install-dist_bashcompletionDATA \
-	install-dist_dbusDATA install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip \
-	install-systemdservicemainDATA installcheck installcheck-am \
-	installdirs installdirs-am maintainer-clean \
+	install-dist_dbusDATA install-dist_tmpfilesDATA install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip install-systemdservicemainDATA installcheck \
+	installcheck-am installdirs installdirs-am maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-generic \
 	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
 	uninstall-am uninstall-dbusservicemainDATA \
 	uninstall-dist_bashcompletionDATA uninstall-dist_dbusDATA \
-	uninstall-systemdservicemainDATA
+	uninstall-dist_tmpfilesDATA uninstall-systemdservicemainDATA
 
 .PRECIOUS: Makefile
 
