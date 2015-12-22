@@ -45,10 +45,29 @@ GQuark		 osp_device_error_quark		(void);
 CdSpectrum	*osp_device_take_spectrum	(GUsbDevice	*device,
 						 GError		**error)
 						 G_GNUC_WARN_UNUSED_RESULT;
+CdSpectrum	*osp_device_take_spectrum_full	(GUsbDevice	*device,
+						 guint64	 sample_duration,
+						 GError		**error)
+						 G_GNUC_WARN_UNUSED_RESULT;
 gchar		*osp_device_get_serial		(GUsbDevice	*device,
 						 GError		**error)
 						 G_GNUC_WARN_UNUSED_RESULT;
 gchar		*osp_device_get_fw_version	(GUsbDevice	*device,
+						 GError		**error)
+						 G_GNUC_WARN_UNUSED_RESULT;
+gdouble		*osp_device_get_nonlinearity_cal(GUsbDevice	*device,
+						 guint		*length,
+						 GError		**error)
+						 G_GNUC_WARN_UNUSED_RESULT;
+gdouble		*osp_device_get_irradiance_cal	(GUsbDevice	*device,
+						 guint		*length,
+						 GError		**error)
+						 G_GNUC_WARN_UNUSED_RESULT;
+gdouble		*osp_device_get_wavelength_cal	(GUsbDevice	*device,
+						 guint		*length,
+						 GError		**error)
+						 G_GNUC_WARN_UNUSED_RESULT;
+gdouble		 osp_device_get_wavelength_start (GUsbDevice	*device,
 						 GError		**error)
 						 G_GNUC_WARN_UNUSED_RESULT;
 gboolean	 osp_device_open		(GUsbDevice	*device,

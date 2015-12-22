@@ -117,7 +117,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(libexecdir)" \
 	"$(DESTDIR)$(dbusservicemaindir)" \
-	"$(DESTDIR)$(introspectiondir)" \
+	"$(DESTDIR)$(introspectiondir)" "$(DESTDIR)$(systemduserdir)" \
 	"$(DESTDIR)$(libcolord_includedir)"
 PROGRAMS = $(libexec_PROGRAMS) $(noinst_PROGRAMS)
 am_colord_session_OBJECTS = colord_session-cd-debug.$(OBJEXT) \
@@ -217,7 +217,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-DATA = $(dbusservicemain_DATA) $(dist_introspection_DATA)
+DATA = $(dbusservicemain_DATA) $(dist_introspection_DATA) \
+	$(systemduser_DATA)
 HEADERS = $(libcolord_include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
@@ -456,6 +457,7 @@ srcdir = @srcdir@
 sysconfdir = @sysconfdir@
 systemdsystemunitdir = @systemdsystemunitdir@
 target_alias = @target_alias@
+tmpfilesdir = @tmpfilesdir@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
@@ -517,6 +519,9 @@ colord_session_CFLAGS = \
 dbusservicemaindir = $(datadir)/dbus-1/services
 dbusservicemain_in_files = org.freedesktop.ColorHelper.service.in
 dbusservicemain_DATA = $(dbusservicemain_in_files:.service.in=.service)
+systemduserdir = $(prefix)/lib/systemd/user
+systemduser_in_files = colord-session.service.in
+systemduser_DATA = $(systemduser_in_files:.service.in=.service)
 @CD_BUILD_SESSION_EXAMPLE_TRUE@colord_session_example_SOURCES = \
 @CD_BUILD_SESSION_EXAMPLE_TRUE@	cd-example.c
 
@@ -534,10 +539,12 @@ gsettings_schemas_in_files = org.freedesktop.ColorHelper.gschema.xml.in
 gsettings_SCHEMAS = $(gsettings_schemas_in_files:.gschema.xml.in=.gschema.xml)
 EXTRA_DIST = \
 	$(gsettings_schemas_in_files)			\
+	$(systemduser_in_files)				\
 	$(dbusservicemain_in_files)
 
 DISTCLEANFILES = \
 	$(dbusservicemain_DATA)				\
+	$(systemduser_DATA)				\
 	org.freedesktop.ColorHelper.gschema.xml
 
 all: all-am
@@ -775,6 +782,27 @@ uninstall-dist_introspectionDATA:
 	@list='$(dist_introspection_DATA)'; test -n "$(introspectiondir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(introspectiondir)'; $(am__uninstall_files_from_dir)
+install-systemduserDATA: $(systemduser_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(systemduser_DATA)'; test -n "$(systemduserdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(systemduserdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(systemduserdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(systemduserdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(systemduserdir)" || exit $$?; \
+	done
+
+uninstall-systemduserDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(systemduser_DATA)'; test -n "$(systemduserdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(systemduserdir)'; $(am__uninstall_files_from_dir)
 install-libcolord_includeHEADERS: $(libcolord_include_HEADERS)
 	@$(NORMAL_INSTALL)
 	@list='$(libcolord_include_HEADERS)'; test -n "$(libcolord_includedir)" || list=; \
@@ -883,7 +911,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(PROGRAMS) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libexecdir)" "$(DESTDIR)$(dbusservicemaindir)" "$(DESTDIR)$(introspectiondir)" "$(DESTDIR)$(libcolord_includedir)"; do \
+	for dir in "$(DESTDIR)$(libexecdir)" "$(DESTDIR)$(dbusservicemaindir)" "$(DESTDIR)$(introspectiondir)" "$(DESTDIR)$(systemduserdir)" "$(DESTDIR)$(libcolord_includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -942,7 +970,7 @@ info-am:
 
 install-data-am: install-dbusservicemainDATA \
 	install-dist_introspectionDATA \
-	install-libcolord_includeHEADERS
+	install-libcolord_includeHEADERS install-systemduserDATA
 
 install-dvi: install-dvi-am
 
@@ -990,7 +1018,8 @@ ps-am:
 
 uninstall-am: uninstall-dbusservicemainDATA \
 	uninstall-dist_introspectionDATA \
-	uninstall-libcolord_includeHEADERS uninstall-libexecPROGRAMS
+	uninstall-libcolord_includeHEADERS uninstall-libexecPROGRAMS \
+	uninstall-systemduserDATA
 
 .MAKE: install-am install-strip
 
@@ -1004,19 +1033,22 @@ uninstall-am: uninstall-dbusservicemainDATA \
 	install-exec install-exec-am install-html install-html-am \
 	install-info install-info-am install-libcolord_includeHEADERS \
 	install-libexecPROGRAMS install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	install-ps install-ps-am install-strip install-systemduserDATA \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am \
 	uninstall-dbusservicemainDATA uninstall-dist_introspectionDATA \
-	uninstall-libcolord_includeHEADERS uninstall-libexecPROGRAMS
+	uninstall-libcolord_includeHEADERS uninstall-libexecPROGRAMS \
+	uninstall-systemduserDATA
 
 .PRECIOUS: Makefile
 
 $(dbusservicemain_DATA): $(dbusservicemain_in_files) Makefile
 	@sed -e "s|\@servicedir\@|$(libexecdir)|" $< | \
 	sed -e "s|\@daemon_user\@|$(daemon_user)|" > $@
+$(systemduser_DATA): $(systemduser_in_files) Makefile
+	@sed -e "s|\@servicedir\@|$(libexecdir)|" $< > $@
 
 @CD_BUILD_SESSION_EXAMPLE_TRUE@test: colord-session-example
 @CD_BUILD_SESSION_EXAMPLE_TRUE@	./colord-session-example			\

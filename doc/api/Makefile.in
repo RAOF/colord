@@ -414,6 +414,7 @@ srcdir = @srcdir@
 sysconfdir = @sysconfdir@
 systemdsystemunitdir = @systemdsystemunitdir@
 target_alias = @target_alias@
+tmpfilesdir = @tmpfilesdir@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
@@ -812,10 +813,10 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 @ENABLE_GTK_DOC_FALSE@clean-local:
-@ENABLE_GTK_DOC_FALSE@maintainer-clean-local:
 @ENABLE_GTK_DOC_FALSE@install-data-local:
-@ENABLE_GTK_DOC_FALSE@uninstall-local:
+@ENABLE_GTK_DOC_FALSE@maintainer-clean-local:
 @ENABLE_GTK_DOC_FALSE@distclean-local:
+@ENABLE_GTK_DOC_FALSE@uninstall-local:
 clean: clean-recursive
 
 clean-am: clean-generic clean-libtool clean-local mostlyclean-am

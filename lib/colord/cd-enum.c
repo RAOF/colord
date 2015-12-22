@@ -1,6 +1,6 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
- * Copyright (C) 2010-2014 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2010-2015 Richard Hughes <richard@hughsie.com>
  *
  * Licensed under the GNU Lesser General Public License Version 2.1
  *
@@ -177,6 +177,9 @@ static const CdEnumMatch enum_sensor_cap[] = {
 	{CD_SENSOR_CAP_SPOT,				"spot"},
 	{CD_SENSOR_CAP_WIDE_GAMUT_LCD_CCFL,		"wide-gamut-lcd-ccfl"},
 	{CD_SENSOR_CAP_WIDE_GAMUT_LCD_RGB_LED,		"wide-gamut-lcd-rgb-led"},
+	{CD_SENSOR_CAP_SPECTRAL,			"spectral"},
+	{CD_SENSOR_CAP_CALIBRATION_DARK,		"calibration-dark"},
+	{CD_SENSOR_CAP_CALIBRATION_IRRADIANCE,		"calibration-irradiance"},
 	{0, NULL}
 };
 
@@ -663,6 +666,10 @@ cd_sensor_error_to_string (CdSensorError error_enum)
 		return CD_DBUS_INTERFACE_SENSOR ".RequiredPositionCalibrate";
 	if (error_enum == CD_SENSOR_ERROR_REQUIRED_POSITION_SURFACE)
 		return CD_DBUS_INTERFACE_SENSOR ".RequiredPositionSurface";
+	if (error_enum == CD_SENSOR_ERROR_REQUIRED_DARK_CALIBRATION)
+		return CD_DBUS_INTERFACE_SENSOR ".RequiredDarkCalibration";
+	if (error_enum == CD_SENSOR_ERROR_REQUIRED_IRRADIANCE_CALIBRATION)
+		return CD_DBUS_INTERFACE_SENSOR ".RequiredIrradianceCalibration";
 	return NULL;
 }
 
@@ -696,6 +703,10 @@ cd_sensor_error_from_string (const gchar *error_desc)
 		return CD_SENSOR_ERROR_REQUIRED_POSITION_CALIBRATE;
 	if (g_strcmp0 (error_desc, CD_DBUS_INTERFACE_SENSOR ".RequiredPositionSurface") == 0)
 		return CD_SENSOR_ERROR_REQUIRED_POSITION_SURFACE;
+	if (g_strcmp0 (error_desc, CD_DBUS_INTERFACE_SENSOR ".RequiredDarkCalibration") == 0)
+		return CD_SENSOR_ERROR_REQUIRED_DARK_CALIBRATION;
+	if (g_strcmp0 (error_desc, CD_DBUS_INTERFACE_SENSOR ".RequiredIrradianceCalibration") == 0)
+		return CD_SENSOR_ERROR_REQUIRED_IRRADIANCE_CALIBRATION;
 	return CD_SENSOR_ERROR_LAST;
 }
 

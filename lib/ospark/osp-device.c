@@ -32,8 +32,6 @@
 #include <string.h>
 #include <colord-private.h>
 
-#include "cd-cleanup.h"
-
 #include "osp-device.h"
 #include "osp-enum.h"
 
@@ -55,6 +53,12 @@ osp_device_error_quark (void)
 
 /**
  * osp_device_open:
+ * @device: a #GUsbDevice instance
+ * @error: A #GError or %NULL
+ *
+ * Opens the device and claims the interface
+ *
+ * Return value: %TRUE for success
  *
  * Since: 1.2.11
  **/
@@ -93,9 +97,9 @@ osp_device_query (GUsbDevice *device, OspCmd cmd,
 	gsize offset_rd = 0;
 	gsize offset_wr = 0;
 	guint i;
-	_cleanup_checksum_free_ GChecksum *csum = NULL;
-	_cleanup_free_ guint8 *buffer_in = NULL;
-	_cleanup_free_ guint8 *buffer_out = NULL;
+	g_autoptr(GChecksum) csum = NULL;
+	g_autofree guint8 *buffer_in = NULL;
+	g_autofree guint8 *buffer_out = NULL;
 
 	g_return_val_if_fail (G_USB_IS_DEVICE (device), FALSE);
 	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
@@ -139,7 +143,8 @@ osp_device_query (GUsbDevice *device, OspCmd cmd,
 	offset_wr += sizeof(OspProtocolFooter);
 
 	/* send data */
-	cd_buffer_debug (CD_BUFFER_KIND_REQUEST, buffer_in, offset_wr);
+	if (g_getenv ("SPARK_PROTOCOL_DEBUG") != NULL)
+		cd_buffer_debug (CD_BUFFER_KIND_REQUEST, buffer_in, offset_wr);
 	if (!g_usb_device_bulk_transfer (device, 0x01,
 					 buffer_in, offset_wr,
 					 &actual_length,
@@ -153,11 +158,33 @@ osp_device_query (GUsbDevice *device, OspCmd cmd,
 					 &actual_length,
 					 OSP_USB_TIMEOUT_MS, NULL, error))
 		return NULL;
-	cd_buffer_debug (CD_BUFFER_KIND_RESPONSE, buffer_out, actual_length);
+	if (g_getenv ("SPARK_PROTOCOL_DEBUG") != NULL)
+		cd_buffer_debug (CD_BUFFER_KIND_RESPONSE, buffer_out, actual_length);
 
 	/* check the error code */
 	hdr = (OspProtocolHeader *) buffer_out;
-	if (hdr->error_code != OSP_ERROR_CODE_SUCCESS) {
+	switch (hdr->error_code) {
+	case OSP_ERROR_CODE_SUCCESS:
+		break;
+	case OSP_ERROR_CODE_MESSAGE_TOO_LARGE:
+	case OSP_ERROR_CODE_UNKNOWN_CHECKSUM_TYPE:
+	case OSP_ERROR_CODE_UNSUPPORTED_PROTOCOL:
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_NO_SUPPORT,
+			     "Failed to %s",
+			     osp_cmd_to_string (cmd));
+		return FALSE;
+		break;
+	case OSP_ERROR_CODE_COMMAND_DATA_MISSING:
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_NO_DATA,
+			     "Failed to %s",
+			     osp_cmd_to_string (cmd));
+		return FALSE;
+		break;
+	default:
 		g_set_error (error,
 			     OSP_DEVICE_ERROR,
 			     OSP_DEVICE_ERROR_INTERNAL,
@@ -165,6 +192,7 @@ osp_device_query (GUsbDevice *device, OspCmd cmd,
 			     osp_cmd_to_string (cmd),
 			     osp_error_code_to_string (hdr->error_code));
 		return FALSE;
+		break;
 	}
 
 	/* copy out the data */
@@ -195,7 +223,8 @@ osp_device_query (GUsbDevice *device, OspCmd cmd,
 						 OSP_USB_TIMEOUT_MS, NULL, error))
 			return NULL;
 		memcpy (*data_out + offset_wr, buffer_out, OSP_DEVICE_EP_SIZE);
-		cd_buffer_debug (CD_BUFFER_KIND_RESPONSE, buffer_out, OSP_DEVICE_EP_SIZE);
+		if (g_getenv ("SPARK_PROTOCOL_DEBUG") != NULL)
+			cd_buffer_debug (CD_BUFFER_KIND_RESPONSE, buffer_out, OSP_DEVICE_EP_SIZE);
 		offset_wr += 64;
 	}
 	offset_rd += payload_length;
@@ -230,6 +259,12 @@ osp_device_send_command (GUsbDevice *device, OspCmd cmd,
 
 /**
  * osp_device_get_serial:
+ * @device: a #GUsbDevice instance
+ * @error: A #GError or %NULL
+ *
+ * Gets the device serial number.
+ *
+ * Return value: A string, or %NULL for failure
  *
  * Since: 1.2.11
  **/
@@ -237,7 +272,7 @@ gchar *
 osp_device_get_serial (GUsbDevice *device, GError **error)
 {
 	gsize data_len;
-	_cleanup_free_ guint8 *data = NULL;
+	g_autofree guint8 *data = NULL;
 
 	g_return_val_if_fail (G_USB_IS_DEVICE (device), NULL);
 	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
@@ -257,11 +292,17 @@ osp_device_get_serial (GUsbDevice *device, GError **error)
 	}
 
 	/* format value */
-	return g_strdup ((const gchar *) data);
+	return g_strndup ((const gchar *) data, data_len);
 }
 
 /**
  * osp_device_get_fw_version:
+ * @device: a #GUsbDevice instance
+ * @error: A #GError or %NULL
+ *
+ * Opens the device and claims the interface
+ *
+ * Return value: The firmware version, or %NULL for error
  *
  * Since: 1.2.11
  **/
@@ -269,7 +310,7 @@ gchar *
 osp_device_get_fw_version (GUsbDevice *device, GError **error)
 {
 	gsize data_len;
-	_cleanup_free_ guint8 *data = NULL;
+	g_autofree guint8 *data = NULL;
 
 	g_return_val_if_fail (G_USB_IS_DEVICE (device), NULL);
 	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
@@ -293,20 +334,385 @@ osp_device_get_fw_version (GUsbDevice *device, GError **error)
 }
 
 /**
- * osp_device_take_spectrum:
+ * osp_device_get_wavelength_cal_for_idx:
  *
- * Since: 1.2.11
+ * Since: 1.3.1
  **/
-CdSpectrum *
-osp_device_take_spectrum (GUsbDevice *device, GError **error)
+static gboolean
+osp_device_get_wavelength_cal_for_idx (GUsbDevice *device,
+				       guint idx,
+				       gfloat *cal,
+				       GError **error)
+{
+	gsize data_len;
+	guint8 idx_buf[1] = { idx };
+	g_autofree guint8 *data = NULL;
+
+	g_return_val_if_fail (G_USB_IS_DEVICE (device), FALSE);
+	g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+	/* query hardware */
+	if (!osp_device_query (device, OSP_CMD_GET_WAVELENGTH_COEFFICIENT,
+			       idx_buf, 1, &data, &data_len, error))
+		return NULL;
+
+	/* check values */
+	if (data_len != 4) {
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_INTERNAL,
+			     "Expected %i bytes, got %li", 4, data_len);
+		return FALSE;
+	}
+
+	/* convert to floating point */
+	if (cal != NULL)
+		*cal = *((gfloat *) data);
+
+	/* format value */
+	return TRUE;
+}
+
+/**
+ * osp_device_get_wavelength_start:
+ * @device: a #GUsbDevice instance
+ * @error: A #GError or %NULL
+ *
+ * Gets the starting wavelength for the sensor.
+ *
+ * Return value: A value in nm, or -1 for error
+ *
+ * Since: 1.3.1
+ **/
+gdouble
+osp_device_get_wavelength_start (GUsbDevice *device, GError **error)
+{
+	gfloat tmp = -1.f;
+
+	/* get from hardware */
+	if (!osp_device_get_wavelength_cal_for_idx (device, 0, &tmp, error))
+		return -1.f;
+
+	/* check values */
+	if (tmp < 0) {
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_INTERNAL,
+			     "Not a valid start, got %f", tmp);
+		return -1.f;
+	}
+
+	return (gdouble) tmp;
+}
+
+/**
+ * osp_device_get_wavelength_cal:
+ * @device: a #GUsbDevice instance
+ * @length: the size of the returned array
+ * @error: A #GError or %NULL
+ *
+ * Gets the wavelength coefficients for the sensor.
+ *
+ * Return value: An array of coefficients
+ *
+ * Since: 1.3.1
+ **/
+gdouble *
+osp_device_get_wavelength_cal (GUsbDevice *device, guint *length, GError **error)
+{
+	gboolean ret;
+	gdouble *coefs = NULL;
+	gfloat cx;
+	gsize data_len;
+	guint i;
+	g_autofree guint8 *data = NULL;
+
+	g_return_val_if_fail (G_USB_IS_DEVICE (device), NULL);
+	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+
+	/* query hardware */
+	if (!osp_device_query (device, OSP_CMD_GET_WAVELENGTH_COEFFICIENT_COUNT,
+			       NULL, 0, &data, &data_len, error))
+		return NULL;
+
+	/* check values */
+	if (data_len != 1) {
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_INTERNAL,
+			     "Expected 1 bytes, got %li", data_len);
+		return FALSE;
+	}
+
+	/* check sanity */
+	if (data[0] != 4) {
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_INTERNAL,
+			     "Expected 4 coefs, got %i", data[0]);
+		return FALSE;
+	}
+
+	/* get the coefs */
+	coefs = g_new0 (gdouble, data[0] - 1);
+	for (i = 0; i < (guint) data[0] - 1; i++) {
+		ret = osp_device_get_wavelength_cal_for_idx (device,
+							     i + 1,
+							     &cx,
+							     error);
+		if (!ret)
+			return FALSE;
+		coefs[i] = cx;
+	}
+
+	/* this is optional */
+	if (length != NULL)
+		*length = data[0] - 1;
+
+	/* success */
+	return coefs;
+}
+
+/**
+ * osp_device_get_nonlinearity_cal_for_idx:
+ *
+ * Since: 1.3.1
+ **/
+static gboolean
+osp_device_get_nonlinearity_cal_for_idx (GUsbDevice *device,
+					 guint idx,
+					 gfloat *cal,
+					 GError **error)
+{
+	gsize data_len;
+	guint8 idx_buf[1] = { idx };
+	g_autofree guint8 *data = NULL;
+
+	g_return_val_if_fail (G_USB_IS_DEVICE (device), NULL);
+	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+
+	/* query hardware */
+	if (!osp_device_query (device, OSP_CMD_GET_NONLINEARITY_COEFFICIENT,
+			       idx_buf, 1, &data, &data_len, error))
+		return NULL;
+
+	/* check values */
+	if (data_len != 4) {
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_INTERNAL,
+			     "Expected %i bytes, got %li", 4, data_len);
+		return FALSE;
+	}
+
+	/* convert to floating point */
+	if (cal != NULL)
+		*cal = *((gfloat *) data);
+
+	/* format value */
+	return TRUE;
+}
+
+/**
+ * osp_device_get_nonlinearity_cal:
+ * @device: a #GUsbDevice instance
+ * @length: the size of the returned array
+ * @error: A #GError or %NULL
+ *
+ * Gets the nonlinearity values for the sensor.
+ *
+ * Return value: An array of coefficients
+ *
+ * Since: 1.3.1
+ **/
+gdouble *
+osp_device_get_nonlinearity_cal (GUsbDevice *device, guint *length, GError **error)
+{
+	gboolean ret;
+	gdouble *coefs = NULL;
+	gfloat cx;
+	gsize data_len;
+	guint i;
+	g_autofree guint8 *data = NULL;
+
+	g_return_val_if_fail (G_USB_IS_DEVICE (device), NULL);
+	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+
+	/* query hardware */
+	if (!osp_device_query (device, OSP_CMD_GET_NONLINEARITY_COEFFICIENT_COUNT,
+			       NULL, 0, &data, &data_len, error))
+		return NULL;
+
+	/* check values */
+	if (data_len != 1) {
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_INTERNAL,
+			     "Expected 1 bytes, got %li", data_len);
+		return FALSE;
+	}
+
+	/* check sanity */
+	if (data[0] != 8) {
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_INTERNAL,
+			     "Expected 8 coefs, got %i", data[0]);
+		return FALSE;
+	}
+
+	/* get the coefs */
+	coefs = g_new0 (gdouble, data[0]);
+	for (i = 0; i < data[0]; i++) {
+		ret = osp_device_get_nonlinearity_cal_for_idx (device,
+							       i,
+							       &cx,
+							       error);
+		if (!ret)
+			return FALSE;
+		coefs[i] = cx;
+	}
+
+	/* this is optional */
+	if (length != NULL)
+		*length = data[0];
+
+	/* success */
+	return coefs;
+}
+
+/**
+ * osp_device_get_irradiance_cal:
+ * @device: a #GUsbDevice instance
+ * @length: the size of the returned array
+ * @error: A #GError or %NULL
+ *
+ * Gets the irradiance spectrum for the sensor.
+ *
+ * Return value: An array of coefficients
+ *
+ * Since: 1.3.1
+ **/
+gdouble *
+osp_device_get_irradiance_cal (GUsbDevice *device, guint *length, GError **error)
+{
+	gdouble *coefs = NULL;
+	gsize data_len;
+	guint i;
+	g_autofree guint8 *data = NULL;
+
+	g_return_val_if_fail (G_USB_IS_DEVICE (device), NULL);
+	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+
+	/* query hardware */
+	if (!osp_device_query (device, OSP_CMD_GET_IRRADIANCE_CALIBRATION,
+			       NULL, 0, &data, &data_len, error))
+		return NULL;
+
+	/* check values */
+	if (data_len != 4096 * 4) {
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_INTERNAL,
+			     "Expected %i bytes, got %li", 4096 * 4, data_len);
+		return FALSE;
+	}
+
+	/* copy out the coefs */
+	coefs = g_new0 (gdouble, 4096);
+	for (i = 0; i < 4096; i++)
+		coefs[i] = *((gfloat *) &data[i*4]);
+
+	/* this is optional */
+	if (length != NULL)
+		*length = 4096;
+
+	/* success */
+	return coefs;
+}
+
+/**
+ * osp_device_take_spectrum_internal:
+ **/
+static CdSpectrum *
+osp_device_take_spectrum_internal (GUsbDevice *device,
+				   guint64 sample_duration,
+				   GError **error)
 {
 	CdSpectrum *sp;
 	gdouble val;
 	gsize data_len;
-	guint32 sample_duration = 100000; /* us */
-	guint8 bin_factor = 0;
 	guint i;
-	_cleanup_free_ guint8 *data = NULL;
+	g_autofree guint8 *data = NULL;
+	g_autoptr(GTimer) t = NULL;
+
+	/* set integral time in us */
+	if (!osp_device_send_command (device, OSP_CMD_SET_INTEGRATION_TIME,
+				      (guint8 *) &sample_duration, 4, error))
+		return NULL;
+
+	/* get spectrum */
+	t = g_timer_new ();
+	if (!osp_device_query (device, OSP_CMD_GET_AND_SEND_RAW_SPECTRUM,
+			       NULL, 0, &data, &data_len, error))
+		return NULL;
+	g_debug ("For integration of %.0fms, sensor took %.0fms",
+		 sample_duration / 1000.f, g_timer_elapsed (t, NULL) * 1000.f);
+
+	/* check values */
+	if (data_len != 2048) {
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_INTERNAL,
+			     "Expected %i bytes, got %li", 2048, data_len);
+		return NULL;
+	}
+
+	/* export */
+	sp = cd_spectrum_sized_new (1024);
+	for (i = 0; i < 1024; i++) {
+		val = data[i*2+1] * 256 + data[i*2+0];
+		cd_spectrum_add_value (sp, val / (gdouble) 0xffff);
+	}
+
+	/* the maximum value the hardware can return is 0x3fff */
+	val = cd_spectrum_get_value_max (sp);
+	if (val > 0.25) {
+		g_set_error (error,
+			     OSP_DEVICE_ERROR,
+			     OSP_DEVICE_ERROR_INTERNAL,
+			     "spectral max should be <= 0.25f, was %f",
+			     val);
+		cd_spectrum_free (sp);
+		return NULL;
+	}
+
+	return sp;
+}
+
+/**
+ * osp_device_take_spectrum_full:
+ * @device: a #GUsbDevice instance
+ * @sample_duration: the sample duration in µs
+ * @error: A #GError or %NULL
+ *
+ * Returns a spectrum for a set sample duration.
+ *
+ * Return value: A #CdSpectrum, or %NULL for error
+ *
+ * Since: 1.3.1
+ **/
+CdSpectrum *
+osp_device_take_spectrum_full (GUsbDevice *device,
+			       guint64 sample_duration,
+			       GError **error)
+{
+	CdSpectrum *sp;
+	gdouble start;
+	guint8 bin_factor = 0;
+	g_autofree gdouble *cx = NULL;
+	g_autoptr(CdSpectrum) sp_dc = NULL;
+	g_autoptr(CdSpectrum) sp_raw = NULL;
 
 	g_return_val_if_fail (G_USB_IS_DEVICE (device), NULL);
 	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
@@ -316,34 +722,134 @@ osp_device_take_spectrum (GUsbDevice *device, GError **error)
 				      &bin_factor, 1, error))
 		return NULL;
 
-	/* set integral time in us */
-	if (!osp_device_send_command (device, OSP_CMD_SET_INTEGRATION_TIME,
-				      (guint8 *) &sample_duration, 4, error))
-		return NULL;
-
 	/* get spectrum */
-	if (!osp_device_query (device, OSP_CMD_GET_AND_SEND_RAW_SPECTRUM,
-			       NULL, 0, &data, &data_len, error))
+	sp_raw = osp_device_take_spectrum_internal (device, sample_duration, error);
+	if (sp_raw == NULL)
+		return NULL;
+	cd_spectrum_set_id (sp_raw, "raw");
+
+	/* remove any DC offset from the sensor by doing a 10us reading --
+	 * ideally this would be 0us, but we have to use what we have */
+	sp_dc = osp_device_take_spectrum_internal (device, 10, error);
+	if (sp_dc == NULL)
+		return NULL;
+	cd_spectrum_set_id (sp_dc, "dc");
+
+	/* get coefficients */
+	cx = osp_device_get_wavelength_cal (device, NULL, error);
+	if (cx == NULL)
 		return NULL;
 
-	/* check values */
-	if (data_len != 2048) {
-		g_set_error (error,
-			     OSP_DEVICE_ERROR,
-			     OSP_DEVICE_ERROR_INTERNAL,
-			     "Expected %i bytes, got %li", 2048, data_len);
-		return FALSE;
+	/* get start */
+	start = osp_device_get_wavelength_start (device, error);
+	if (start < 0)
+		return NULL;
+
+	/* return the reading without a DC component */
+	sp = cd_spectrum_subtract (sp_raw, sp_dc, 5);
+	cd_spectrum_set_start (sp, start);
+	cd_spectrum_set_norm (sp, 4);
+	cd_spectrum_set_wavelength_cal (sp, cx[0], cx[1], cx[2]);
+	return sp;
+}
+
+/**
+ * osp_device_take_spectrum:
+ * @device: a #GUsbDevice instance.
+ * @error: A #GError or %NULL
+ *
+ * Returns a spectrum. The optimal sample duration is calculated automatically.
+ *
+ * Return value: A #CdSpectrum, or %NULL for error
+ *
+ * Since: 1.2.11
+ **/
+CdSpectrum *
+osp_device_take_spectrum (GUsbDevice *device, GError **error)
+{
+	const guint sample_duration_max_secs = 3;
+	gboolean relax_requirements = FALSE;
+	gdouble max;
+	gdouble scale = 0.f;
+	guint64 sample_duration = 10000; /* us */
+	CdSpectrum *sp = NULL;
+	guint i;
+
+	g_return_val_if_fail (G_USB_IS_DEVICE (device), NULL);
+	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+
+	/* loop until we're in 1/4 to 3/4 FSD */
+	for (i = 0; i < 5; i++) {
+		g_autoptr(CdSpectrum) sp_probe = NULL;
+
+		/* for the last try, relax what we deem acceptable so we can
+		 * measure very black things with a long integration time */
+		if (i == 4)
+			relax_requirements = TRUE;
+
+		/* take a measurement */
+		sp_probe = osp_device_take_spectrum_full (device,
+							  sample_duration,
+							  error);
+		if (sp_probe == NULL)
+			return NULL;
+
+		/* sensor picked up nothing, take action */
+		max = cd_spectrum_get_value_max (sp_probe);
+		if (max < 0.001f) {
+			sample_duration *= 100.f;
+			g_debug ("sensor read no data, setting duration to %luus",
+				 sample_duration);
+			continue;
+		}
+
+		/* sensor is saturated, take action */
+		if (max > 0.99f) {
+			sample_duration /= 100.f;
+			g_debug ("sensor saturated, setting duration to %luus",
+				 sample_duration);
+			continue;
+		}
+
+		/* break out if we got valid readings */
+		if (max > 0.25f && max < 0.75f) {
+			sp = cd_spectrum_dup (sp_probe);
+			break;
+		}
+
+		/* be more accepting */
+		if (relax_requirements && max > 0.01f) {
+			sp = cd_spectrum_dup (sp_probe);
+			break;
+		}
+
+		/* aim for FSD / 2 */
+		scale = (gdouble) 0.5 / max;
+		sample_duration *= scale;
+		g_debug ("for max of %f, using scale=%f for duration %luus",
+			 max, scale, sample_duration);
+
+		/* limit this to something sane */
+		if (sample_duration / G_USEC_PER_SEC > sample_duration_max_secs) {
+			g_debug ("limiting duration from %lus to %is",
+				 sample_duration / G_USEC_PER_SEC,
+				 sample_duration_max_secs);
+			sample_duration = sample_duration_max_secs * G_USEC_PER_SEC;
+			relax_requirements = TRUE;
+		}
 	}
 
-	/* export */
-	sp = cd_spectrum_sized_new (1024);
-	cd_spectrum_set_id (sp, "raw");
-	cd_spectrum_set_start (sp, 380);
-	cd_spectrum_set_end (sp, 700);
-	cd_spectrum_set_norm (sp, FALSE);
-	for (i = 0; i < 1024; i++) {
-		val = data[i*2+1] * 256 + data[i*2+0];
-		cd_spectrum_add_value (sp, val / (gdouble) 0xffff);
+	/* no suitable readings */
+	if (sp == NULL) {
+		g_set_error_literal (error,
+				     OSP_DEVICE_ERROR,
+				     OSP_DEVICE_ERROR_NO_DATA,
+				     "Got no valid data");
+		return NULL;
 	}
+
+	/* scale with the new integral time */
+	cd_spectrum_set_norm (sp, cd_spectrum_get_norm (sp) / scale);
+	g_debug ("normalised spectral max is %f", cd_spectrum_get_value_max (sp));
 	return sp;
 }

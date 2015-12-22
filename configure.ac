@@ -2,8 +2,8 @@
 AC_PREREQ(2.63)
 
 m4_define([cd_major_version], [1])
-m4_define([cd_minor_version], [2])
-m4_define([cd_micro_version], [12])
+m4_define([cd_minor_version], [3])
+m4_define([cd_micro_version], [1])
 m4_define([cd_version],
           [cd_major_version.cd_minor_version.cd_micro_version])
 
@@ -39,7 +39,7 @@ AC_SUBST(CD_MICRO_VERSION)
 # REVISION	If the API and ABI remains the same, but bugs are fixed.
 # AGE		Don't use.
 LT_CURRENT=2
-LT_REVISION=4
+LT_REVISION=5
 LT_AGE=0
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
@@ -150,7 +150,7 @@ dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
 COLORD_REQUIRES_PRIVATE="lcms2"
-PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.36.0 gobject-2.0 gthread-2.0 gio-2.0 >= 2.25.9 gmodule-2.0)
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.44.0 gobject-2.0 gthread-2.0 gio-2.0 >= 2.25.9 gmodule-2.0)
 
 dnl ---------------------------------------------------------------------------
 dnl - Check Linux-specific dependencies
@@ -191,7 +191,7 @@ AM_CONDITIONAL(HAVE_UNIX, test x$enable_unix = xyes)
 AC_ARG_ENABLE(gusb, AS_HELP_STRING([--enable-gusb],[Enable GUSB support]),
 	      enable_gusb=$enableval, enable_gusb=yes)
 if test x$enable_gusb != xno; then
-	PKG_CHECK_MODULES(GUSB, gusb >= 0.2.2)
+	PKG_CHECK_MODULES(GUSB, gusb >= 0.2.7)
 	AC_DEFINE(HAVE_GUSB,1,[whether gusb is available])
 fi
 AM_CONDITIONAL(HAVE_GUSB, test x$enable_gusb = xyes)
@@ -253,6 +253,17 @@ if test "x$with_systemdsystemunitdir" != "xno"; then
 	AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])
 fi
 AM_CONDITIONAL(HAVE_SYSTEMD, [test -n "$systemdsystemunitdir"])
+
+dnl ---------------------------------------------------------------------------
+dnl - Where to install tmpfiles.d snippet rules
+dnl ---------------------------------------------------------------------------
+AC_ARG_WITH([tmpfilesdir],
+            AS_HELP_STRING([--with-tmpfilesdir=DIR], [Directory for tmpfiles.d snippet files]),
+            [],
+            [with_tmpfilesdir=$($PKG_CONFIG --variable=tmpfilesdir systemd)])
+if test "x$with_tmpfilesdir" != "xno"; then
+	AC_SUBST([tmpfilesdir], [$with_tmpfilesdir])
+fi
 
 dnl **** Check if we should build libcolordcompat ****
 AC_ARG_ENABLE(libcolordcompat, AS_HELP_STRING([--enable-libcolordcompat],
@@ -508,6 +519,7 @@ echo "
         udev rules.d dir:          ${with_udevrulesdir}
         systemd-login support:     ${enable_systemd_login}
         systemd service dir:       ${with_systemdsystemunitdir}
+        tmpfiles.d dir:            ${with_tmpfilesdir}
         Unix support:              ${enable_unix}
 "
 
