@@ -14,3 +14,5 @@ usr/share/man
 usr/share/polkit-1
 usr/share/bash-completion
 lib/systemd/system/*.service
+usr/lib/systemd/user/
+usr/lib/tmpfiles.d/
