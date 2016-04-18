@@ -26,7 +26,7 @@ Build-Depends:
  dh-systemd (>= 1.4),
 Build-Depends-Indep:
  argyll [linux-any],
-Standards-Version: 3.9.6
+Standards-Version: 3.9.8
 Section: graphics
 Homepage: http://www.freedesktop.org/software/colord/
 Vcs-Git: git://anonscm.debian.org/collab-maint/colord.git
