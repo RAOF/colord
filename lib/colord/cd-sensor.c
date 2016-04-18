@@ -616,16 +616,16 @@ cd_sensor_connect_cb (GObject *source_object,
 		cd_sensor_set_metadata_from_variant (sensor, metadata);
 
 	/* get signals from DBus */
-	g_signal_connect (priv->proxy,
-			  "g-signal",
-			  G_CALLBACK (cd_sensor_dbus_signal_cb),
-			  sensor);
+	g_signal_connect_object (priv->proxy,
+				 "g-signal",
+				 G_CALLBACK (cd_sensor_dbus_signal_cb),
+				 sensor, 0);
 
 	/* watch if any remote properties change */
-	g_signal_connect (priv->proxy,
-			  "g-properties-changed",
-			  G_CALLBACK (cd_sensor_dbus_properties_changed_cb),
-			  sensor);
+	g_signal_connect_object (priv->proxy,
+				 "g-properties-changed",
+				 G_CALLBACK (cd_sensor_dbus_properties_changed_cb),
+				 sensor, 0);
 
 	/* we're done */
 	g_task_return_boolean (task, TRUE);
@@ -996,7 +996,7 @@ cd_sensor_get_sample_finish (CdSensor *sensor,
 			     GAsyncResult *res,
 			     GError **error)
 {
-	g_return_val_if_fail (g_task_is_valid (res, sensor), FALSE);
+	g_return_val_if_fail (g_task_is_valid (res, sensor), NULL);
 	return g_task_propagate_pointer (G_TASK (res), error);
 }
 
@@ -1088,7 +1088,7 @@ cd_sensor_get_spectrum_finish (CdSensor *sensor,
 			       GAsyncResult *res,
 			       GError **error)
 {
-	g_return_val_if_fail (g_task_is_valid (res, sensor), FALSE);
+	g_return_val_if_fail (g_task_is_valid (res, sensor), NULL);
 	return g_task_propagate_pointer (G_TASK (res), error);
 }
 
@@ -1633,7 +1633,6 @@ cd_sensor_finalize (GObject *object)
 							    sensor);
 		g_assert (ret > 0);
 		g_object_unref (priv->proxy);
-		g_assert (!G_IS_DBUS_PROXY (priv->proxy));
 	}
 
 	G_OBJECT_CLASS (cd_sensor_parent_class)->finalize (object);

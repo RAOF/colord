@@ -89,11 +89,11 @@ build_triplet = @build@
 host_triplet = @host@
 
 # this needs data/profiles/*.icc
-@HAVE_UNIX_TRUE@am__append_1 = \
-@HAVE_UNIX_TRUE@	man						\
-@HAVE_UNIX_TRUE@	policy						\
-@HAVE_UNIX_TRUE@	rules						\
-@HAVE_UNIX_TRUE@	src
+@HAVE_DAEMON_TRUE@am__append_1 = \
+@HAVE_DAEMON_TRUE@	man						\
+@HAVE_DAEMON_TRUE@	policy						\
+@HAVE_DAEMON_TRUE@	rules						\
+@HAVE_DAEMON_TRUE@	src
 
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -336,6 +336,7 @@ LTLIBOBJS = @LTLIBOBJS@
 LT_AGE = @LT_AGE@
 LT_CURRENT = @LT_CURRENT@
 LT_REVISION = @LT_REVISION@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@

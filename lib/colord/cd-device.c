@@ -891,16 +891,16 @@ cd_device_connect_cb (GObject *source_object,
 		cd_device_set_metadata_from_variant (device, metadata);
 
 	/* get signals from DBus */
-	g_signal_connect (priv->proxy,
-			  "g-signal",
-			  G_CALLBACK (cd_device_dbus_signal_cb),
-			  device);
+	g_signal_connect_object (priv->proxy,
+				 "g-signal",
+				 G_CALLBACK (cd_device_dbus_signal_cb),
+				 device, 0);
 
 	/* watch if any remote properties change */
-	g_signal_connect (priv->proxy,
-			  "g-properties-changed",
-			  G_CALLBACK (cd_device_dbus_properties_changed_cb),
-			  device);
+	g_signal_connect_object (priv->proxy,
+				 "g-properties-changed",
+				 G_CALLBACK (cd_device_dbus_properties_changed_cb),
+				 device, 0);
 
 	/* success */
 	g_task_return_boolean (task, TRUE);
@@ -1498,7 +1498,7 @@ cd_device_get_profile_for_qualifiers_finish (CdDevice *device,
 					     GAsyncResult *res,
 					     GError **error)
 {
-	g_return_val_if_fail (g_task_is_valid (res, device), FALSE);
+	g_return_val_if_fail (g_task_is_valid (res, device), NULL);
 	return g_task_propagate_pointer (G_TASK (res), error);
 }
 
