@@ -58,7 +58,7 @@ Architecture: any
 Depends: 
  ${shlibs:Depends},
  ${misc:Depends},
-Recommends: colord
+Suggests: colord
 Pre-Depends: ${misc:Pre-Depends}
 Multi-Arch: same
 Description: system service to manage device colour profiles -- runtime
