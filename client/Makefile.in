@@ -90,8 +90,8 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = cd-create-profile$(EXEEXT) cd-iccdump$(EXEEXT) \
 	cd-it8$(EXEEXT) cd-fix-profile$(EXEEXT) $(am__EXEEXT_1)
-@HAVE_UNIX_TRUE@am__append_1 = \
-@HAVE_UNIX_TRUE@	colormgr
+@HAVE_DAEMON_TRUE@am__append_1 = \
+@HAVE_DAEMON_TRUE@	colormgr
 
 subdir = client
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -115,7 +115,7 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-@HAVE_UNIX_TRUE@am__EXEEXT_1 = colormgr$(EXEEXT)
+@HAVE_DAEMON_TRUE@am__EXEEXT_1 = colormgr$(EXEEXT)
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_cd_create_profile_OBJECTS =  \
@@ -336,6 +336,7 @@ LTLIBOBJS = @LTLIBOBJS@
 LT_AGE = @LT_AGE@
 LT_CURRENT = @LT_CURRENT@
 LT_REVISION = @LT_REVISION@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@

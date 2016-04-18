@@ -3,7 +3,7 @@ AC_PREREQ(2.63)
 
 m4_define([cd_major_version], [1])
 m4_define([cd_minor_version], [3])
-m4_define([cd_micro_version], [1])
+m4_define([cd_micro_version], [2])
 m4_define([cd_version],
           [cd_major_version.cd_minor_version.cd_micro_version])
 
@@ -186,7 +186,16 @@ else
 fi
 AC_SUBST([CD_IT8])
 AC_SUBST([CD_CREATE_PROFILE])
-AM_CONDITIONAL(HAVE_UNIX, test x$enable_unix = xyes)
+
+# optional
+AC_ARG_ENABLE(session_helper, AS_HELP_STRING([--enable-session-helper],[Enable Session Helper]),
+	      enable_session_helper=$enableval, enable_session_helper=$enable_unix)
+AM_CONDITIONAL(HAVE_SESSION_HELPER, test x$enable_session_helper = xyes)
+
+# optional
+AC_ARG_ENABLE(daemon, AS_HELP_STRING([--enable-daemon],[Enable daemon]),
+	      enable_daemon=$enableval, enable_daemon=$enable_unix)
+AM_CONDITIONAL(HAVE_DAEMON, test x$enable_daemon = xyes)
 
 AC_ARG_ENABLE(gusb, AS_HELP_STRING([--enable-gusb],[Enable GUSB support]),
 	      enable_gusb=$enableval, enable_gusb=yes)
@@ -510,6 +519,7 @@ echo "
         SANE support:              ${has_sane}
         Udev support:              ${enable_udev}
         GUsb support:              ${enable_gusb}
+        Build daemon:              ${enable_daemon}
         Extra print profiles:      ${enable_print_profiles}
         Install tests:             ${enable_installed_tests}
         ArgyllCMS sensor:          ${enable_argyllcms_sensor}
@@ -520,6 +530,7 @@ echo "
         systemd-login support:     ${enable_systemd_login}
         systemd service dir:       ${with_systemdsystemunitdir}
         tmpfiles.d dir:            ${with_tmpfilesdir}
+        Session helper support:    ${enable_session_helper}
         Unix support:              ${enable_unix}
 "
 

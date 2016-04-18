@@ -30,7 +30,7 @@
  */
 #define CH_MAJOR_VERSION				(1)
 #define CH_MINOR_VERSION				(3)
-#define CH_MICRO_VERSION				(1)
+#define CH_MICRO_VERSION				(2)
 
 /* check whether a Ch version equal to or greater than
  * major.minor.micro.

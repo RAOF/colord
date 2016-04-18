@@ -87,8 +87,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@HAVE_UNIX_TRUE@am__append_1 = \
-@HAVE_UNIX_TRUE@	session-helper
+@HAVE_SESSION_HELPER_TRUE@am__append_1 = \
+@HAVE_SESSION_HELPER_TRUE@	session-helper
 
 @HAVE_SANE_TRUE@am__append_2 = \
 @HAVE_SANE_TRUE@	colord-sane
@@ -309,6 +309,7 @@ LTLIBOBJS = @LTLIBOBJS@
 LT_AGE = @LT_AGE@
 LT_CURRENT = @LT_CURRENT@
 LT_REVISION = @LT_REVISION@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
