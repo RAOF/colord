@@ -1,3 +1,16 @@
+colord (1.3.2-1) UNRELEASED; urgency=medium
+
+  * New upstream 1.3.2 release (Closes: 815252)
+  * Add new symbols to libcolord2.symbols
+  * Install systemd user service and tmpfiles.d snippets
+  * Install new OceanOptics Spark sensor driver
+  * Demote colord to a Suggests of libcolord2 (Closes: 780625)
+  * Add new symbols to libcolorhug2
+  * Bump Standards-Version; no changes required.
+  * Retrospectively wrap 1.2.12-1's changelog to 80 characters.
+
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Mon, 18 Apr 2016 17:27:34 +1000
+
 colord (1.2.12-1) unstable; urgency=medium
 
   * Bump standards-version; no changes required
@@ -12,8 +25,8 @@ colord (1.2.12-1) unstable; urgency=medium
   * Update libcolorhug symbols for 1.2.12 release
   * Really, truly, remove obsolete colord.conf. (Closes: 751212)
   * colord-plugin-argyll: fix upgrade from Jessie.
-    This package was split out of colord as argyll has become Linux-only, so we need
-    to do the Breaks/Replaces dance. (Closes: 798355)
+    This package was split out of colord as argyll has become Linux-only, so
+    we need to do the Breaks/Replaces dance. (Closes: 798355)
 
  -- Christopher James Halse Rogers <raof@ubuntu.com>  Fri, 06 Nov 2015 10:51:38 -0600
 
