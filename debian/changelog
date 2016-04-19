@@ -8,8 +8,10 @@ colord (1.3.2-1) UNRELEASED; urgency=medium
   * Add new symbols to libcolorhug2
   * Bump Standards-Version; no changes required.
   * Retrospectively wrap 1.2.12-1's changelog to 80 characters.
+  * Cherry-pick 5256a116:
+    libcolord: Fix an assert failure when connecting to sensors.
 
- -- Christopher James Halse Rogers <raof@ubuntu.com>  Mon, 18 Apr 2016 17:27:34 +1000
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Tue, 19 Apr 2016 17:27:34 +1000
 
 colord (1.2.12-1) unstable; urgency=medium
 
