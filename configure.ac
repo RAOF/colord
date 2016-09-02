@@ -3,7 +3,7 @@ AC_PREREQ(2.63)
 
 m4_define([cd_major_version], [1])
 m4_define([cd_minor_version], [3])
-m4_define([cd_micro_version], [2])
+m4_define([cd_micro_version], [3])
 m4_define([cd_version],
           [cd_major_version.cd_minor_version.cd_micro_version])
 
@@ -248,6 +248,10 @@ AM_CONDITIONAL(CD_BUILD_POLKIT, test x$enable_polkit = xyes)
 if test x$enable_polkit = xyes; then
 	PKG_CHECK_MODULES(POLKIT, polkit-gobject-1 >= 0.103)
 	AC_DEFINE(USE_POLKIT, 1, [if we should use PolicyKit])
+
+        PKG_CHECK_EXISTS([polkit-gobject-1 >= 0.114],
+                         [AC_DEFINE(POLKIT_HAS_AUTOPTR_MACROS, 1, [if PolKit has autoptr macros])],
+                         [])
 fi
 
 dnl ---------------------------------------------------------------------------
