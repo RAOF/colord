@@ -8,7 +8,7 @@
 <link rel="up" href="libcolord.html" title="libcolord">
 <link rel="prev" href="colord-cd-profile.html" title="cd-profile">
 <link rel="next" href="colord-cd-sensor.html" title="cd-sensor">
-<meta name="generator" content="GTK-Doc V1.24.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -41,7 +41,7 @@
 <tbody>
 <tr>
 <td class="function_type">
-<span class="returnvalue">gboolean</span>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="colord-cd-sensor-sync.html#cd-sensor-connect-sync" title="cd_sensor_connect_sync ()">cd_sensor_connect_sync</a> <span class="c_punctuation">()</span>
@@ -49,7 +49,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">gboolean</span>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="colord-cd-sensor-sync.html#cd-sensor-lock-sync" title="cd_sensor_lock_sync ()">cd_sensor_lock_sync</a> <span class="c_punctuation">()</span>
@@ -57,7 +57,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">gboolean</span>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="colord-cd-sensor-sync.html#cd-sensor-unlock-sync" title="cd_sensor_unlock_sync ()">cd_sensor_unlock_sync</a> <span class="c_punctuation">()</span>
@@ -65,7 +65,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">gboolean</span>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="colord-cd-sensor-sync.html#cd-sensor-set-options-sync" title="cd_sensor_set_options_sync ()">cd_sensor_set_options_sync</a> <span class="c_punctuation">()</span>
@@ -92,10 +92,10 @@ in command line tools.</p>
 <a name="colord-cd-sensor-sync.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
 <a name="cd-sensor-connect-sync"></a><h3>cd_sensor_connect_sync ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 cd_sensor_connect_sync (<em class="parameter"><code><span class="type">CdSensor</span> *sensor</code></em>,
-                        <em class="parameter"><code><span class="type">GCancellable</span> *cancellable</code></em>,
-                        <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> *cancellable</code></em>,
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Connects to the object and fills up initial properties.</p>
 <p>WARNING: This function is synchronous, and may block.
 Do not use it in GUI applications.</p>
@@ -115,12 +115,12 @@ Do not use it in GUI applications.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>a <span class="type">GCancellable</span> or <code class="literal">NULL</code></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <span class="type">GError</span>, or <code class="literal">NULL</code>.</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -128,17 +128,17 @@ Do not use it in GUI applications.</p>
 </div>
 <div class="refsect3">
 <a name="cd-sensor-connect-sync.returns"></a><h4>Returns</h4>
-<p> <code class="literal">TRUE</code> for success, else <code class="literal">FALSE</code>.</p>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for success, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 </div>
 <p class="since">Since: 0.1.8</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="cd-sensor-lock-sync"></a><h3>cd_sensor_lock_sync ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 cd_sensor_lock_sync (<em class="parameter"><code><span class="type">CdSensor</span> *sensor</code></em>,
-                     <em class="parameter"><code><span class="type">GCancellable</span> *cancellable</code></em>,
-                     <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> *cancellable</code></em>,
+                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Locks the device so we can use it.</p>
 <p>WARNING: This function is synchronous, and may block.
 Do not use it in GUI applications.</p>
@@ -158,12 +158,12 @@ Do not use it in GUI applications.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>a <span class="type">GCancellable</span> or <code class="literal">NULL</code></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <span class="type">GError</span>, or <code class="literal">NULL</code>.</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -171,17 +171,17 @@ Do not use it in GUI applications.</p>
 </div>
 <div class="refsect3">
 <a name="cd-sensor-lock-sync.returns"></a><h4>Returns</h4>
-<p> <code class="literal">TRUE</code> for success, else <code class="literal">FALSE</code>.</p>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for success, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 </div>
 <p class="since">Since: 0.1.6</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="cd-sensor-unlock-sync"></a><h3>cd_sensor_unlock_sync ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 cd_sensor_unlock_sync (<em class="parameter"><code><span class="type">CdSensor</span> *sensor</code></em>,
-                       <em class="parameter"><code><span class="type">GCancellable</span> *cancellable</code></em>,
-                       <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> *cancellable</code></em>,
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Unlocks the device for use by other programs.</p>
 <p>WARNING: This function is synchronous, and may block.
 Do not use it in GUI applications.</p>
@@ -201,12 +201,12 @@ Do not use it in GUI applications.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>a <span class="type">GCancellable</span> or <code class="literal">NULL</code></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <span class="type">GError</span>, or <code class="literal">NULL</code>.</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -214,18 +214,18 @@ Do not use it in GUI applications.</p>
 </div>
 <div class="refsect3">
 <a name="cd-sensor-unlock-sync.returns"></a><h4>Returns</h4>
-<p> <code class="literal">TRUE</code> for success, else <code class="literal">FALSE</code>.</p>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for success, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 </div>
 <p class="since">Since: 0.1.6</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="cd-sensor-set-options-sync"></a><h3>cd_sensor_set_options_sync ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 cd_sensor_set_options_sync (<em class="parameter"><code><span class="type">CdSensor</span> *sensor</code></em>,
-                            <em class="parameter"><code><span class="type">GHashTable</span> *values</code></em>,
-                            <em class="parameter"><code><span class="type">GCancellable</span> *cancellable</code></em>,
-                            <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Hash-Tables.html#GHashTable"><span class="type">GHashTable</span></a> *values</code></em>,
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> *cancellable</code></em>,
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Sets options on the sensor device.</p>
 <p>WARNING: This function is synchronous, and may block.
 Do not use it in GUI applications.</p>
@@ -250,12 +250,12 @@ Do not use it in GUI applications.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>a <span class="type">GCancellable</span> or <code class="literal">NULL</code></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <span class="type">GError</span>, or <code class="literal">NULL</code>.</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -263,7 +263,7 @@ Do not use it in GUI applications.</p>
 </div>
 <div class="refsect3">
 <a name="cd-sensor-set-options-sync.returns"></a><h4>Returns</h4>
-<p> <code class="literal">TRUE</code> for success, else <code class="literal">FALSE</code>.</p>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for success, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 </div>
 <p class="since">Since: 0.1.20</p>
 </div>
@@ -273,8 +273,8 @@ Do not use it in GUI applications.</p>
 <pre class="programlisting"><a class="link" href="colord-cd-color.html#CdColorXYZ"><span class="returnvalue">CdColorXYZ</span></a> *
 cd_sensor_get_sample_sync (<em class="parameter"><code><span class="type">CdSensor</span> *sensor</code></em>,
                            <em class="parameter"><code><span class="type">CdSensorCap</span> cap</code></em>,
-                           <em class="parameter"><code><span class="type">GCancellable</span> *cancellable</code></em>,
-                           <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> *cancellable</code></em>,
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Gets a sample from the sensor.</p>
 <p>WARNING: This function is synchronous, and may block.
 Do not use it in GUI applications.</p>
@@ -299,12 +299,12 @@ Do not use it in GUI applications.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>a <span class="type">GCancellable</span> or <code class="literal">NULL</code></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <span class="type">GError</span>, or <code class="literal">NULL</code>.</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -312,7 +312,7 @@ Do not use it in GUI applications.</p>
 </div>
 <div class="refsect3">
 <a name="cd-sensor-get-sample-sync.returns"></a><h4>Returns</h4>
-<p> the XYZ reading, with ambient levels in Lux encoded in X, or <code class="literal">NULL</code> for error.</p>
+<p> the XYZ reading, with ambient levels in Lux encoded in X, or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a> for error.</p>
 </div>
 <p class="since">Since: 0.1.8</p>
 </div>
@@ -322,6 +322,6 @@ Do not use it in GUI applications.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.24.1</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>

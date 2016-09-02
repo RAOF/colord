@@ -96,7 +96,7 @@
 #define PACKAGE_NAME "colord"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "colord 1.3.2"
+#define PACKAGE_STRING "colord 1.3.3"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "colord"
@@ -105,7 +105,10 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.3.2"
+#define PACKAGE_VERSION "1.3.3"
+
+/* if PolKit has autoptr macros */
+/* #undef POLKIT_HAS_AUTOPTR_MACROS */
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -117,4 +120,4 @@
 #define USE_POLKIT 1
 
 /* Version number of package */
-#define VERSION "1.3.2"
+#define VERSION "1.3.3"

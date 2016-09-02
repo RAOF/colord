@@ -8,7 +8,7 @@
 <link rel="up" href="libcolord.html" title="libcolord">
 <link rel="prev" href="colord-cd-device.html" title="cd-device">
 <link rel="next" href="colord-cd-profile.html" title="cd-profile">
-<meta name="generator" content="GTK-Doc V1.24.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -41,7 +41,7 @@
 <tbody>
 <tr>
 <td class="function_type">
-<span class="returnvalue">gboolean</span>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="colord-cd-profile-sync.html#cd-profile-connect-sync" title="cd_profile_connect_sync ()">cd_profile_connect_sync</a> <span class="c_punctuation">()</span>
@@ -49,7 +49,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">gboolean</span>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="colord-cd-profile-sync.html#cd-profile-set-property-sync" title="cd_profile_set_property_sync ()">cd_profile_set_property_sync</a> <span class="c_punctuation">()</span>
@@ -57,7 +57,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">gboolean</span>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="colord-cd-profile-sync.html#cd-profile-install-system-wide-sync" title="cd_profile_install_system_wide_sync ()">cd_profile_install_system_wide_sync</a> <span class="c_punctuation">()</span>
@@ -76,10 +76,10 @@ in command line tools.</p>
 <a name="colord-cd-profile-sync.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
 <a name="cd-profile-connect-sync"></a><h3>cd_profile_connect_sync ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 cd_profile_connect_sync (<em class="parameter"><code><span class="type">CdProfile</span> *profile</code></em>,
-                         <em class="parameter"><code><span class="type">GCancellable</span> *cancellable</code></em>,
-                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> *cancellable</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Connects to the object and fills up initial properties.</p>
 <p>WARNING: This function is synchronous, and may block.
 Do not use it in GUI applications.</p>
@@ -99,12 +99,12 @@ Do not use it in GUI applications.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>a <span class="type">GCancellable</span> or <code class="literal">NULL</code></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <span class="type">GError</span>, or <code class="literal">NULL</code>.</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -112,19 +112,19 @@ Do not use it in GUI applications.</p>
 </div>
 <div class="refsect3">
 <a name="cd-profile-connect-sync.returns"></a><h4>Returns</h4>
-<p> <code class="literal">TRUE</code> for success, else <code class="literal">FALSE</code>.</p>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for success, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 </div>
 <p class="since">Since: 0.1.8</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="cd-profile-set-property-sync"></a><h3>cd_profile_set_property_sync ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 cd_profile_set_property_sync (<em class="parameter"><code><span class="type">CdProfile</span> *profile</code></em>,
-                              <em class="parameter"><code>const <span class="type">gchar</span> *key</code></em>,
-                              <em class="parameter"><code>const <span class="type">gchar</span> *value</code></em>,
-                              <em class="parameter"><code><span class="type">GCancellable</span> *cancellable</code></em>,
-                              <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
+                              <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *key</code></em>,
+                              <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *value</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> *cancellable</code></em>,
+                              <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Sets properties on an object</p>
 <p>WARNING: This function is synchronous, and may block.
 Do not use it in GUI applications.</p>
@@ -154,12 +154,12 @@ Do not use it in GUI applications.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>a <span class="type">GCancellable</span> or <code class="literal">NULL</code></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <span class="type">GError</span>, or <code class="literal">NULL</code>.</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -167,17 +167,17 @@ Do not use it in GUI applications.</p>
 </div>
 <div class="refsect3">
 <a name="cd-profile-set-property-sync.returns"></a><h4>Returns</h4>
-<p> <code class="literal">TRUE</code> for success, else <code class="literal">FALSE</code>.</p>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for success, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 </div>
 <p class="since">Since: 0.1.8</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="cd-profile-install-system-wide-sync"></a><h3>cd_profile_install_system_wide_sync ()</h3>
-<pre class="programlisting"><span class="returnvalue">gboolean</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 cd_profile_install_system_wide_sync (<em class="parameter"><code><span class="type">CdProfile</span> *profile</code></em>,
-                                     <em class="parameter"><code><span class="type">GCancellable</span> *cancellable</code></em>,
-                                     <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
+                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> *cancellable</code></em>,
+                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
 <p>Sets the profile system wide.</p>
 <p>WARNING: This function is synchronous, and may block.
 Do not use it in GUI applications.</p>
@@ -197,12 +197,12 @@ Do not use it in GUI applications.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>a <span class="type">GCancellable</span> or <code class="literal">NULL</code></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gioGCancellable.html#GCancellable-struct"><span class="type">GCancellable</span></a> or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <span class="type">GError</span>, or <code class="literal">NULL</code>.</p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/glibglib-Error-Reporting.html#GError"><span class="type">GError</span></a>, or <a href="/usr/share/gtk-doc/html/liboilliboil-liboiljunk.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -210,7 +210,7 @@ Do not use it in GUI applications.</p>
 </div>
 <div class="refsect3">
 <a name="cd-profile-install-system-wide-sync.returns"></a><h4>Returns</h4>
-<p> <code class="literal">TRUE</code> for success, else <code class="literal">FALSE</code>.</p>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for success, else <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
 </div>
 <p class="since">Since: 0.1.8</p>
 </div>
@@ -220,6 +220,6 @@ Do not use it in GUI applications.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.24.1</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>

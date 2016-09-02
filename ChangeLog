@@ -1,7 +1,147 @@
+commit 7437d21fe5c9cf2825c77f4c1f9493ab4d3318e4
+Author: Richard Hughes <richard@hughsie.com>
+Date:   2016-07-27
+
+    Release colord 1.3.3
+
+M	NEWS
+M	doc/website/download.html
+M	po/de.po
+M	po/hu.po
+M	po/id.po
+C079	po/id.po	po/is.po
+M	po/ko.po
+C079	po/id.po	po/lt.po
+C079	po/id.po	po/oc.po
+M	po/tr.po
+
+commit 4c20ac1bd802947721be0c15a0ac465b7c1873a4
+Merge: 2f9b089 259a87c
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2016-07-20
+
+    Merge pull request #31 from lantw44/master
+
+    build: Fix gtk-doc build when srcdir != builddir
+
+commit 259a87c560407b91595ee1ca4fe8d16d67f618c1
+Author: Ting-Wei Lan <lantw@src.gnome.org>
+Date:	2016-06-14
+
+    build: Fix gtk-doc build when srcdir != builddir
+
+    https://bugs.freedesktop.org/show_bug.cgi?id=96520
+
+M	doc/api/Makefile.am
+
+commit 2f9b0890fad22cc686b3f1293c961493d01e923b
+Merge: 760e79c b5dae81
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2016-07-06
+
+    Merge pull request #30 from ebassi/polkit-autoptr
+
+    Check polkit version before defining g_autoptr macros
+
+commit b5dae8163e715980f476cde4ea5e2ee8ee897d44
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:	2016-07-06
+
+    Check polkit version before defining g_autoptr macros
+
+    We cannot check on the internal name created by G_DECLARE_AUTO* macros
+    because it's not a pre-processor symbol.
+
+    Instead, we should check whether we're being built against a
+    version of
+    PolKit that has those symbols, and only define them ourselves for
+    previous versions.
+
+    This commit fixes a build failure in GNOME Continuous.
+
+M	configure.ac
+M	src/cd-common.c
+
+commit 760e79ccafc97bc7973e4e2d11bb6ca5d6eed1e0
+Merge: 003e401 48f5176
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2016-07-05
+
+    Merge pull request #29 from Hextremist/master
+
+    Increase timeout to 60s for argyll spotread sampling
+
+commit 48f5176e35b3ab69e5df650f1971dec295fc2b18
+Author: Kjell Irgens <hextremist@gmail.com>
+Date:	2016-07-05
+
+    Increase timeout to 60s for argyll spotread sampling
+
+    There was a 10s timeout for spotread to finish sampling.  This works
+    fine for light colors, in which case it may finish in as little as 3
+    seconds.  But the darker the color is, the longer it takes to finish.
+    When measuring black, it takes around 25-30 seconds for my Spyder 3
+    Express.
+
+    The timeout caused Gnome Control Panel to fail when attempting to
+    calibrate.
+
+M	src/sensors/cd-sensor-argyll.c
+
+commit 003e401b6b76bc8ae445b0c152f7ff41d1eaab5e
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2016-04-18
+
+    Use the USB path to match the ArgyllCMS port
+
+    Fixes https://github.com/hughsie/colord/issues/24
+
+M	src/cd-sensor.c
+M	src/cd-sensor.h
+M	src/sensors/cd-sensor-argyll.c
+
+commit 5256a11638c797809c183f2e468475f6a5fb7a52
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2016-04-18
+
+    libcolord: Fix an assert failure when connecting to sensors
+
+    Do not manually disconnect this as g_signal_connect_object() does
+    this already.
+
+    Hopefully fixes https://github.com/hughsie/colord/issues/23
+
+M	lib/colord/cd-device.c
+M	lib/colord/cd-profile.c
+M	lib/colord/cd-sensor.c
+
+commit 8a5eaac276ffe16e81c58994989ec7319ef00bf2
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2016-03-21
+
+    trivial: post release version bump
+
+M	RELEASE
+M	configure.ac
+
+commit 06aec25df06c7f9115d1d2a38fd9d2fb58a65d61
+Author: Richard Hughes <richard@hughsie.com>
+Date:	2016-03-21
+
+    Release colord 1.3.2
+
+M	NEWS
+M	RELEASE
+M	doc/website/download.html
+M	po/ca.po
+M	po/id.po
+M	po/pt_BR.po
+M	po/sr.po
+
 commit 6949c2a1a62cd44e7e6c25e6db4a5a88d6ab5efd
 Merge: d9c9255 8e27af8
 Author: Richard Hughes <richard@hughsie.com>
-Date:   2016-03-21
+Date:	2016-03-21
 
     Merge pull request #22 from canek-pelaez/master
 
@@ -10,7 +150,7 @@ Date:   2016-03-21
 
 commit 8e27af8feeea71ed79c06c46a28b0e445cef46cb
 Author: Canek Peláez Valdés <canek@ciencias.unam.mx>
-Date:   2016-03-20
+Date:	2016-03-20
 
     session-helper: Replace '/' with '-' on the basename so creating the
     profile file doesn't fail.
