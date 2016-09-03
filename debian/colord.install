@@ -1,5 +1,4 @@
 debian/tmp/etc/
-lib/udev/rules.d/
 usr/bin/
 usr/lib/colord*
 usr/lib/*/colord-sensors/libcolord_sensor_dummy.so
@@ -8,6 +7,3 @@ usr/share/dbus-1
 usr/share/man
 usr/share/polkit-1
 usr/share/bash-completion
-lib/systemd/system/*.service
-usr/lib/systemd/user/
-usr/lib/tmpfiles.d/
