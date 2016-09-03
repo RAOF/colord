@@ -22,6 +22,7 @@ Build-Depends:
  gtk-doc-tools,
  autopoint,
  libsystemd-dev [linux-any],
+ systemd [linux-any],
  bash-completion,
  dh-systemd (>= 1.4),
 Build-Depends-Indep:

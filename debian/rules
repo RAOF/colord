@@ -19,7 +19,6 @@ confflags = \
  --disable-examples \
  --disable-static \
  --with-daemon-user=colord \
- --with-systemdsystemunitdir=/lib/systemd/system \
  --with-udevrulesdir=/lib/udev/rules.d \
  --enable-vala \
  --disable-silent-rules
