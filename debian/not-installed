@@ -1,0 +1,5 @@
+# There's no point installing the systemd or udev files on !linux
+usr/lib/systemd/user/colord-session.service
+lib/udev/rules.d/69-cd-sensors.rules
+lib/udev/rules.d/95-cd-devices.rules
+
